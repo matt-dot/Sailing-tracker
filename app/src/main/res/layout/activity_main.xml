@@ -14,10 +14,13 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
+        android:hint="@string/edit_message"
         android:inputType="textPersonName"
-        android:text="Name"
+        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/button"
@@ -25,7 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="Button"
+        android:onClick="sendMessage"
         app:layout_constraintBaseline_toBaselineOf="@+id/editTextTextPersonName"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
+        tools:text="@string/button_send" />
 </androidx.constraintlayout.widget.ConstraintLayout>
