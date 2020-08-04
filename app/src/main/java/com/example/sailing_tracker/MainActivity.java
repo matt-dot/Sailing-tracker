@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     class AuthenticationPagerAdapter extends FragmentPagerAdapter {
-        private ArrayList<Fragment> fragmentList = new ArrayList<>;
+        private ArrayList<Fragment> fragmentList = new ArrayList<>();
         public AuthenticationPagerAdapter (FragmentManager fm) {
             super(fm);
 
