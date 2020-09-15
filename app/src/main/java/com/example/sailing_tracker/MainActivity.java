@@ -19,45 +19,44 @@ import android.os.Bundle;
 
 import java.io.*;
 import java.util.ArrayList;
-
+import java.util.jar.Attributes;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private EditText Email;
+    private EditText Password;
+    private Button LoginButton;
 
-    class AuthenticationPagerAdapter extends FragmentPagerAdapter {
-        private ArrayList<Fragment> fragmentList = new ArrayList<>();
-        public AuthenticationPagerAdapter (FragmentManager fm) {
-            super(fm);
-
-        }
-        @Override
-        public Fragment getItem(int i){
-            return fragmentList.get(i);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-        void addFragment(Fragment fragment){
-            fragmentList.add(fragment);
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager viewPager = findViewById(R.id.viewPager);
 
-        AuthenticationPagerAdapter pagerAdapter = new
-                AuthenticationPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new LoginFragment());
-        pagerAdapter.addFragment(new RegisterFragment());
-        viewPager.setAdapter(pagerAdapter);
+        Email = (EditText) findViewById(R.id.et_email);
+        Password = (EditText) findViewById(R.id.et_password);
+        LoginButton = (Button) findViewById(R.id.btn_login);
 
+        LoginButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick (View view){
+            validate(Email.getText().toString(), Password.getText().toString());
+            }
+
+        });
+
+
+    }
+
+    private void validate(String userName, String userPassword){
+        if((userName.equals("Admin")) && (userPassword.equals("1234"))){
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            startActivity(intent);
+        } else {
+            
+        }
     }
 }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1032662541856",
+    "firebase_url": "https://sailing-tracker-db0c2.firebaseio.com",
+    "project_id": "sailing-tracker-db0c2",
+    "storage_bucket": "sailing-tracker-db0c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032662541856:android:0164ce0b4e01b914537e45",
+        "android_client_info": {
+          "package_name": "com.example.sailing_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032662541856-3mmvsr07f75irk9fmebtn72c4djj6a45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACfX8H0Q9bWfRKr0Ewzqm7li6i8bHLkJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032662541856-3mmvsr07f75irk9fmebtn72c4djj6a45.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
