@@ -9,37 +9,36 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText Email;
-    private EditText Password;
-    private Button LoginButton;
-
+    Button mRegisterBtn, mLoginBtn;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //initiate views
 
-        Email = (EditText) findViewById(R.id.et_email);
-        Password = (EditText) findViewById(R.id.et_password);
-        LoginButton = (Button) findViewById(R.id.btn_login);
+        mRegisterBtn = findViewById(R.id.register_btn);
+        mLoginBtn = findViewById(R.id.login_btn);
+
+        // register button click
+
+        mRegisterBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick (View v){
+                    // Start register activity
+                   startActivity(new Intent (MainActivity.this, RegisterActivity.class));
 
 
 
-        LoginButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick (View view){
-            validate(Email.getText().toString(), Password.getText().toString());
             }
-
         });
 
 
@@ -47,17 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void validate(String userName, String userPassword){
-        if((userName.equals("Admin")) && (userPassword.equals("1234"))){
-            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-            startActivity(intent);
-        } else {
-            
-        }
 
 
 
-    }
 
 
 
