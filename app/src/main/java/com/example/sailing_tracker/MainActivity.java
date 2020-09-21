@@ -3,14 +3,10 @@ package com.example.sailing_tracker;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,9 +19,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //initiate views
+        // init views
 
-        mRegisterBtn = findViewById(R.id.register_btn);
+        mRegisterBtn = findViewById(R.id.registerBtn);
         mLoginBtn = findViewById(R.id.login_btn);
 
         // register button click

@@ -8,7 +8,7 @@
 
 
     <Button
-        android:id="@+id/register_btn"
+        android:id="@+id/registerBtn"
         android:text="Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
