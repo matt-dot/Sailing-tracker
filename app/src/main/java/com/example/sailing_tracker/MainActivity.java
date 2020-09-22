@@ -32,11 +32,16 @@ public class MainActivity extends AppCompatActivity {
                     // Start register activity
                    startActivity(new Intent (MainActivity.this, RegisterActivity.class));
 
-
-
             }
         });
 
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start login activity
+                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+            }
+        });
 
 
 

@@ -12,8 +12,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Actionbar and its title
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Create Account");
+        // Init
+
     }
 }
