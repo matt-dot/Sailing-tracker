@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/profileTv"
-        android:text="Prfile"
+        android:text="Profile"
         android:textSize="30sp"
         android:textColor="@color/colorPrimary"
         android:layout_width="wrap_content"

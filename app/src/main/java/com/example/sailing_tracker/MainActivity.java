@@ -10,28 +10,24 @@ import android.os.Bundle;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    // Views
     Button mRegisterBtn, mLoginBtn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // init views
-
+        // Init views
         mRegisterBtn = findViewById(R.id.registerBtn);
         mLoginBtn = findViewById(R.id.login_btn);
 
-        // register button click
-
+        // Register button click
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick (View v){
                     // Start register activity
                    startActivity(new Intent (MainActivity.this, RegisterActivity.class));
-
             }
         });
 
@@ -42,15 +38,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, RegisterActivity.class));
             }
         });
-
-
-
     }
-
-
-
-
-
-
-
 }

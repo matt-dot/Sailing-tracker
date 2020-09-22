@@ -38,15 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-/*
-        // Actionbar and its title
-        ActionBar actionBar = getActionBar();
-        actionBar.setTitle("Create Account");
-        // Enable back button
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-
- */
 
         // Init
         mEmailEt = findViewById(R.id.emailEt);
