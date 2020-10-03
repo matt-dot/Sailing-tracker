@@ -3,7 +3,6 @@ package com.example.sailing_tracker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String TAG = "EmailPassword";
 
     // Views
     EditText mEmailEt, mPasswordEt;
@@ -82,17 +81,16 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, dismiss dialogue and start registering activity
-                            progressDialog.dismiss();
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(RegisterActivity.this, "Registered...\n" + user.getEmail(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
-                            finish();
+                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            progressDialog.dismiss();
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            updateUI(null);
                         }
 
 
@@ -109,6 +107,20 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
+
+        public void  updateUI(FirebaseUser account){
+            if(account != null){
+                Toast.makeText(this,"Registration successful",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+            }else {
+                Toast.makeText(this,"Registration failed",Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+
+
+
 
     @Override
     public boolean onSupportNavigateUp() {

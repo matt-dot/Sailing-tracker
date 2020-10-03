@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "584458719810-50ebb16uj1l6te08jn6gkljhboa8mmc6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sailing_tracker",
+            "certificate_hash": "c2d6730e8ff13b571d67ce17becc487e5894a89c"
+          }
+        },
+        {
           "client_id": "584458719810-udan9c884ipdi196jqqgviki52cautjr.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -77,14 +77,14 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             progressDialog.dismiss();
                             FirebaseUser user = mAuth.getCurrentUser();
                             assert user != null;
-                            Toast.makeText(LoginActivity.this, "Registered...\n" + user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Logging In...\n" + user.getEmail(), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
                             finish();
                         } else {
