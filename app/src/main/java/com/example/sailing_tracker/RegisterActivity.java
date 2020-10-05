@@ -11,6 +11,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,8 +24,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
+
     // Views
-    EditText mEmailEt, mPasswordEt;
+    EditText mEmailEt, mPasswordEt;;
     Button mRegisterBtn;
 
     // Progressbar to display while registering user
@@ -32,6 +34,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering User..");
 
+
+
         // Handle register button click
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +63,12 @@ public class RegisterActivity extends AppCompatActivity {
                 // Input email, password
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEt.getText().toString().trim();
+
+
+
+
+
+
                 // Validate
                 if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     // Set error and focus to email EditText
@@ -65,12 +78,17 @@ public class RegisterActivity extends AppCompatActivity {
                     // Set error and focus to the password EditText
                     mPasswordEt.setError("Password length at least 6 characters");
                     mPasswordEt.setFocusable(true);
+                } else if (checkPassword(password)){
+                    mPasswordEt.setError("Password requires at least 1 capital letter");
+                    mPasswordEt.setFocusable(true);
                 } else {
                     registerUser(email, password); // Register the user
                 }
             }
         });
     }
+
+
 
     private void registerUser(String email, String password) {
         // Email and password pattern is valid, show progress dialogue and start registering user
@@ -118,7 +136,25 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
 
+    private static boolean checkPassword(String password) {
+        char ch;
+        boolean capitalFlag = false;
+        boolean digitFlag = false;
+        for (int i = 0; i < password.length(); i++) {
+            ch = password.charAt(i);
+            if (Character.isUpperCase(ch)) {
+                capitalFlag = true;
+            } else if (Character.isDigit(ch)){
+                digitFlag = true;
+            }
+            if(capitalFlag && digitFlag){
+                return true;
+            }
 
+
+        }
+        return false;
+    }
 
 
 

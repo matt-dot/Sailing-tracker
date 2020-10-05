@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity{
+    private static final String TAG = "EmailPassword";
 
     // Views
     EditText mEmailEt, mPasswordEt;
@@ -38,8 +40,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Initialize views and assign to variables
-        mEmailEt = findViewById(R.id.emailEt);
-        mPasswordEt = findViewById(R.id.passwordEt);
+        mEmailEt = findViewById(R.id.emailEt2);
+        mPasswordEt = findViewById(R.id.passwordEt2);
         mLoginBtn = findViewById(R.id.login_btn);
 
         // In the onCreate() method, init the firebase auth instance
@@ -61,16 +63,19 @@ public class LoginActivity extends AppCompatActivity {
                     // Set error and focus to email EditText
                     mEmailEt.setError("Invalid Email");
                     mEmailEt.setFocusable(true);
-                } else if(password.length() < 6) {
-                    // Set error and focus to the password EditText
-                    mPasswordEt.setError("Password length at least 6 characters");
-                    mPasswordEt.setFocusable(true);
+
                 } else {
                     loginUser(email, password); // Register the user
                 }
             }
         });
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Logging in...");
     }
+
+
+
+
 
     private void loginUser(String email, String password) {
         // Email and password pattern is valid, show progress dialogue and start registering user
@@ -78,22 +83,21 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            progressDialog.dismiss();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            assert user != null;
-                            Toast.makeText(LoginActivity.this, "Logging In...\n" + user.getEmail(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
-                            finish();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            progressDialog.dismiss();
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                updateUI(null);
 
-                        }
+
+                                }
 
                         // ...
                     }
@@ -108,6 +112,17 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    public void  updateUI(FirebaseUser account){
+        if(account != null){
+            Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+        }else {
+            Toast.makeText(this,"Login failed",Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 
     @Override
     public boolean onSupportNavigateUp() {

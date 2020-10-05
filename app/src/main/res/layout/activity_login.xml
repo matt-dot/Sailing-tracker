@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".LoginActivity">
+
     <TextView
+
         android:id="@+id/loginscrn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,25 +19,31 @@
         android:layout_gravity="center"/>
 
     <TextView
+        android:layout_marginRight="100dp"
         android:id="@+id/secTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email"
         android:layout_marginLeft="100dp" />
+
     <EditText
-        android:id="@+id/emailEt"
+        android:layout_marginRight="100dp"
+        android:id="@+id/emailEt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
         android:ems="10" />
+
     <TextView
+        android:layout_marginRight="100dp"
         android:id="@+id/thirdTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Password"
         android:layout_marginLeft="100dp" />
     <EditText
-        android:id="@+id/passwordEt"
+        android:layout_marginRight="100dp"
+        android:id="@+id/passwordEt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
@@ -39,6 +51,7 @@
         android:ems="10" />
 
     <Button
+        android:layout_marginRight="100dp"
         android:id="@+id/login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
