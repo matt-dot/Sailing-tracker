@@ -21,8 +21,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
+
 
 
     // Views
@@ -56,18 +63,19 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
+
         // Handle register button click
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Pattern pattern = Pattern.compile("^(?=\\P{Ll}*\\p{Ll})(?=\\P{Lu}*\\p{Lu})(?=\\P{N}*\\p{N})[\\s\\S]{8,}$\n");
                 // Input email, password
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEt.getText().toString().trim();
 
-
-
-
-
+                Matcher matcher = pattern.matcher(password);
+                boolean matchFound = matcher.find();
 
                 // Validate
                 if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
@@ -78,8 +86,8 @@ public class RegisterActivity extends AppCompatActivity {
                     // Set error and focus to the password EditText
                     mPasswordEt.setError("Password length at least 6 characters");
                     mPasswordEt.setFocusable(true);
-                } else if (checkPassword(password)){
-                    mPasswordEt.setError("Password requires at least 1 capital letter");
+                } else if (!matchFound){
+                    mPasswordEt.setError("Password requires at least one lowercase, uppercase, number, and symbol exist in a 8+");
                     mPasswordEt.setFocusable(true);
                 } else {
                     registerUser(email, password); // Register the user
@@ -87,7 +95,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void registerUser(String email, String password) {
@@ -135,26 +142,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
 
-
-    private static boolean checkPassword(String password) {
-        char ch;
-        boolean capitalFlag = false;
-        boolean digitFlag = false;
-        for (int i = 0; i < password.length(); i++) {
-            ch = password.charAt(i);
-            if (Character.isUpperCase(ch)) {
-                capitalFlag = true;
-            } else if (Character.isDigit(ch)){
-                digitFlag = true;
-            }
-            if(capitalFlag && digitFlag){
-                return true;
-            }
-
-
-        }
-        return false;
-    }
 
 
 
