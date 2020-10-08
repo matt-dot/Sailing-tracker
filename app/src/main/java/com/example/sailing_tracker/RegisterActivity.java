@@ -68,26 +68,20 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Pattern pattern = Pattern.compile("^(?=\\P{Ll}*\\p{Ll})(?=\\P{Lu}*\\p{Lu})(?=\\P{N}*\\p{N})[\\s\\S]{8,}$\n");
                 // Input email, password
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEt.getText().toString().trim();
 
-                Matcher matcher = pattern.matcher(password);
-                boolean matchFound = matcher.find();
+
 
                 // Validate
                 if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     // Set error and focus to email EditText
                     mEmailEt.setError("Invalid Email");
                     mEmailEt.setFocusable(true);
-                } else if(password.length() < 6) {
-                    // Set error and focus to the password EditText
-                    mPasswordEt.setError("Password length at least 6 characters");
-                    mPasswordEt.setFocusable(true);
-                } else if (!matchFound){
-                    mPasswordEt.setError("Password requires at least one lowercase, uppercase, number, and symbol exist in a 8+");
+
+                } else if (!isValidPassword(password)){
+                    mPasswordEt.setError("Password requires at least one lowercase, uppercase, number in a 8+");
                     mPasswordEt.setFocusable(true);
                 } else {
                     registerUser(email, password); // Register the user
@@ -131,6 +125,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
+
+
+
+
     }
 
         public void  updateUI(FirebaseUser account){
@@ -142,6 +140,37 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
 
+
+
+    // Function to validate the password.
+    public static boolean
+    isValidPassword(String password)
+    {
+
+        // Regex to check valid password.
+        String regex = "^(?=.*[0-9])"
+                + "(?=.*[a-z])(?=.*[A-Z])"
+                + "(?=.*[@#$%^&+=])"
+                + "(?=\\S+$).{8,20}$";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        // If the password is empty
+        // return false
+        if (password == null) {
+            return false;
+        }
+
+        // Pattern class contains matcher() method
+        // to find matching between given password
+        // and regular expression.
+        Matcher m = p.matcher(password);
+
+        // Return if the password
+        // matched the ReGex
+        return m.matches();
+    }
 
 
 
