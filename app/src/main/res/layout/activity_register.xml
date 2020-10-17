@@ -12,6 +12,7 @@
     <TextView
 
         android:id="@+id/registerScrn"
+        android:layout_marginBottom="80dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
@@ -43,6 +44,23 @@
         android:layout_marginLeft="100dp" />
     <EditText
         android:id="@+id/passwordEt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:inputType="textPassword"
+        android:ems="10" />
+
+    <TextView
+        android:layout_marginRight="100dp"
+        android:id="@+id/forthTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm password"
+        android:layout_marginLeft="100dp" />
+
+    <EditText
+        android:id="@+id/confirmPasswordEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"

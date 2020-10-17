@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".LoginActivity">
@@ -12,25 +14,28 @@
         android:id="@+id/loginscrn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="80dp"
+        android:layout_marginBottom="80dp"
         android:text="Login"
         android:textSize="25dp"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
+        android:textStyle="bold" />
 
     <TextView
         android:layout_marginRight="100dp"
         android:id="@+id/secTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="Email"
         android:layout_marginLeft="100dp" />
 
     <EditText
         android:layout_marginRight="100dp"
-        android:id="@+id/emailEt2"
+        android:id="@+id/emailEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="100dp"
         android:ems="10" />
 
@@ -39,13 +44,17 @@
         android:id="@+id/thirdTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="Password"
         android:layout_marginLeft="100dp" />
+
+
     <EditText
         android:layout_marginRight="100dp"
-        android:id="@+id/passwordEt2"
+        android:id="@+id/passwordEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="100dp"
         android:inputType="textPassword"
         android:ems="10" />
@@ -56,5 +65,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:layout_marginBottom="20dp"
         android:text="login" />
+
+   <TextView
+       android:id="@+id/mRecoverPassTv"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:textAlignment="center"
+       android:text="Recover forgotten password"
+       android:gravity="center_horizontal"
+       android:layout_below="@id/login_btn"
+       android:textColor="@color/colorPrimaryDark"/>
+
+
+
 </LinearLayout>

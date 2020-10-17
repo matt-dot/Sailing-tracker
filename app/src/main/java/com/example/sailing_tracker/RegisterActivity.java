@@ -2,7 +2,6 @@ package com.example.sailing_tracker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,18 +10,13 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     // Views
-    EditText mEmailEt, mPasswordEt;;
+    EditText mEmailEt, mPasswordEt, mConfirmPasswordEt;
     Button mRegisterBtn;
 
     // Progressbar to display while registering user
@@ -54,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         mEmailEt = findViewById(R.id.emailEt);
         mPasswordEt = findViewById(R.id. passwordEt);
         mRegisterBtn = findViewById(R.id.registerBtn);
+        mConfirmPasswordEt = findViewById(R.id.confirmPasswordEt);
 
         // In the onCreate() method, initialize the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
@@ -71,18 +66,26 @@ public class RegisterActivity extends AppCompatActivity {
                 // Input email, password
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEt.getText().toString().trim();
+                String confirmPassword = mConfirmPasswordEt.getText().toString().trim();
 
 
 
-                // Validate
+                // Validate the user entered data
+                // Email must be valid i.e. not have @
+                // Password must conform to the RegEx (8 >= password <= 20, at least 1 capital, at least 1 lowercase
+                // at least one symbol)
+                // User must enter the same password twice
                 if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     // Set error and focus to email EditText
                     mEmailEt.setError("Invalid Email");
                     mEmailEt.setFocusable(true);
 
-                } else if (!isValidPassword(password)){
-                    mPasswordEt.setError("Password requires at least one lowercase, uppercase, number in a 8+");
+                } else if (!isValidPassword(password)) {
+                    mPasswordEt.setError("Password requires at least one lowercase, uppercase and at least 8 characters");
                     mPasswordEt.setFocusable(true);
+
+                } else if(!password.equals(confirmPassword)){
+                    Toast.makeText(RegisterActivity.this,"Passwords do not match",Toast.LENGTH_LONG).show();
                 } else {
                     registerUser(email, password); // Register the user
                 }
@@ -94,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerUser(String email, String password) {
         // Email and password pattern is valid, show progress dialogue and start registering user
         progressDialog.show();
-
+        // Calls the mAuth method to handle the authentication with firebase
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -102,13 +105,16 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
+                            // Check that the user is not already lined in
                             FirebaseUser user = mAuth.getCurrentUser();
+                            // Call the updateUI method, this changes the UI to the profile
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            // Call the updateUI method, do not change UI as authentication has failed
                             updateUI(null);
                         }
 
@@ -117,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                // Error, dismiss progress dialogue and get and show the error message
+                // Error, dismiss progress dialogue and get and show the generated error message
                 progressDialog.dismiss();
                 Toast.makeText(RegisterActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -125,29 +131,30 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-
-
-
-
     }
-
+        // Method to change the UI according to whether authentication has been successful for not
         public void  updateUI(FirebaseUser account){
+            // When account is not null update the UI to show the profile page
             if(account != null){
                 Toast.makeText(this,"Registration successful",Toast.LENGTH_LONG).show();
                 startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+            // The authentication has failed, do not change UI
             }else {
+
                 Toast.makeText(this,"Registration failed",Toast.LENGTH_LONG).show();
             }
         }
 
 
 
-    // Function to validate the password.
+    // Method to compare the password entered to the defined RegEx
     public static boolean
     isValidPassword(String password)
     {
 
-        // Regex to check valid password.
+        // RegEx to check valid password
+        // RegEx is defined as having at least 1 number, at least 1 lower case, at least 1 upper case
+        // at least 1 symbol, and need to be between 8 and 20 characters
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
                 + "(?=.*[@#$%^&+=])"
@@ -172,8 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
         return m.matches();
     }
 
-
-
+    // Allows navigation between pages
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed(); // Go to previous activity
