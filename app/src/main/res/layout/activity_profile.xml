@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
     tools:context=".ProfileActivity">
 
+
+
+
     <TextView
         android:id="@+id/profileTv"
-        android:text="Profile"
-        android:textSize="30sp"
-        android:textColor="@color/colorPrimary"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:text="Profile"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp">
 
     </TextView>
-</LinearLayout>
+
+    <Button
+        android:id="@+id/logOutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+
+        android:layout_above="@id/profileTv"
+
+
+
+        >
+
+    </Button>
+</RelativeLayout>

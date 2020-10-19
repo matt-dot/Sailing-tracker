@@ -78,6 +78,13 @@
        android:layout_below="@id/login_btn"
        android:textColor="@color/colorPrimaryDark"/>
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/googleLoginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+    </com.google.android.gms.common.SignInButton>
 
 
 </LinearLayout>
