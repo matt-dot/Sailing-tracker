@@ -32,6 +32,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 
 public class LoginActivity extends AppCompatActivity{
@@ -125,8 +129,6 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
     }
-
-
 
     private void showRecoverPasswordDialog(){
         //Alert dialogue
@@ -240,7 +242,7 @@ public class LoginActivity extends AppCompatActivity{
     public void  updateUI(FirebaseUser account){
         if(account != null){
             Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show();
-            startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
         }else {
             Toast.makeText(this,"Login failed",Toast.LENGTH_LONG).show();
         }
@@ -282,6 +284,30 @@ public class LoginActivity extends AppCompatActivity{
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            // Get email and userID from authentication
+                            String email = user.getEmail();
+                            String uid = user.getUid();
+                            // When a user is registered store info in firebase realtime database
+                            // using HashMap
+                            HashMap<Object, String> hashMap = new HashMap<>();
+                            // Put info into HashMap
+                            hashMap.put("email", email);
+                            hashMap.put("uid", uid);
+                            hashMap.put("name", ""); // To be added later in profile
+                            hashMap.put("phone", ""); //
+                            hashMap.put("image", ""); //
+                            hashMap.put("boatClass", ""); //
+                            // Firebase database instance
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            // Path toe store user data named "Users"
+                            DatabaseReference reference = database.getReference("Users");
+                            // Put data within HashMap in database
+                            reference.child(uid).setValue(hashMap);
+
+
+
+
+
                             // Show user email in toast
                             assert user != null;
                             Toast.makeText(LoginActivity.this, ""+user.getEmail(), Toast.LENGTH_SHORT).show();

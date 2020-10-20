@@ -17,6 +17,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,6 +111,29 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             // Check that the user is not already lined in
                             FirebaseUser user = mAuth.getCurrentUser();
+                            // Get email and userID from authentication
+                            String email = user.getEmail();
+                            String uid = user.getUid();
+                            // When a user is registered store info in firebase realtime database
+                            // using HashMap
+                            HashMap<Object, String> hashMap = new HashMap<>();
+                            // Put info into HashMap
+                            hashMap.put("email", email);
+                            hashMap.put("uid", uid);
+                            hashMap.put("name", ""); // To be added later in profile
+                            hashMap.put("phone", ""); //
+                            hashMap.put("image", ""); //
+                            hashMap.put("boatClass", ""); //
+                            // Firebase database instance
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            // Path toe store user data named "Users"
+                            DatabaseReference reference = database.getReference("Users");
+                            // Put data within HashMap in database
+                            reference.child(uid).setValue(hashMap);
+
+
+
+
                             // Call the updateUI method, this changes the UI to the profile
                             updateUI(user);
                         } else {
@@ -137,7 +164,7 @@ public class RegisterActivity extends AppCompatActivity {
             // When account is not null update the UI to show the profile page
             if(account != null){
                 Toast.makeText(this,"Registration successful",Toast.LENGTH_LONG).show();
-                startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+                startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
             // The authentication has failed, do not change UI
             }else {
 
