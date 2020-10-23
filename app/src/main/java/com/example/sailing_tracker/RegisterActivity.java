@@ -97,7 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-
     private void registerUser(String email, String password) {
         // Email and password pattern is valid, show progress dialogue and start registering user
         progressDialog.show();
@@ -130,10 +129,6 @@ public class RegisterActivity extends AppCompatActivity {
                             DatabaseReference reference = database.getReference("Users");
                             // Put data within HashMap in database
                             reference.child(uid).setValue(hashMap);
-
-
-
-
                             // Call the updateUI method, this changes the UI to the profile
                             updateUI(user);
                         } else {
@@ -159,8 +154,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
-        // Method to change the UI according to whether authentication has been successful for not
-        public void  updateUI(FirebaseUser account){
+
+    // Method to change the UI according to whether authentication has been successful for not
+    public void  updateUI(FirebaseUser account){
             // When account is not null update the UI to show the profile page
             if(account != null){
                 Toast.makeText(this,"Registration successful",Toast.LENGTH_LONG).show();
@@ -171,8 +167,6 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(this,"Registration failed",Toast.LENGTH_LONG).show();
             }
         }
-
-
 
     // Method to compare the password entered to the defined RegEx
     public static boolean

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     tools:context=".DashboardActivity">
 
@@ -19,6 +20,14 @@
         tools:ignore="Suspicious0dp">
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/profileTv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+    </TextView>
+
+
     <!--Bottom navigation: show menu-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
-        android:menu="@menu/menu_nav">
+        app:menu="@menu/menu_nav">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
