@@ -111,6 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // Check that the user is not already lined in
                             FirebaseUser user = mAuth.getCurrentUser();
                             // Get email and userID from authentication
+                            assert user != null;
                             String email = user.getEmail();
                             String uid = user.getUid();
                             // When a user is registered store info in firebase realtime database
