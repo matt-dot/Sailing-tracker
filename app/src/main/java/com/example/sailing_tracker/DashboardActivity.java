@@ -1,16 +1,17 @@
 package com.example.sailing_tracker;
 
+import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -39,10 +40,9 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // Sets the Toolbar to act as the ActionBar for this Activity window.
-        // Make sure the toolbar exists in the activity and is not null
-        setSupportActionBar(toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
 
 
 
@@ -55,23 +55,29 @@ public class DashboardActivity extends AppCompatActivity {
         // Init views
         mProfileTv = findViewById(R.id.profileTv);
 
-        /* Bottom navigation
+        // Bottom navigation
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemReselectedListener((BottomNavigationView.OnNavigationItemReselectedListener) selectedListener);
-         */
-       /* actionBar.setTitle("Home"); // Default fragment
+
+        //actionBar.setTitle("Home"); // Default fragment
         HomeFragment fragment1 = new HomeFragment();
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         ft1.replace(R.id.content, fragment1, "");
         ft1.commit();
 
-        */
+
 
 
 
 
     }
 
+
+    /* private void setSupportActionBar(Toolbar toolbar) {
+        AppCompatActivity.getSupportActionBar(toolbar);
+    }
+
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -79,7 +85,11 @@ public class DashboardActivity extends AppCompatActivity {
         return true;
     }
 
-
+    @Nullable
+    @Override
+    public ActionBar getActionBar() {
+        return super.getActionBar();
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -89,12 +99,14 @@ public class DashboardActivity extends AppCompatActivity {
                     switch (item.getItemId()){
                         case R.id.nav_home:
                             // Home fragment transaction
-                            //actionBar.setTitle("Home"); // Change actionbar title
+                            ; // Change actionbar title
                             HomeFragment fragment1 = new HomeFragment();
                             FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
                             ft1.replace(R.id.content, fragment1, "");
                             ft1.commit();
                             return  true;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + item.getItemId());
                     }
                     switch (item.getItemId()){
                         case R.id.nav_profile:
