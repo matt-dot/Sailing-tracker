@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sailing_tracker">
 
+
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
