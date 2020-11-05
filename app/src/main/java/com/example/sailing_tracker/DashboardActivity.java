@@ -31,7 +31,7 @@ public class DashboardActivity extends AppCompatActivity {
         setSupportActionBar(mTopToolbar);
 
 
-        // TODO: 05/11/2020 Action bar deprecated needs amending to ToolBar.
+
 
 
 
@@ -42,9 +42,11 @@ public class DashboardActivity extends AppCompatActivity {
         // Init views
         mProfileTv = findViewById(R.id.profileTv);
 
-        // TODO: 05/11/2020 Bottom nav throwing error
-        // Bottom navigation;
 
+        // Bottom navigation;
+        // TODO: 05/11/2020 Menu is not displayed on ToolBar - needs to be fixed
+        // TODO: 05/11/2020 Navigation for menu needed to be coded
+        // TODO: 05/11/2020 Fragments need to be edited - YOUTUBE
         setSupportActionBar(mTopToolbar);
         mTopToolbar.setTitle("My title");
 
@@ -58,9 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
         ft1.commit();
 
 
-
-
-
+        // TODO: 05/11/2020 Get bottom nav to display and allow navigation between fragments
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
