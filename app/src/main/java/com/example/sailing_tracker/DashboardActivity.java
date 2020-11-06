@@ -66,7 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         // Handle item clicks
-                        if (item.getItemId() == R.id.nav_home) {// Home fragment transaction
+                        if (item.getItemId() == R.id.nav_home) { // Home fragment transaction
                             mTopToolbar.setTitle("Home"); // Change actionbar title
                             HomeFragment fragment1 = new HomeFragment();
                             FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
@@ -74,7 +74,7 @@ public class DashboardActivity extends AppCompatActivity {
                             ft1.commit();
                             return true;
                         }
-                        if (item.getItemId() == R.id.nav_profile) {// Profile fragment transaction
+                        if (item.getItemId() == R.id.nav_profile) { // Profile fragment transaction
                             mTopToolbar.setTitle("Profile"); // Change actionbar title
                             ProfileFragment fragment2 = new ProfileFragment();
                             FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
@@ -82,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
                             ft2.commit();
                             return true;
                         }
-                        if (item.getItemId() == R.id.nav_users) {// Users fragment transaction
+                        if (item.getItemId() == R.id.nav_users) { // Users fragment transaction
                             mTopToolbar.setTitle("Users"); // Change actionbar title
                             UsersFragment fragment3 = new UsersFragment();
                             FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
