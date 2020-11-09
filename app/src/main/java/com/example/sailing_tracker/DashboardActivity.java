@@ -3,14 +3,13 @@ package com.example.sailing_tracker;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.NavigationMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,32 +21,28 @@ public class DashboardActivity extends AppCompatActivity {
     // Firebase auth
     FirebaseAuth firebaseAuth;
 
-    // Views init
-    TextView mProfileTv;
-
-    TextView et;
-
-    NavigationMenu navigationMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+
+        // Init
+        firebaseAuth = FirebaseAuth.getInstance();
+
+
+        // Toolbar init
         final Toolbar mTopToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(mTopToolbar);
+        // Set default toolbar value
         mTopToolbar.setTitle("Home");
 
-        et = findViewById(R.id.et);
-
-         final String home = "Home";
-         final String profile = "Profile";
-         final String users = "Users";
-        // Init
-         firebaseAuth = FirebaseAuth.getInstance();
 
 
 
 
-
+        // TODO: 09/11/2020 Add navigation between fragments to bottom nav
+        // Bottom navigation
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -56,7 +51,10 @@ public class DashboardActivity extends AppCompatActivity {
                switch (item.getItemId()){
                    case R.id.nav_home:
                        mTopToolbar.setTitle("Home");
-
+                       HomeFragment fragment1 = new HomeFragment();
+                       FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+                       ft1.replace(R.id.content, fragment1, "");
+                       ft1.commit();
                        break;
                    case R.id.nav_profile:
                        mTopToolbar.setTitle("Profile");
@@ -77,14 +75,11 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         // Bottom navigation;
-        // TODO: 05/11/2020 Menu is not displayed on ToolBar - needs to be fixed
         // TODO: 05/11/2020 Navigation for menu needed to be coded
         // TODO: 05/11/2020 Fragments need to be edited - YOUTUBE
 
     }
 
-
-    // TODO: 05/11/2020 Get bottom nav to display and allow navigation between fragments
 
 
 
