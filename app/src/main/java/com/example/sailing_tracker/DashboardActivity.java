@@ -13,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-;
+
 
 
 public class DashboardActivity extends AppCompatActivity {
@@ -52,15 +52,23 @@ public class DashboardActivity extends AppCompatActivity {
                    case R.id.nav_home:
                        mTopToolbar.setTitle("Home");
                        HomeFragment fragment1 = new HomeFragment();
-                       FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
-                       ft1.replace(R.id.content, fragment1, "");
-                       ft1.commit();
+                       fragment1.setArguments(getIntent().getExtras());
+                       getSupportFragmentManager().beginTransaction()
+                               .add(R.id.fragment_container, fragment1).commit();
                        break;
                    case R.id.nav_profile:
                        mTopToolbar.setTitle("Profile");
+                       ProfileFragment fragment2 = new ProfileFragment();
+                       fragment2.setArguments(getIntent().getExtras());
+                       getSupportFragmentManager().beginTransaction()
+                               .add(R.id.fragment_container, fragment2).commit();
                        break;
                    case R.id.nav_users:
                        mTopToolbar.setTitle("Users");
+                       ProfileFragment fragment3 = new ProfileFragment();
+                       fragment3.setArguments(getIntent().getExtras());
+                       getSupportFragmentManager().beginTransaction()
+                               .add(R.id.fragment_container, fragment3).commit();
 
                        break;
 
