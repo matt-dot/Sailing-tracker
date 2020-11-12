@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "84000378609",
+    "firebase_url": "https://gybe-a049d.firebaseio.com",
+    "project_id": "gybe-a049d",
+    "storage_bucket": "gybe-a049d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84000378609:android:658f0a839844a7db702350",
+        "android_client_info": {
+          "package_name": "com.example.sailing_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "84000378609-03fqbq6l175kufe32u9dn2sopem60r2j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sailing_tracker",
+            "certificate_hash": "02bb388c8bfec43f9ee80737497617b27e3fb970"
+          }
+        },
+        {
+          "client_id": "84000378609-qvsafes0rjhhlaqn2cnuvv7hb0ulkks0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0XyvaqWLqdeda_XW0zza_xHLu8gE9k_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "84000378609-qvsafes0rjhhlaqn2cnuvv7hb0ulkks0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
