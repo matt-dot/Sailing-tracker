@@ -47,7 +47,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:textColor="@color/White"
-                        android:text="Name"
                         android:layout_marginTop="10sp"
                         android:textSize="25sp"
                         android:layout_marginLeft="5dp">
@@ -59,7 +58,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:textColor="@color/White"
-                        android:text="Email"
                         android:layout_marginLeft="5dp">
                     </TextView>
 
@@ -69,7 +67,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:textColor="@color/White"
-                        android:text="Phone"
                         android:layout_marginLeft="5dp">
 
                     </TextView>
