@@ -306,7 +306,7 @@ public class LoginActivity extends AppCompatActivity{
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 // Path toe store user data named "Users"
                                 DatabaseReference reference = database.getReference("Users");
-                                // Put data within HashMap in database
+                                // Put data within HashMap in databaseGiraff$Car11
                                 reference.child(uid).setValue(hashMap);
 
                             }

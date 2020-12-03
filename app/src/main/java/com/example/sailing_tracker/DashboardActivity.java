@@ -1,5 +1,4 @@
 package com.example.sailing_tracker;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,11 +10,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+public class
 
-
-
-
-public class DashboardActivity extends AppCompatActivity {
+DashboardActivity extends AppCompatActivity {
 
     // Firebase auth
     FirebaseAuth firebaseAuth;
@@ -36,11 +33,6 @@ public class DashboardActivity extends AppCompatActivity {
         // Set default toolbar value
         mTopToolbar.setTitle("Home");
 
-
-
-
-
-        // TODO: 09/11/2020 Add navigation between fragments to bottom nav
         // Bottom navigation
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -55,20 +47,21 @@ public class DashboardActivity extends AppCompatActivity {
                        getSupportFragmentManager().beginTransaction()
                                .add(R.id.fragment_container, fragment1).commit();
                        break;
-                   case R.id.nav_profile:
-                       mTopToolbar.setTitle("Profile");
-                       ProfileFragment fragment2 = new ProfileFragment();
+
+                   case R.id.nav_users:
+                       mTopToolbar.setTitle("Record");
+                       RecordFragment fragment2 = new RecordFragment();
                        fragment2.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
                                .add(R.id.fragment_container, fragment2).commit();
+
                        break;
-                   case R.id.nav_users:
-                       mTopToolbar.setTitle("Users");
-                       ProfileFragment fragment3 = new ProfileFragment();
+                   case R.id.nav_profile:
+                       mTopToolbar.setTitle("Profile");
+                       RecordFragment fragment3 = new RecordFragment();
                        fragment3.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
                                .add(R.id.fragment_container, fragment3).commit();
-
                        break;
 
                }
@@ -79,18 +72,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
 
-
-
-        // Bottom navigation;
-        // TODO: 05/11/2020 Navigation for menu needed to be coded
-        // TODO: 05/11/2020 Fragments need to be edited - YOUTUBE
-
     }
-
-
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -103,9 +85,6 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     private void checkUserStatus() {
         // Get the current user
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -116,23 +95,17 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-
-
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-
     public void setSupportActionBar(Toolbar myToolbar) {
         getSupportActionBar();
     }
 
-
-
-
-
-
 }
 
+
+// TODO: 23/11/20 BUG - Once switch to profile fragment, it does not switch back

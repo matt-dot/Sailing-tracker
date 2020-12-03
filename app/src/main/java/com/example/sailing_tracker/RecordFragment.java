@@ -20,7 +20,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class ProfileFragment extends Fragment{
+public class RecordFragment extends Fragment{
 
     // Firebase
     FirebaseAuth firebaseAuth;
@@ -32,7 +32,7 @@ public class ProfileFragment extends Fragment{
     ImageView profilePicIv;
     TextView nameTv, emailTv, phoneTv;
 
-    public ProfileFragment(){
+    public RecordFragment(){
         // Required empty public constructor
     }
 

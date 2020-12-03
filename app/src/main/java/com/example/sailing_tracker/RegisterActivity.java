@@ -28,8 +28,6 @@ import java.util.regex.Pattern;
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
-
-
     // Views
     EditText mEmailEt, mPasswordEt, mConfirmPasswordEt;
     Button mRegisterBtn;
@@ -39,9 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,8 +165,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     // Method to compare the password entered to the defined RegEx
-    public static boolean
-    isValidPassword(String password)
+    public static boolean isValidPassword(String password)
     {
 
         // RegEx to check valid password
