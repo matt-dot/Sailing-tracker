@@ -45,23 +45,23 @@ DashboardActivity extends AppCompatActivity {
                        HomeFragment fragment1 = new HomeFragment();
                        fragment1.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
-                               .add(R.id.fragment_container, fragment1).commit();
+                               .replace(R.id.fragment_container, fragment1).commit();
                        break;
 
-                   case R.id.nav_users:
+                   case R.id.nav_record:
                        mTopToolbar.setTitle("Record");
                        RecordFragment fragment2 = new RecordFragment();
                        fragment2.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
-                               .add(R.id.fragment_container, fragment2).commit();
+                               .replace(R.id.fragment_container, fragment2).commit();
 
                        break;
                    case R.id.nav_profile:
                        mTopToolbar.setTitle("Profile");
-                       RecordFragment fragment3 = new RecordFragment();
+                       ProfileFragment fragment3 = new ProfileFragment();
                        fragment3.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
-                               .add(R.id.fragment_container, fragment3).commit();
+                               .replace(R.id.fragment_container, fragment3).commit();
                        break;
 
                }
@@ -107,5 +107,4 @@ DashboardActivity extends AppCompatActivity {
 
 }
 
-
-// TODO: 23/11/20 BUG - Once switch to profile fragment, it does not switch back
+// TODO: 03/12/20 UI of record
