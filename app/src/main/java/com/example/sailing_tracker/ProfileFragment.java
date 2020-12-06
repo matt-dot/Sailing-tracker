@@ -106,8 +106,8 @@ public class ProfileFragment extends Fragment{
         // Init firebase
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        databaseReference = firebaseDatabase.getReference("Users");
-        storageReference = getInstance().getReference();
+        databaseReference = getInstance().getReference("Users");
+        storageReference = getInstance().getReference("filePathAndName");
 
 
 
@@ -427,8 +427,9 @@ public class ProfileFragment extends Fragment{
         // Path and name of image to be stored in firebase storage
         String filePathAndName = storagePath+ ""+ profilePicture + "_"+ user.getUid();
 
-        StorageReference storageReference1 = storageReference.child(filePathAndName);
-        storageReference1.putFile(uri)
+        StorageReference storageRef = null;
+        storageRef = storageRef.child(filePathAndName);
+        storageRef.putFile(uri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
