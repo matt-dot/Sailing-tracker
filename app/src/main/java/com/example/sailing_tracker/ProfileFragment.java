@@ -407,14 +407,10 @@ public class ProfileFragment extends Fragment{
         if(resultCode == RESULT_OK){
             if(requestCode == IMAGE_PICK_CAMERA_CODE){
                 // Image picked fromm gallery, get uri of image
-
-               // image_uri = data.getData();
-
                 uploadProfilePicture(image_uri);
             }
             if(requestCode == IMAGE_PICK_CAMERA_CODE){
                 // Image picked from camera, get uri of image
-                //image_uri = data.getData();
                 uploadProfilePicture(image_uri);
             }
         }
@@ -496,9 +492,9 @@ public class ProfileFragment extends Fragment{
 
     private void pickFromGallery() {
         // Pick an image from phone gallery
-
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        Intent galleryIntent = new Intent();
         galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
     }
 
@@ -521,5 +517,4 @@ public class ProfileFragment extends Fragment{
 }
 
 
-// TODO: 05/12/20 56:09 Error around firebase database storage
 // TODO: 17/12/2020 Error with google auth
