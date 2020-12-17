@@ -209,6 +209,7 @@ public class LoginActivity extends AppCompatActivity{
         // Email and password pattern is valid, show progress dialogue and start registering user
         progressDialog.setMessage("Logging in...");
         progressDialog.show();
+        progressDialog.dismiss();
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -354,7 +355,8 @@ public class LoginActivity extends AppCompatActivity{
 }
 
 
-
+// TODO: 17/12/2020 Upload not working causes crash to sign in screen 
+// TODO: 17/12/2020  
 
 
 
