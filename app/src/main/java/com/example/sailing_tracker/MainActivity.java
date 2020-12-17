@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Init views
         mRegisterBtn = findViewById(R.id.registerBtn);
-        mLoginBtn = findViewById(R.id.login_btn);
+        mLoginBtn = findViewById(R.id.signIn_btn);
 
         // Register button click
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {

@@ -15,11 +15,11 @@
         android:text="Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/login_btn"
+        android:layout_above="@id/signIn_btn"
         />
     <Button
-        android:id="@+id/login_btn"
-        android:text="Login"
+        android:id="@+id/signIn_btn"
+        android:text="Sign In"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="100dp"
         android:layout_width="match_parent"

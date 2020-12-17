@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity{
         // Initialize views and assign to variables
         mEmailEt = findViewById(R.id.emailEt);
         mPasswordEt = findViewById(R.id.passwordEt);
-        mLoginBtn = findViewById(R.id.login_btn);
+        mLoginBtn = findViewById(R.id.signIn_btn);
         mRecoverPassTv = findViewById(R.id.mRecoverPassTv);
         mGoogleLoginBtn = findViewById(R.id.googleLoginBtn);
 

@@ -61,7 +61,7 @@
 
     <Button
         android:layout_marginRight="100dp"
-        android:id="@+id/login_btn"
+        android:id="@+id/signIn_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
@@ -75,7 +75,7 @@
        android:textAlignment="center"
        android:text="Recover forgotten password"
        android:gravity="center_horizontal"
-       android:layout_below="@id/login_btn"
+       android:layout_below="@id/signIn_btn"
        android:textColor="@color/colorPrimaryDark"/>
 
     <com.google.android.gms.common.SignInButton
