@@ -38,7 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity  extends AppCompatActivity{
     private static final String TAG = "EmailPassword";
     private static final int RC_SIGN_IN = 100 ;
     GoogleSignInClient mGoogleSignInClient;
@@ -307,27 +307,11 @@ public class LoginActivity extends AppCompatActivity{
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 // Path toe store user data named "Users"
                                 DatabaseReference reference = database.getReference("Users");
-                                // Put data within HashMap in databaseGiraff$Car11
+                                // Put data within HashMap in database
                                 reference.child(uid).setValue(hashMap);
 
                             }
-
-
-
-
-
-
-
                             Log.d(TAG, "signInWithCredential:success");
-
-
-
-
-
-
-
-
-
                             // Show user email in toast
                             assert user != null;
                             Toast.makeText(LoginActivity.this, ""+user.getEmail(), Toast.LENGTH_SHORT).show();

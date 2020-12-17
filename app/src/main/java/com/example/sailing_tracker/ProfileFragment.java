@@ -34,9 +34,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -53,14 +53,13 @@ public class ProfileFragment extends Fragment{
     // Firebase
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-    FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
     // Storage
-    DatabaseReference storageReference;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageReference = storage.getReferenceFromUrl("gs://sailing-tracker-ed506.appspot.com");
 
     // Path of profile pic storage location
-
     String storagePath = "User_Profile_Picture/";
 
     // Views from xml
@@ -104,7 +103,9 @@ public class ProfileFragment extends Fragment{
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         databaseReference = getInstance().getReference("Users");
-        storageReference = getInstance().getReference("filePathAndName");
+        storageReference = storage.getReference("filePathAndName");
+
+
 
 
 
@@ -406,14 +407,15 @@ public class ProfileFragment extends Fragment{
         if(resultCode == RESULT_OK){
             if(requestCode == IMAGE_PICK_CAMERA_CODE){
                 // Image picked fromm gallery, get uri of image
-                image_uri = data.getData();
+
+               // image_uri = data.getData();
 
                 uploadProfilePicture(image_uri);
             }
             if(requestCode == IMAGE_PICK_CAMERA_CODE){
                 // Image picked from camera, get uri of image
-
-
+                //image_uri = data.getData();
+                uploadProfilePicture(image_uri);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -423,16 +425,15 @@ public class ProfileFragment extends Fragment{
         progressDialog.show();
         // Path and name of image to be stored in firebase storage
         String filePathAndName = storagePath+ ""+ profilePicture + "_"+ user.getUid();
-
-        StorageReference storageRef = null;
-        storageRef = storageRef.child(filePathAndName);
-        storageRef.putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        StorageReference storageReference2 = storage.getReference();
+        StorageReference fileRef = storageReference2.child(filePathAndName);
+        fileRef.putFile(image_uri)
+                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Image is uploaded to storage, now get uri and store in user's database
                         Task<Uri> uriTask= taskSnapshot.getStorage().getDownloadUrl();
-                        while   (!uriTask.isSuccessful());
+                        while  (!uriTask.isSuccessful());
                         Uri downloadUri = uriTask.getResult();
 
                         // Check if image is uploaded and url received
@@ -448,6 +449,8 @@ public class ProfileFragment extends Fragment{
                             // Image uploaded successfully
                             // Add update the url in user's database
                             HashMap<String, Object> results = new HashMap<>();
+
+                            assert downloadUri != null;
                             results.put(profilePicture, downloadUri.toString());
 
                             databaseReference.child(user.getUid()).updateChildren(results)
@@ -489,6 +492,7 @@ public class ProfileFragment extends Fragment{
 
 
     }
+
 
     private void pickFromGallery() {
         // Pick an image from phone gallery
