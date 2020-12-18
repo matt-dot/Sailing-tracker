@@ -235,7 +235,6 @@ public class ProfileFragment extends Fragment{
                             progressDialog.setMessage("Updating profile picture");
                             profilePicture = "image";
                             showProfilePicDialog();
-
                         }
                         else if (which == 1){
                             // Edit name picked
@@ -247,11 +246,8 @@ public class ProfileFragment extends Fragment{
                             progressDialog.setMessage("Updating boat class");
                             showNameBoatClassUpdateDialog("boatClass");
                         }
-
                     }
-
                 });
-
                 // Create and show dialog
                 builder.create().show();
             }
