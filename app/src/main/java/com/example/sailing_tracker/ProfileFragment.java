@@ -342,14 +342,13 @@ public class ProfileFragment extends Fragment{
                                pickFromCamera();
                            }
                         }
-                        else if (which == 1){
-                            if(!checkStoragePermissions()) {
+                        else if (which == 1) {
+                            if (!checkStoragePermissions()) {
                                 requestStoragePermissions();
+                            } else {
+                                pickFromGallery();
                             }
-                        } else {
-                            pickFromGallery();
                         }
-
 
                     }
 
@@ -405,19 +404,21 @@ public class ProfileFragment extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // Method to be called after picking image from camera or gallery
         if(resultCode == RESULT_OK){
-            if(requestCode == IMAGE_PICK_CAMERA_CODE){
+            if(requestCode == IMAGE_PICK_GALLERY_CODE){
                 // Image picked fromm gallery, get uri of image
+                image_uri = data.getData();
                 uploadProfilePicture(image_uri);
             }
             if(requestCode == IMAGE_PICK_CAMERA_CODE){
                 // Image picked from camera, get uri of image
+
                 uploadProfilePicture(image_uri);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void uploadProfilePicture(Uri uri) {
+    private void uploadProfilePicture(Uri image_uri) {
         progressDialog.show();
         // Path and name of image to be stored in firebase storage
         String filePathAndName = storagePath+ ""+ profilePicture + "_"+ user.getUid();
@@ -495,7 +496,9 @@ public class ProfileFragment extends Fragment{
         Intent galleryIntent = new Intent();
         galleryIntent.setType("image/*");
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
+        startActivityForResult(Intent.createChooser(galleryIntent, "Pick image"), IMAGE_PICK_GALLERY_CODE);
+
+
     }
 
     private void pickFromCamera() {
@@ -511,10 +514,14 @@ public class ProfileFragment extends Fragment{
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
 
+
     }
+
 
 
 }
 
 
 // TODO: 17/12/2020 Error with google auth
+
+
