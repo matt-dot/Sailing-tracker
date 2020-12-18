@@ -1,7 +1,5 @@
 package com.example.sailing_tracker;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -81,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mEmailEt.setFocusable(true);
 
                 } else if (!isValidPassword(password)) {
-                    mPasswordEt.setError("Password requires at least one lowercase, uppercase and at least 8 characters");
+                    mPasswordEt.setError("Password requires at least one lowercase, uppercase, at least 8 characters and at least 1 symbol ");
                     mPasswordEt.setFocusable(true);
 
                 } else if(!password.equals(confirmPassword)){
