@@ -130,19 +130,6 @@ public class ProfileFragment extends Fragment {
         boatClassTv = view.findViewById(R.id.boatClassTv);
         usersBtn = view.findViewById(R.id.display_users_btn);
 
-        usersBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v){
-                // Start register activity
-                startActivity(new Intent (getActivity(), UsersFragment.class));
-            }
-        });
-
-
-
-
-
-
 
         // init progress dialog
         progressDialog = new ProgressDialog(getActivity());
@@ -202,7 +189,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         // Users button click
-       /*
+
         usersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,7 +197,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        */
+
         return view;
     }
 

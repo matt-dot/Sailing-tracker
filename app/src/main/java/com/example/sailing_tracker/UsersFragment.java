@@ -26,6 +26,8 @@ public class UsersFragment extends Fragment {
     RecyclerView recyclerView;
     AdapterUsers adapterUsers;
     List<ModelUser> userList;
+    RecyclerView.LayoutManager layoutManager;
+
 
     public UsersFragment(){
         // Required empty public constructor
@@ -38,7 +40,8 @@ public class UsersFragment extends Fragment {
         // Init recycler view
         recyclerView = view.findViewById(R.id.users_recycleView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
 
         userList = new ArrayList<>();
 
@@ -47,6 +50,7 @@ public class UsersFragment extends Fragment {
 
         return view;
     };
+
 
 
 
@@ -66,8 +70,7 @@ public class UsersFragment extends Fragment {
                     ModelUser modelUser = ds.getValue(ModelUser.class);
 
                     // Get all users except one currently signed in
-                    assert modelUser != null;
-                    assert firebaseUser != null;
+
                     if(!modelUser.getUid().equals(firebaseUser.getUid())){
                         userList.add(modelUser);
                     }
@@ -75,9 +78,8 @@ public class UsersFragment extends Fragment {
                     // Adapter
                     adapterUsers = new AdapterUsers(getActivity(), userList);
                     // Set adapter to recycler view
+
                     recyclerView.setAdapter(adapterUsers);
-
-
                 }
 
             }
