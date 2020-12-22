@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button mRegisterBtn;
 
     // Progressbar to display while registering user
-    ProgressDialog progressDialog;
+    ProgressDialog progressDialog; 
 
     // Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;

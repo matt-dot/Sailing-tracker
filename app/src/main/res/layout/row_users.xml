@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:id="@+id/card_View"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:cardCornerRadius="2dp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/White"
+    app:contentPadding="3dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.blogspot.atifsoftwares.circularimageview.CircularImageView
+            android:id="@+id/usersIv"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_default_user_image"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/person_NameTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Person Name"
+            android:textSize="18sp"
+            android:textColor="@color/Black">
+        </TextView>
+        <TextView
+            android:id="@+id/person_EmailTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Person Email"
+            android:textSize="18sp"
+            android:textColor="@color/Black">
+        </TextView>
+        <TextView
+            android:id="@+id/person_boatClassTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Boat Class"
+            android:textSize="18sp"
+            android:textColor="@color/Black">
+        </TextView>
+    </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+

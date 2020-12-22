@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +25,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,7 +51,7 @@ import java.util.HashMap;
 import static android.app.Activity.RESULT_OK;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
-public class ProfileFragment extends Fragment{
+public class ProfileFragment extends Fragment {
 
     // Firebase
     FirebaseAuth firebaseAuth;
@@ -66,6 +69,7 @@ public class ProfileFragment extends Fragment{
     ImageView profilePicIv;
     TextView nameTv, emailTv, phoneTv, boatClassTv;
     FloatingActionButton floatingActionButton;
+    Button usersBtn;
 
     // Progress dialog
     ProgressDialog progressDialog;
@@ -89,9 +93,13 @@ public class ProfileFragment extends Fragment{
 
 
 
+
+
     public ProfileFragment(){
         // Required empty public constructor
     }
+
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,6 +128,21 @@ public class ProfileFragment extends Fragment{
         phoneTv = view.findViewById(R.id.phoneTv);
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
         boatClassTv = view.findViewById(R.id.boatClassTv);
+        usersBtn = view.findViewById(R.id.display_users_btn);
+
+        usersBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v){
+                // Start register activity
+                startActivity(new Intent (getActivity(), UsersFragment.class));
+            }
+        });
+
+
+
+
+
+
 
         // init progress dialog
         progressDialog = new ProgressDialog(getActivity());
@@ -178,6 +201,16 @@ public class ProfileFragment extends Fragment{
                 showEditProfileDialog();
             }
         });
+        // Users button click
+       /*
+        usersBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               updateUI();
+            }
+        });
+
+        */
         return view;
     }
 
@@ -513,7 +546,14 @@ public class ProfileFragment extends Fragment{
 
     }
 
-
+    private void updateUI(){
+        Fragment fragment = new UsersFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.profileLayout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    };
 
 }
 
