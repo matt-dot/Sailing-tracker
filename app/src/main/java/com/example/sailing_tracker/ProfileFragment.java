@@ -25,8 +25,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -124,7 +122,7 @@ public class ProfileFragment extends Fragment {
         // Init views
         profilePicIv = view.findViewById(R.id.profilePicIv);
         nameTv = view.findViewById(R.id.nameTv);
-        emailTv = view.findViewById(R.id.emailTV);
+        emailTv = view.findViewById(R.id.emailTv);
         phoneTv = view.findViewById(R.id.phoneTv);
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
         boatClassTv = view.findViewById(R.id.boatClassTv);
@@ -193,7 +191,9 @@ public class ProfileFragment extends Fragment {
         usersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               updateUI();
+                Intent myIntent = new Intent(getActivity(), UsersActivity.class);
+                startActivity(myIntent);
+
             }
         });
 
@@ -533,14 +533,6 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void updateUI(){
-        Fragment fragment = new UsersFragment();
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.profileLayout, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    };
 
 }
 

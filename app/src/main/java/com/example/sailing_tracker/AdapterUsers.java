@@ -15,56 +15,61 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
-
-    Context context;
+public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     List<ModelUser> userList;
+    Context context;
 
-    // Constructor
-    public AdapterUsers(Context context, List<ModelUser> userList){
-        this.context = context;
-        this.userList = userList;
-    }
 
 
     @NonNull
     @Override
-    public MyHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public AdapterUsers.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate layout row_user.xml
-        View view = LayoutInflater.from(context).inflate(R.layout.row_users, viewGroup);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_users, parent, false);
         return new MyHolder(view);
     }
 
+    // Constructor
+    public AdapterUsers(Context context, List<ModelUser> userList) {
+        this.context = context;
+        this.userList = userList;
+    }
+
     @Override
-    public void onBindViewHolder(@NonNull MyHolder myHolder, int i) {
+    public void onBindViewHolder(@NonNull AdapterUsers.MyHolder holder, int position) {
         // Get data
-        String userImage = userList.get(i).getImage();
-        String userName = userList.get(i).getName();
-        final String userEmail = userList.get(i).getEmail();
-        String userBoatClass = userList.get(i).getBoatClass();
+        String userImage = userList.get(position).getImage();
+        String userName = userList.get(position).getName();
+        String userEmail = userList.get(position).getEmail();
+        String userBoatClass = userList.get(position).getBoatClass();
 
 
-        myHolder.mNameTv.setText(userName);
-        myHolder.mEmailTv.setText(userEmail);
-        myHolder.mBoatClassTv.setText(userBoatClass);
+        // Set data
+        holder.mNameTv.setText(userName);
+        holder.mEmailTv.setText(userEmail);
+        holder.mBoatClassTv.setText(userBoatClass);
 
-        try{
+        try {
             Picasso.get().load(userImage)
                     .placeholder(R.drawable.ic_default_user_image)
-                    .into(myHolder.mUsersIv);
-
-
-        }
-        catch(Exception e){
-
+                    .into(holder.mUsersIv);
+        } catch( Exception e ) {
 
         }
-        myHolder.itemView.setOnClickListener(new View.OnClickListener() {
+
+        // Handle item click
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, ""+userEmail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
+
+
     }
 
     @Override
@@ -72,20 +77,20 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         return userList.size();
     }
 
-    static class MyHolder extends RecyclerView.ViewHolder{
+    // View holder class
+    class MyHolder extends RecyclerView.ViewHolder{
 
         ImageView mUsersIv;
         TextView mNameTv, mEmailTv, mBoatClassTv;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
+
+            // Init views
             mUsersIv = itemView.findViewById(R.id.usersIv);
-            mNameTv = itemView.findViewById(R.id.person_NameTv);
-            mEmailTv = itemView.findViewById(R.id.person_EmailTv);
-            mBoatClassTv = itemView.findViewById(R.id.person_boatClassTv);
-
-
-
+            mNameTv = itemView.findViewById(R.id.nameTv);
+            mEmailTv = itemView.findViewById(R.id.emailTv);
+            mBoatClassTv = itemView.findViewById(R.id.boatClassTv);
         }
     }
 }
