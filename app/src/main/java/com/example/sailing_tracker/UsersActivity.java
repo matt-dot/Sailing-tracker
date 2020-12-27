@@ -22,7 +22,7 @@ public class UsersActivity extends AppCompatActivity{
 
     private RecyclerView recyclerView;
     private List<ModelUser> userList;
-    private AdapterUsers adapterUsers;
+    // private AdapterUsers adapterUsers;
 
 
 
@@ -37,15 +37,9 @@ public class UsersActivity extends AppCompatActivity{
         setContentView(R.layout.activity_users);
         recyclerView = (RecyclerView) findViewById(R.id.users_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         userList = new ArrayList<>();
-
-
-
         getAllUsers();
-
         }
-
 
         public void getAllUsers () {
             // Get current user
@@ -59,18 +53,11 @@ public class UsersActivity extends AppCompatActivity{
                     userList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         ModelUser modelUser = ds.getValue(ModelUser.class);
-
                         // Get all users except one currently signed in
-
                         if (!modelUser.getUid().equals(firebaseUser.getUid())) {
                             userList.add(modelUser);
                         }
 
-                        // Adapter
-                      //  adapterUsers = new AdapterUsers(new UsersActivity(), userList);
-                        // Set adapter to recycler view
-
-                        //recyclerView.setAdapter(adapterUsers);
 
                         AdapterUsers mAdapter = new AdapterUsers(UsersActivity.this, userList );
                         recyclerView.setAdapter(mAdapter);

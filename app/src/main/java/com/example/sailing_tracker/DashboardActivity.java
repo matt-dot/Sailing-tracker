@@ -1,4 +1,7 @@
 package com.example.sailing_tracker;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,21 +30,23 @@ DashboardActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
 
+
         // Toolbar init
-        final Toolbar mTopToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(mTopToolbar);
+        final Toolbar mToolBar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(mToolBar);
         // Set default toolbar value
-        mTopToolbar.setTitle("Home");
+        mToolBar.setTitle("Home");
 
         // Bottom navigation
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                switch (item.getItemId()){
                    case R.id.nav_home:
-                       mTopToolbar.setTitle("Home");
+                       mToolBar.setTitle("Home");
                        HomeFragment fragment1 = new HomeFragment();
                        fragment1.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
@@ -49,15 +54,14 @@ DashboardActivity extends AppCompatActivity {
                        break;
 
                    case R.id.nav_record:
-                       mTopToolbar.setTitle("Record");
+                       mToolBar.setTitle("Record");
                        RecordFragment fragment2 = new RecordFragment();
                        fragment2.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
                                .replace(R.id.fragment_container, fragment2).commit();
-
                        break;
                    case R.id.nav_profile:
-                       mTopToolbar.setTitle("Profile");
+                       mToolBar.setTitle("Profile");
                        ProfileFragment fragment3 = new ProfileFragment();
                        fragment3.setArguments(getIntent().getExtras());
                        getSupportFragmentManager().beginTransaction()
@@ -75,14 +79,14 @@ DashboardActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.action_favorite:
-            case R.id.action_settings:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            firebaseAuth.signOut();
+            checkUserStatus();
         }
+        startActivity(new Intent(DashboardActivity.this, MainActivity.class));
+        return super.onOptionsItemSelected(item);
     }
 
     private void checkUserStatus() {
@@ -91,19 +95,18 @@ DashboardActivity extends AppCompatActivity {
         if (user != null){
             // User is signed in stay here
             // Set email of logged in user
-            //
         }
     }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
-    public void setSupportActionBar(Toolbar myToolbar) {
-        getSupportActionBar();
-    }
+
+
 
 }
 
