@@ -3,17 +3,15 @@
 
 
     <item android:id="@+id/action_logout"
-        android:title="Logout"
-        />
+        android:title="Logout"/>
+
+    <item android:id="@+id/action_showUsers"
+        android:title="Users" />
+
     <item android:id="@+id/action_search"
         android:title="Search"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
-    <item android:id="@+id/action_showUsers"
-        android:title="Users"
-        />
-
-
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.SearchView" />
 
 </menu>

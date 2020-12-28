@@ -82,23 +82,15 @@ public class ProfileFragment extends Fragment {
     String[] cameraPermissions;
     String[] storagePermissions;
 
-
     // URI of picked image
     Uri image_uri;
 
     // For checking profile picture
     String profilePicture;
 
-
-
-
-
     public ProfileFragment(){
         // Required empty public constructor
     }
-
-
-
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -534,7 +526,6 @@ public class ProfileFragment extends Fragment {
 
 
     }
-
 
 }
 

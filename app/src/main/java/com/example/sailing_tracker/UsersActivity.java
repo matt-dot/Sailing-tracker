@@ -1,8 +1,10 @@
 package com.example.sailing_tracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +26,7 @@ public class UsersActivity extends AppCompatActivity{
     private List<ModelUser> userList;
     // private AdapterUsers adapterUsers;
 
+    FirebaseAuth firebaseAuth;
 
 
 
@@ -32,16 +35,25 @@ public class UsersActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        userList = new ArrayList<>();
         setContentView(R.layout.activity_users);
         recyclerView = (RecyclerView) findViewById(R.id.users_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         userList = new ArrayList<>();
+
+        firebaseAuth = firebaseAuth.getInstance();
         getAllUsers();
+
         }
 
-        public void getAllUsers () {
+
+
+
+
+    public void getAllUsers () {
             // Get current user
             final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             // Get path of database named users
@@ -76,7 +88,22 @@ public class UsersActivity extends AppCompatActivity{
                 }
             });
 
+
+        }
+
+    private void checkUserStatus() {
+        // Get the current user
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            // User is signed in stay here
+            // Set email of logged in user
+        }
+        else{
+            // User is not signed in
+            startActivity(new Intent(UsersActivity.this, MainActivity.class));
+
         }
     }
+}
 
 
