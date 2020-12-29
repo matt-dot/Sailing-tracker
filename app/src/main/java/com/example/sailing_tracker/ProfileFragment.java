@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment {
         phoneTv = view.findViewById(R.id.phoneTv);
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
         boatClassTv = view.findViewById(R.id.boatClassTv);
-        usersBtn = view.findViewById(R.id.display_users_btn);
+
 
 
         // init progress dialog
@@ -180,18 +180,6 @@ public class ProfileFragment extends Fragment {
                 showEditProfileDialog();
             }
         });
-        // Users button click
-
-        usersBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), UsersActivity.class);
-                startActivity(myIntent);
-
-            }
-        });
-
-
         return view;
     }
 

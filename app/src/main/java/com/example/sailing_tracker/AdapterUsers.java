@@ -15,9 +15,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
-    List<ModelUser> userList;
+public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
     Context context;
+    private List<ModelUser> userList;
+    private List<ModelUser> userFullList;
 
 
 

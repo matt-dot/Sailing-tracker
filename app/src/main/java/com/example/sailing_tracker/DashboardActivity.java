@@ -1,9 +1,6 @@
 package com.example.sailing_tracker;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -192,6 +189,10 @@ DashboardActivity extends AppCompatActivity {
             firebaseAuth.signOut();
             checkUserStatus();
         }
+        if (id == R.id.action_showUsers){
+            Intent myIntent = new Intent(DashboardActivity.this, UsersActivity.class);
+            startActivity(myIntent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -204,11 +205,6 @@ DashboardActivity extends AppCompatActivity {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView)
                 MenuItemCompat.getActionView(searchItem);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        ComponentName componentName = new ComponentName(DashboardActivity.this, SearchableActivity.class );
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(componentName));
 
 
         return true;

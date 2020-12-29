@@ -2,10 +2,15 @@ package com.example.sailing_tracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +29,7 @@ public class UsersActivity extends AppCompatActivity{
 
     private RecyclerView recyclerView;
     private List<ModelUser> userList;
-    // private AdapterUsers adapterUsers;
+    private AdapterUsers adapterUsers;
 
     FirebaseAuth firebaseAuth;
 
@@ -36,22 +41,19 @@ public class UsersActivity extends AppCompatActivity{
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        userList = new ArrayList<>();
         setContentView(R.layout.activity_users);
         recyclerView = (RecyclerView) findViewById(R.id.users_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         userList = new ArrayList<>();
+        final Toolbar mToolBar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(mToolBar);
+        mToolBar.setTitle("Users");
 
         firebaseAuth = firebaseAuth.getInstance();
         getAllUsers();
 
         }
-
-
-
-
 
     public void getAllUsers () {
             // Get current user
@@ -103,6 +105,34 @@ public class UsersActivity extends AppCompatActivity{
             startActivity(new Intent(UsersActivity.this, MainActivity.class));
 
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            firebaseAuth.signOut();
+            checkUserStatus();
+        }
+        if (id == R.id.action_showUsers){
+            Intent myIntent = new Intent(UsersActivity.this, UsersActivity.class);
+            startActivity(myIntent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView)
+                MenuItemCompat.getActionView(searchItem);
+
+
+        return true;
+
     }
 }
 
