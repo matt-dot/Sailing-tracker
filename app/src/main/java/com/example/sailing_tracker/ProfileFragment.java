@@ -78,6 +78,7 @@ public class ProfileFragment extends Fragment {
     private static final int IMAGE_PICK_GALLERY_CODE = 300;
     private static final int IMAGE_PICK_CAMERA_CODE = 400;
 
+
     // Arrays of permissions to be requested
     String[] cameraPermissions;
     String[] storagePermissions;

@@ -3,8 +3,6 @@ package com.example.sailing_tracker;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> implements Filterable {
+public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
     private final List<ModelUser> userList;
-    private final List<ModelUser> userFullList;
+
 
 
     // View holder class
@@ -68,16 +65,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> im
                     .into(holder.mUsersIv);
         } catch (Exception e) {}
 
-        /*
-        // Handle item click
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-         */
 
 
     }
@@ -85,12 +73,10 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> im
     // Constructor
     AdapterUsers(List<ModelUser> userList) {
         this.userList = userList;
-        userFullList = new ArrayList<>(userList);
-        /*
-        exampleArrayList = new ArrayList<>(exampleArrayList);
-        userFullList = new ArrayList<>()
 
-         */
+
+
+
 
 
     }
@@ -105,41 +91,5 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> im
         return userList.size();
     }
 
-    @Override
-    public Filter getFilter() {
-        return userFilter;
-    }
 
-    private final Filter userFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<ModelUser> filteredList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(userFullList);
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (ModelUser modelUser : userFullList) {
-                    if (modelUser.getEmail().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(modelUser);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            userList.clear();
-            userList.addAll((List) results.values);
-            notifyDataSetChanged();
-        }
-
-
-    };
 }
