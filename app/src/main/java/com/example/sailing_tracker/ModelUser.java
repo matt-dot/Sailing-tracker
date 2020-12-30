@@ -1,10 +1,14 @@
 package com.example.sailing_tracker;
 
+import java.util.List;
+
 public class ModelUser {
     String name, email, search, phone, image, boatClass, uid;
 
-    public ModelUser() {
+    public ModelUser(List<ModelUser> userList) {
     }
+
+    public ModelUser(){}
 
     public ModelUser(String name, String email, String search, String phone, String image, String boatClass, String uid) {
         this.name = name;

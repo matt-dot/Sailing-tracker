@@ -1,6 +1,7 @@
 package com.example.sailing_tracker;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,8 +11,8 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,13 +33,18 @@ DashboardActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     List<ModelUser> userList;
     RecyclerView recyclerView;
-
+    Adapter adapter;
+    Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+
+
+
 
 
 
@@ -129,7 +135,7 @@ DashboardActivity extends AppCompatActivity {
                     }
 
 
-                    AdapterUsers mAdapter = new AdapterUsers(DashboardActivity.this, userList);
+                    AdapterUsers mAdapter = new AdapterUsers(userList);
                     // Refresh adapter
                     mAdapter.notifyDataSetChanged();
                     // Set adapter to recycler view
@@ -165,7 +171,7 @@ DashboardActivity extends AppCompatActivity {
                     }
 
 
-                    AdapterUsers mAdapter = new AdapterUsers(DashboardActivity.this, userList);
+                    AdapterUsers mAdapter = new AdapterUsers(userList);
                     recyclerView.setAdapter(mAdapter);
 
 
@@ -193,7 +199,7 @@ DashboardActivity extends AppCompatActivity {
             Intent myIntent = new Intent(DashboardActivity.this, UsersActivity.class);
             startActivity(myIntent);
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
 
@@ -203,8 +209,8 @@ DashboardActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView)
-                MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
 
 
         return true;
