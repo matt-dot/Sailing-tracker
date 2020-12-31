@@ -1,6 +1,7 @@
 package com.example.sailing_tracker;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,20 +16,31 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CustomCap;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener {
     final static int PERMISSIONS_ALL = 1;
     final static String[] PERMISSIONS = {Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION};
@@ -37,6 +49,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     MarkerOptions markerOptions;
     Marker marker;
+    private static final int COLOR_BLACK_ARGB = 0xff000000;
+    private static final int POLYLINE_STROKE_WIDTH_PX = 12;
 
 
     @Override
@@ -47,12 +61,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setSupportActionBar(mToolBar);
 
-
-
         firebaseAuth = firebaseAuth.getInstance();
 
         // Set default toolbar value
-        mToolBar.setTitle("Home");
+        mToolBar.setTitle("Record new session");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -72,41 +84,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
 
 
-        return true;
 
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_logout) {
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        if (id == R.id.action_showUsers){
-            Intent myIntent = new Intent(MapsActivity.this, UsersActivity.class);
-            startActivity(myIntent);
-        }
-        return true;
-    }
-
-    private void checkUserStatus() {
-        // Get the current user
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            // User is signed in stay here
-            // Set email of logged in user
-        }
-        else{
-            // User is not signed in
-            startActivity(new Intent(MapsActivity.this, MainActivity.class));
-        }
-    }
 
     /**
      * Manipulates the map once available.
@@ -116,11 +96,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        marker = mMap.addMarker(markerOptions);
+        mMap.setMyLocationEnabled(true);
+
+        Polyline polyline = googleMap.addPolyline(new PolylineOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(-35.016, 143.321),
+                        new LatLng(-34.747, 145.592),
+                        new LatLng(-34.364, 147.891),
+                        new LatLng(-33.501, 150.217),
+                        new LatLng(-32.306, 149.248),
+                        new LatLng(-32.491, 147.309)));
+        // Store a data object with the polyline, used here to indicate an arbitrary type.
+        polyline.setTag("A");
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4));
+
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -129,6 +125,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myCoordinates));
 
     }
+
+
+
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -214,6 +213,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+
+        return true;
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            firebaseAuth.signOut();
+            checkUserStatus();
+        }
+        if (id == R.id.action_showUsers){
+            Intent myIntent = new Intent(MapsActivity.this, UsersActivity.class);
+            startActivity(myIntent);
+        }
+        return true;
+    }
+
+    private void checkUserStatus() {
+        // Get the current user
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            // User is signed in stay here
+            // Set email of logged in user
+        }
+        else{
+            // User is not signed in
+            startActivity(new Intent(MapsActivity.this, MainActivity.class));
+        }
+    }
 
 
 }
