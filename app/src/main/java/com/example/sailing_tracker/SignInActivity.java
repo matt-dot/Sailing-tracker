@@ -38,7 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 
-public class LoginActivity  extends AppCompatActivity{
+public class SignInActivity extends AppCompatActivity{
     private static final String TAG = "EmailPassword";
     private static final int RC_SIGN_IN = 100 ;
     GoogleSignInClient mGoogleSignInClient;
@@ -186,10 +186,10 @@ public class LoginActivity  extends AppCompatActivity{
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
                 if(task.isSuccessful()){
-                    Toast.makeText(LoginActivity.this, "Email sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "Email sent", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(LoginActivity.this, "Failed to send email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "Failed to send email", Toast.LENGTH_SHORT).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -198,7 +198,7 @@ public class LoginActivity  extends AppCompatActivity{
                 progressDialog.dismiss();
 
                 // Get and show full error message
-                Toast.makeText(LoginActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -223,7 +223,7 @@ public class LoginActivity  extends AppCompatActivity{
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.makeText(SignInActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                                 updateUI(null);
                                 }
@@ -234,7 +234,7 @@ public class LoginActivity  extends AppCompatActivity{
         public void onFailure(@NonNull Exception e) {
             // Error, dismiss progress dialogue and get and show the error message
             progressDialog.dismiss();
-            Toast.makeText(LoginActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignInActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     });
 
@@ -243,7 +243,7 @@ public class LoginActivity  extends AppCompatActivity{
     public void  updateUI(FirebaseUser account){
         if(account != null){
             Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show();
-            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+            startActivity(new Intent(SignInActivity.this, DashboardActivity.class));
         }else {
             Toast.makeText(this,"Login failed",Toast.LENGTH_LONG).show();
         }
@@ -314,12 +314,12 @@ public class LoginActivity  extends AppCompatActivity{
                             Log.d(TAG, "signInWithCredential:success");
                             // Show user email in toast
                             assert user != null;
-                            Toast.makeText(LoginActivity.this, ""+user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignInActivity.this, ""+user.getEmail(), Toast.LENGTH_SHORT).show();
                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Login failed..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignInActivity.this, "Login failed..", Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
@@ -328,7 +328,7 @@ public class LoginActivity  extends AppCompatActivity{
             @Override
             public void onFailure(@NonNull Exception e) {
                 // Get and  show error message
-              Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT ).show();
+              Toast.makeText(SignInActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT ).show();
             }
         });
 
