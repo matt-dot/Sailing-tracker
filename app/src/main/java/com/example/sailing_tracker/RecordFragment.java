@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,9 +26,19 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.apache.commons.lang3.time.StopWatch;
+
 public class RecordFragment extends Fragment {
 
+    StopWatch watch;
+
     private static final String TAG = "RecordFragment";
+
+    int speedInKnots;
+
+
+    TextView mCurrent_speedTv, mBearingTv, mElapsedTimeTv;
+
 
 
     // Location callback
@@ -40,7 +51,7 @@ public class RecordFragment extends Fragment {
     private static final int PERMISSION_FINE_LOCATION = 99;
 
     // Reference to UI element record button
-    Button mButtonRecord;
+    Button mButtonStartLocationUpdates, mButtonStopLocationUpdates;
 
     // Google API for location services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -48,14 +59,28 @@ public class RecordFragment extends Fragment {
     // Location request is config file for all setting related to fusedLocationProviderClient
     LocationRequest locationRequest;
 
+    public RecordFragment(){
+        // Required empty public constructor
+    }
 
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_record, container, false);
-        // Assign value to buttonRecord
-        mButtonRecord = view.findViewById(R.id.buttonRecord);
+
+
+        watch = new StopWatch();
+
+        // Assign values
+        mButtonStartLocationUpdates = view.findViewById(R.id.buttonRecord);
+        mButtonStopLocationUpdates = view.findViewById(R.id.buttonStop);
+        mCurrent_speedTv = view.findViewById(R.id.current_speedTv);
+        mBearingTv = view.findViewById(R.id.bearingTv);
+        mElapsedTimeTv = view.findViewById(R.id.elapsed_timeTv);
+
+
+
 
         // Instantiate and then set all properties of LocationRequest
         locationRequest = new LocationRequest();
@@ -73,36 +98,65 @@ public class RecordFragment extends Fragment {
         // This event is triggered whenever the update interval is met
         // i.e. triggered every 2000ms (2 seconds)
         locationCallback = new LocationCallback(){
+            @SuppressLint("SetTextI18n")
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
 
                 // Save the location to a variable
                 Location location = locationResult.getLastLocation();
+                double speed = location.getSpeed();
+
+                // Handle the conversion from m/s to knots using helper method toKnots
+                toKnots((int) speed);
+                double seconds = watch.getTime()/1000;
+
+
+                // Log the long and lat values but don't display to user
                 Log.d(TAG, "Latitude: " + location.getLatitude());
-                Log.d(TAG, "Longitude: " + location.getLatitude());
+                Log.d(TAG, "Longitude: " + location.getLongitude());
+
+                // Display live data to the user
+                mCurrent_speedTv.setText("Speed: " + speedInKnots + "knots");
+                mBearingTv.setText("Bearing: " + location.getBearing() + "degrees");
+                //mElapsedTimeTv.setText("Elapsed time: " + location.getTime() +" ms");
+                mElapsedTimeTv.setText("Elapsed time: " + seconds + " seconds");
+
+
+
 
             }
         };
 
 
-        mButtonRecord.setOnClickListener(new View.OnClickListener() {
+        mButtonStartLocationUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                watch.start();
                 // Turn on tracking
                 startLocationUpdates();
+
             }
         });
 
+        mButtonStopLocationUpdates.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                watch.stop();
+                stopLocationUpdates();
+            }
+        });
 
+        // Call the method to retrieve last know location of the device
+        getLastKnowLocationOfDevice();
 
-
-
-        updateGPS();
         // Return the view
        return view;
     } // End of onCreate()
 
+
+
+    // When the activity is destroyed, location tracking is removed
     @SuppressLint("MissingPermission")
     @Override
     public void onStop() {
@@ -114,10 +168,17 @@ public class RecordFragment extends Fragment {
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
+        // Start recording location updates
         Toast.makeText(getActivity(), "Location is being tracked", Toast.LENGTH_SHORT).show();
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
+    @SuppressLint("MissingPermission")
+    private void stopLocationUpdates() {
+        // Stop recording location updates
+        Toast.makeText(getActivity(), "Location is being tracked", Toast.LENGTH_SHORT).show();
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -131,7 +192,7 @@ public class RecordFragment extends Fragment {
                 // If the result of the request permission call is 0 (granted)
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // All permissions are granted call the method updateGPS()
-                    updateGPS();
+                    getLastKnowLocationOfDevice();
                 } else {
                     // Generate toast to inform user the app will not function
                     Toast.makeText(getActivity(), "This app requires location permission to function ", Toast.LENGTH_SHORT).show();
@@ -140,12 +201,14 @@ public class RecordFragment extends Fragment {
         }
     }
 
-    private void updateGPS() {
+    private void getLastKnowLocationOfDevice() {
         // 1. Get permissions from the user to use GPS services
         // 2. Get the current location of the user from the fusedClientProvider
         // 3. Output the update to logcat
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+
 
 
         // Permissions check
@@ -177,12 +240,18 @@ public class RecordFragment extends Fragment {
     }
 
     private void updateLogAndToast(Location location) {
+
+
         if (location != null) {
             // Update the log with new location
-            //Toast.makeText(getActivity(), "Latitude: " + (location.getLatitude()), Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getActivity(), "Longitude:  " + (location.getLongitude()), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Latitude: " + location.getLatitude());
             Log.d(TAG, "Longitude: " + location.getLongitude());
+
+            mCurrent_speedTv.setText("Speed: " + speedInKnots + "knots");
+            mBearingTv.setText("Bearing: " + location.getBearing());
+            mElapsedTimeTv.setText("Elapsed time: " + location.getTime());
+
+
 
         } else {
             Toast.makeText(getActivity(), "Location is null", Toast.LENGTH_SHORT).show();
@@ -191,6 +260,19 @@ public class RecordFragment extends Fragment {
         }
 
     }
+
+    private void toKnots(int speed){
+        speedInKnots = (int) (speed * 1.944);
+    }
+
+
+
+
+
+
+
+
+
 
 
 
