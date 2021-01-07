@@ -28,11 +28,9 @@ public class LocationService extends Service {
     public static final String
             ACTION_LOCATION_BROADCAST = LocationService.class.getName() + "LocationBroadcast",
             EXTRA_LATITUDE = "extra_latitude",
-            EXTRA_LONGITUDE = "extra_longitude";
-
-    private static final int
-            MIN_TIME = 2000,
-            MIN_DISTANCE = 1;
+            EXTRA_LONGITUDE = "extra_longitude",
+            EXTRA_SPEED = "extra_speed",
+            EXTRA_BEARING = "extra_bearing";
 
 
     Location location;
@@ -52,12 +50,14 @@ public class LocationService extends Service {
                 // ...assign the user current location to lat and long variables
                 double latitude = locationResult.getLastLocation().getLatitude();
                 double longitude = locationResult.getLastLocation().getLongitude();
-
+                double speed = locationResult.getLastLocation().getSpeed();
 
 
                 // Output to log
-                Log.d("LOCATION_UPDATE", "Lat: "+ latitude + "," + "Long: " + longitude);
+                Log.d("Broadcast", "Lat: "+ latitude + "," + "Long: " + longitude);
                 Log.d("Broadcast", "Success: Send broadcast parsing location");
+
+                // Broadcast the current location to the record fragment
                 sendBroadcastMessage(location);
             }
 

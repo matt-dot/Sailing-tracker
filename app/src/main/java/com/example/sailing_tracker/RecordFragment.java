@@ -95,9 +95,21 @@ public class RecordFragment extends Fragment {
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
+
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
-                        mCurrent_speedTv.setText("Lat: " + latitude + ", Lng: " + longitude);
+                        double speed = intent.getDoubleExtra(LocationService.EXTRA_SPEED,0);
+
+
+
+                        // Log the location data
+                        Log.d(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
+
+                        mCurrent_speedTv.setText("Speed is: " + speed);
+
+
+
+
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
         );

@@ -6,4 +6,5 @@ class ConstantsForLocationService {
     static final String ACTION_STOP_LOCATION_SERVICE = "stopLocationService";
 
 
+
 }
