@@ -105,7 +105,8 @@ public class RecordFragment extends Fragment {
                         // Log the location data
                         Log.d(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
 
-                        mCurrent_speedTv.setText("Speed is: " + speed);
+                        //mCurrent_speedTv.setText("Speed is: " + speed);
+                        mCurrent_speedTv.setText("Direction " + latitude +", " + longitude);
 
 
 
