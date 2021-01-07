@@ -7,20 +7,74 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+
+
 public class LocationService extends Service {
 
+    public static final String
+            ACTION_LOCATION_BROADCAST = LocationService.class.getName() + "LocationBroadcast",
+            EXTRA_LATITUDE = "extra_latitude",
+            EXTRA_LONGITUDE = "extra_longitude";
+
+    private static final int
+            MIN_TIME = 2000,
+            MIN_DISTANCE = 1;
+
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        sendBroadcastMessage(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE,new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        Log.d("Broadcast", "Success: Send broadcast parsing location");
+                        sendBroadcastMessage(location);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                }
+        );
+    }
+
+
+
+    // Location callback is called evertime
     private final LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -34,8 +88,10 @@ public class LocationService extends Service {
                 double longitude = locationResult.getLastLocation().getLongitude();
 
 
+
                 // Output to log
                 Log.d("LOCATION_UPDATE", "Lat: "+ latitude + "," + "Long: " + longitude);
+
             }
 
             }
@@ -49,6 +105,7 @@ public class LocationService extends Service {
     }
 
 
+    // TODO: 07/01/2021 Comment me 
     @SuppressLint("MissingPermission")
     private void startLocationService(){
         // Set the id of the channel
@@ -63,7 +120,7 @@ public class LocationService extends Service {
                 resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
-        Context context;
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 getApplicationContext(),
                 channelId
@@ -76,9 +133,10 @@ public class LocationService extends Service {
         builder.setAutoCancel(false);
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
 
+
+        // TODO: 07/01/2021 Read about channels and then understand below
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null){
-                CharSequence name;
                 NotificationChannel notificationChannel = new NotificationChannel(
                         channelId,
                         "LocationService",
@@ -90,6 +148,7 @@ public class LocationService extends Service {
             locationRequest.setInterval(5000); // Store me in a constant
             locationRequest.setFastestInterval(2000); // Store me in a constant
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
 
 
             LocationServices.getFusedLocationProviderClient(this)
@@ -127,6 +186,15 @@ public class LocationService extends Service {
              }
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void sendBroadcastMessage(Location location) {
+        if (location != null) {
+            Intent intent = new Intent(ACTION_LOCATION_BROADCAST);
+            intent.putExtra(EXTRA_LATITUDE, location.getLatitude());
+            intent.putExtra(EXTRA_LONGITUDE, location.getLongitude());
+            LocalBroadcastManager.getInstance(LocationService.this).sendBroadcast(intent);
+        }
     }
 }
 

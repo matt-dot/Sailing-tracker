@@ -2,8 +2,10 @@ package com.example.sailing_tracker;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -68,13 +71,13 @@ public class RecordFragment extends Fragment {
             public void onClick(View view) {
                 Log.d(TAG, "Click of start location service");
                 Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
                             getActivity(),
-                            new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             PERMISSION_FINE_LOCATION_CODE
                     );
-                }  else {
+                } else {
                     startLocationService();
                 }
             }
@@ -87,6 +90,17 @@ public class RecordFragment extends Fragment {
                 stopLocationService();
             }
         });
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
+                        double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
+                        mCurrent_speedTv.setText("Lat: " + latitude + ", Lng: " + longitude);
+                    }
+                }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
+        );
 
         return view;
     }
@@ -141,6 +155,7 @@ public class RecordFragment extends Fragment {
     }
 
 
+    }
 
 
 
@@ -152,5 +167,7 @@ public class RecordFragment extends Fragment {
 
 
 
-}
+
+
+
 
