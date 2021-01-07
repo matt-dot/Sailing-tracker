@@ -8,10 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -38,40 +35,7 @@ public class LocationService extends Service {
             MIN_DISTANCE = 1;
 
 
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        sendBroadcastMessage(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE,new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        Log.d("Broadcast", "Success: Send broadcast parsing location");
-                        sendBroadcastMessage(location);
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                }
-        );
-    }
-
+    Location location;
 
 
     // Location callback is called evertime
@@ -83,6 +47,8 @@ public class LocationService extends Service {
             // This avoids null pointer exceptions as there are instances where last known location
             // will be null
             if(locationResult != null && locationResult.getLastLocation() != null){
+
+                location = locationResult.getLastLocation();
                 // ...assign the user current location to lat and long variables
                 double latitude = locationResult.getLastLocation().getLatitude();
                 double longitude = locationResult.getLastLocation().getLongitude();
@@ -91,7 +57,8 @@ public class LocationService extends Service {
 
                 // Output to log
                 Log.d("LOCATION_UPDATE", "Lat: "+ latitude + "," + "Long: " + longitude);
-
+                Log.d("Broadcast", "Success: Send broadcast parsing location");
+                sendBroadcastMessage(location);
             }
 
             }
