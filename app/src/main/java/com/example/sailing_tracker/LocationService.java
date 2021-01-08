@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationServices;
 
 
 public class LocationService extends Service {
+    //double speedInKnots;
 
     public static final String
             ACTION_LOCATION_BROADCAST = LocationService.class.getName() + "LocationBroadcast",
@@ -50,12 +51,16 @@ public class LocationService extends Service {
                 // ...assign the user current location to lat and long variables
                 double latitude = locationResult.getLastLocation().getLatitude();
                 double longitude = locationResult.getLastLocation().getLongitude();
-                double speed = locationResult.getLastLocation().getSpeed();
+                double speed = ((double) locationResult.getLastLocation().getSpeed());
+                double bearing = locationResult.getLastLocation().getBearing();
+                // speedInKnots = speed * 1.944;
 
 
                 // Output to log
                 Log.d("Broadcast", "Lat: "+ latitude + "," + "Long: " + longitude);
                 Log.d("Broadcast", "Success: Send broadcast parsing location");
+                Log.d("Broadcast", "Speed: " + speed);
+
 
                 // Broadcast the current location to the record fragment
                 sendBroadcastMessage(location);
@@ -160,6 +165,8 @@ public class LocationService extends Service {
             Intent intent = new Intent(ACTION_LOCATION_BROADCAST);
             intent.putExtra(EXTRA_LATITUDE, location.getLatitude());
             intent.putExtra(EXTRA_LONGITUDE, location.getLongitude());
+            intent.putExtra(EXTRA_SPEED, location.getSpeed());
+            intent.putExtra(EXTRA_BEARING, location.getBearing());
             LocalBroadcastManager.getInstance(LocationService.this).sendBroadcast(intent);
         }
     }

@@ -1,6 +1,7 @@
 package com.example.sailing_tracker;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,6 +26,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.time.StopWatch;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static java.lang.Integer.MAX_VALUE;
 
 
@@ -37,7 +41,7 @@ public class RecordFragment extends Fragment {
 
     private static final String TAG = "RecordFragment";
 
-    int speedInKnots;
+    double speedInKnots, doubleBearing;
 
 
     TextView mCurrent_speedTv, mBearingTv, mElapsedTimeTv;
@@ -93,20 +97,24 @@ public class RecordFragment extends Fragment {
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 new BroadcastReceiver() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onReceive(Context context, Intent intent) {
 
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
-                        double speed = intent.getDoubleExtra(LocationService.EXTRA_SPEED,0);
+                        float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED,0);
+                        float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
 
+                        speedInKnots = speed * 1.194;
+                        doubleBearing = ((double) bearing);
 
 
                         // Log the location data
                         Log.d(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
 
-                        //mCurrent_speedTv.setText("Speed is: " + speed);
-                        mCurrent_speedTv.setText("Direction " + latitude +", " + longitude);
+                        mCurrent_speedTv.setText("Speed is: " + round(speedInKnots,2) + "knots");
+                        mBearingTv.setText("Direction: " + round(doubleBearing, 2));
 
 
 
@@ -166,6 +174,15 @@ public class RecordFragment extends Fragment {
 
         }
     }
+
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
 
 
     }
