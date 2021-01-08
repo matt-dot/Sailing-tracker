@@ -31,7 +31,9 @@ public class LocationService extends Service {
             EXTRA_LATITUDE = "extra_latitude",
             EXTRA_LONGITUDE = "extra_longitude",
             EXTRA_SPEED = "extra_speed",
-            EXTRA_BEARING = "extra_bearing";
+            EXTRA_BEARING = "extra_bearing",
+            EXTRA_START_TIME = "extra_start_time",
+            EXTRA_END_TIME = "extra_end_time";
 
 
     Location location;
@@ -49,11 +51,13 @@ public class LocationService extends Service {
 
                 location = locationResult.getLastLocation();
                 // ...assign the user current location to lat and long variables
+
+                // Variables needed for log
                 double latitude = locationResult.getLastLocation().getLatitude();
                 double longitude = locationResult.getLastLocation().getLongitude();
                 double speed = ((double) locationResult.getLastLocation().getSpeed());
                 double bearing = locationResult.getLastLocation().getBearing();
-                // speedInKnots = speed * 1.944;
+
 
 
                 // Output to log
@@ -117,8 +121,8 @@ public class LocationService extends Service {
                 notificationManager.createNotificationChannel(notificationChannel);
             }
             LocationRequest locationRequest = new LocationRequest();
-            locationRequest.setInterval(5000); // Store me in a constant
-            locationRequest.setFastestInterval(2000); // Store me in a constant
+            locationRequest.setInterval(1); // Store me in a constant
+            locationRequest.setFastestInterval(1); // Store me in a constant
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 

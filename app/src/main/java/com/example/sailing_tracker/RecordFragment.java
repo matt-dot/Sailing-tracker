@@ -41,7 +41,7 @@ public class RecordFragment extends Fragment {
 
     private static final String TAG = "RecordFragment";
 
-    double speedInKnots, doubleBearing;
+    double speedInKnots, doubleBearing, timeInSeconds, time;
 
 
     TextView mCurrent_speedTv, mBearingTv, mElapsedTimeTv;
@@ -82,6 +82,7 @@ public class RecordFragment extends Fragment {
                             PERMISSION_FINE_LOCATION_CODE
                     );
                 } else {
+                    watch.start();
                     startLocationService();
                 }
             }
@@ -91,6 +92,7 @@ public class RecordFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Click of stop location service");
+                watch.stop();
                 stopLocationService();
             }
         });
@@ -106,15 +108,19 @@ public class RecordFragment extends Fragment {
                         float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED,0);
                         float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
 
+
                         speedInKnots = speed * 1.194;
                         doubleBearing = ((double) bearing);
+                        time = watch.getTime();
+                        timeInSeconds = time /1000;
 
 
                         // Log the location data
                         Log.d(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
-
+                        Log.d("Speed_before_conversion", "onReceive: Speed before conversion " + speed);
                         mCurrent_speedTv.setText("Speed is: " + round(speedInKnots,2) + "knots");
                         mBearingTv.setText("Direction: " + round(doubleBearing, 2));
+                        mElapsedTimeTv.setText("Time: " + time);
 
 
 
@@ -137,7 +143,6 @@ public class RecordFragment extends Fragment {
             }
         }
     }
-
     private boolean isLocationServiceRunning() {
         ActivityManager activityManager =
                 (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
@@ -154,8 +159,6 @@ public class RecordFragment extends Fragment {
             }
         return false;
         }
-
-
     private void startLocationService(){
         if(!isLocationServiceRunning()){
             Intent intent = new Intent(getActivity(), LocationService.class);
@@ -174,7 +177,6 @@ public class RecordFragment extends Fragment {
 
         }
     }
-
     private static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
