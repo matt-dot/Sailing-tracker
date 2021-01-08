@@ -22,8 +22,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 
-
 public class LocationService extends Service {
+
+    private static final String TAG = "LocationService";
     //double speedInKnots;
 
     public static final String
@@ -31,9 +32,7 @@ public class LocationService extends Service {
             EXTRA_LATITUDE = "extra_latitude",
             EXTRA_LONGITUDE = "extra_longitude",
             EXTRA_SPEED = "extra_speed",
-            EXTRA_BEARING = "extra_bearing",
-            EXTRA_START_TIME = "extra_start_time",
-            EXTRA_END_TIME = "extra_end_time";
+            EXTRA_BEARING = "extra_bearing";
 
 
     Location location;
@@ -101,7 +100,7 @@ public class LocationService extends Service {
                 getApplicationContext(),
                 channelId
         );
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.ic_sailing_app);
         builder.setContentTitle("Location Service");
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         builder.setContentText("Running");
@@ -121,8 +120,8 @@ public class LocationService extends Service {
                 notificationManager.createNotificationChannel(notificationChannel);
             }
             LocationRequest locationRequest = new LocationRequest();
-            locationRequest.setInterval(1); // Store me in a constant
-            locationRequest.setFastestInterval(1); // Store me in a constant
+            locationRequest.setInterval(100); // Store me in a constant
+            locationRequest.setFastestInterval(100); // Store me in a constant
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 
@@ -143,6 +142,7 @@ public class LocationService extends Service {
 
 
     private void stopLocationService(){
+        Log.d(TAG, "stopLocationService: Stopping service");
         LocationServices.getFusedLocationProviderClient(this)
                 .removeLocationUpdates(locationCallback);
         stopForeground(true);

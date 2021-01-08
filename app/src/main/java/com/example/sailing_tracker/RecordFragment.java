@@ -34,20 +34,23 @@ import static java.lang.Integer.MAX_VALUE;
 
 public class RecordFragment extends Fragment {
 
+    // Declare the StopWatch
     StopWatch watch;
 
-    // Constants
+    // Constants, used in permission requests
     private static final int PERMISSION_FINE_LOCATION_CODE = 99;
 
+    // Log tag declaration used for debugging purposes
     private static final String TAG = "RecordFragment";
 
+    // Declare variables to be used to populate xml assets
     double speedInKnots, doubleBearing, timeInSeconds, time;
 
-
+    // Declare variables to be assigned to xml elements
     TextView mCurrent_speedTv, mBearingTv, mElapsedTimeTv;
-
-    // Reference to UI element record button
     Button mButtonStartLocationUpdates, mButtonStopLocationUpdates;
+
+
 
 
 
@@ -59,8 +62,10 @@ public class RecordFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Assign view to the inflated xml layout
         View view = inflater.inflate(R.layout.fragment_record, container, false);
 
+        // Instantiate the stopwatch class
         watch = new StopWatch();
 
         // Assign values
@@ -70,11 +75,19 @@ public class RecordFragment extends Fragment {
         mBearingTv = view.findViewById(R.id.bearingTv);
         mElapsedTimeTv = view.findViewById(R.id.elapsed_timeTv);
 
+
+        /*
+        Set an onClickListener on the start button. When the start button is clicked,
+        the method will be called.
+        */
         mButtonStartLocationUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Log used for debugging
                 Log.d(TAG, "Click of start location service");
-                Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
+                // Permissions check
+                // If permissions are not granted the if statement is validated and a permissions request is called
+                // This displays a window to the user to allow them to allow permissions - as they are essential to the application
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
                             getActivity(),
@@ -82,24 +95,39 @@ public class RecordFragment extends Fragment {
                             PERMISSION_FINE_LOCATION_CODE
                     );
                 } else {
+                    // User has already granted permissions so the app will function properly
+                    // Start the stopwatch
                     watch.start();
+                    // Call the method starLocationService
                     startLocationService();
                 }
             }
         });
 
+         /*
+        Set an onClickListener on the stop button. When the start button is clicked,
+        the method will be called.
+        */
         mButtonStopLocationUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Click of stop location service");
+                if(isLocationServiceRunning()){
+                    // Call stop location service method - stops the location service
+                    stopLocationService();
+
+                }
+                // Stopwatch stopped, elapsed time TextView will not update while location service not running
                 watch.stop();
-                stopLocationService();
             }
         });
 
+
+        /*
+        The data sent from the service is handled below
+         */
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 new BroadcastReceiver() {
-                    @SuppressLint("SetTextI18n")
+                    @SuppressLint({"SetTextI18n", "DefaultLocale"})
                     @Override
                     public void onReceive(Context context, Intent intent) {
 
@@ -108,19 +136,19 @@ public class RecordFragment extends Fragment {
                         float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED,0);
                         float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
 
+                        time = watch.getTime();
 
                         speedInKnots = speed * 1.194;
-                        doubleBearing = ((double) bearing);
-                        time = watch.getTime();
+                        doubleBearing = (((double) bearing));
                         timeInSeconds = time /1000;
 
 
                         // Log the location data
                         Log.d(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
                         Log.d("Speed_before_conversion", "onReceive: Speed before conversion " + speed);
-                        mCurrent_speedTv.setText("Speed is: " + round(speedInKnots,2) + "knots");
-                        mBearingTv.setText("Direction: " + round(doubleBearing, 2));
-                        mElapsedTimeTv.setText("Time: " + time);
+                        mCurrent_speedTv.setText("Speed is: " + round(speedInKnots,2) + " knots");
+                        mBearingTv.setText("Direction: " + round(doubleBearing, 2) + "\u00B0");
+                        mElapsedTimeTv.setText("Elapsed time: " + round(timeInSeconds,2) + " s");
 
 
 
@@ -149,7 +177,7 @@ public class RecordFragment extends Fragment {
         if (activityManager != null){
             for (ActivityManager.RunningServiceInfo service :
                 activityManager.getRunningServices(MAX_VALUE)) {
-                if (LocationService.class.getName().equals(service.service.getClass())) {
+                if (LocationService.class.getName().equals(service.service.getClassName())) {
                     if (service.foreground) {
                         return true;
                     }
@@ -161,19 +189,20 @@ public class RecordFragment extends Fragment {
         }
     private void startLocationService(){
         if(!isLocationServiceRunning()){
-            Intent intent = new Intent(getActivity(), LocationService.class);
-            intent.setAction(ConstantsForLocationService.ACTION_START_LOCATION_SERVICE);
-            getActivity().startService(intent);
+            Intent startIntent = new Intent(getActivity().getApplicationContext(), LocationService.class);
+            startIntent.setAction(ConstantsForLocationService.ACTION_START_LOCATION_SERVICE);
+            getActivity().startService(startIntent);
             Toast.makeText(getActivity(), "Location service started", Toast.LENGTH_SHORT).show();
 
         }
     }
     private void stopLocationService(){
         if(isLocationServiceRunning()){
-            Intent intent = new Intent(getActivity(), LocationService.class);
-            intent.setAction(ConstantsForLocationService.ACTION_STOP_LOCATION_SERVICE);
-            getActivity().stopService(intent);
             Toast.makeText(getActivity(), "Location service stopped", Toast.LENGTH_SHORT).show();
+            Log.d("LocationService", "stopLocationService: Sending data to service.....");
+            Intent stopIntent = new Intent(getActivity(), LocationService.class);
+            stopIntent.setAction(ConstantsForLocationService.ACTION_STOP_LOCATION_SERVICE);
+            getActivity().startService(stopIntent);
 
         }
     }
