@@ -69,7 +69,8 @@ public class LocationService extends Service {
                 Log.d("Broadcast", "Speed: " + speed);
 
 
-                // Broadcast the current location to the record fragment
+                // Parse the location to the sendBroadcastMessage method to send data
+                // to receiver in RecordFragment class
                 sendBroadcastMessage(location);
             }
 
@@ -88,12 +89,13 @@ public class LocationService extends Service {
     @SuppressLint("MissingPermission")
     private void startLocationService(){
         // Set the id of the channel
-        // The notification
         String channelId = "location_notification_channel";
         // Init NotificationManager
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // EXPLAIN
         Intent resultIntent = new Intent();
+        // EXPLAIN
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 getApplicationContext(),
                 0,
@@ -101,10 +103,16 @@ public class LocationService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
 
+
+        // EXPLAIN
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 getApplicationContext(),
                 channelId
         );
+
+
+        // EXPLAIN
         builder.setSmallIcon(R.drawable.ic_sailing_app);
         builder.setContentTitle("Recording session");
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
@@ -113,8 +121,7 @@ public class LocationService extends Service {
         builder.setAutoCancel(false);
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
 
-
-        // TODO: 07/01/2021 Read about channels and then understand below
+        // Check to see whether build is greater than or equal to Oreo due to compatibility
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null){
                 NotificationChannel notificationChannel = new NotificationChannel(
@@ -128,18 +135,10 @@ public class LocationService extends Service {
             locationRequest.setInterval(100); // Store me in a constant
             locationRequest.setFastestInterval(100); // Store me in a constant
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
-
             LocationServices.getFusedLocationProviderClient(this)
                     .requestLocationUpdates(locationRequest, locationCallback, null); // May cause error
-
             startForeground(ConstantsForLocationService.LOCATION_SERVICE_ID, builder.build());
-
-
             }
-
-
         }
 
 
@@ -147,10 +146,15 @@ public class LocationService extends Service {
 
 
     private void stopLocationService(){
+        // Log for debugging purposes
         Log.d(TAG, "stopLocationService: Stopping service");
+        // Call the location services class and get the FusedLocationProviderClient
+        // call the remove location services class relating to location callback
         LocationServices.getFusedLocationProviderClient(this)
                 .removeLocationUpdates(locationCallback);
+        // Remove the notification
         stopForeground(true);
+        // End service
         stopSelf();
     }
 
@@ -169,13 +173,20 @@ public class LocationService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+
+    // Method to send data service to receiver in the RecordFragment class
+    // Location is parsed to the method
     private void sendBroadcastMessage(Location location) {
         if (location != null) {
             Intent intent = new Intent(ACTION_LOCATION_BROADCAST);
+            // Add extra data to the intent
+            // When the intent is parsed so is the extra data
             intent.putExtra(EXTRA_LATITUDE, location.getLatitude());
             intent.putExtra(EXTRA_LONGITUDE, location.getLongitude());
             intent.putExtra(EXTRA_SPEED, location.getSpeed());
             intent.putExtra(EXTRA_BEARING, location.getBearing());
+            // Send the data to receiver
             LocalBroadcastManager.getInstance(LocationService.this).sendBroadcast(intent);
         }
     }
