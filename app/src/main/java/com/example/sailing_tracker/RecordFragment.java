@@ -120,7 +120,6 @@ public class RecordFragment extends Fragment {
                     stopLocationService();
                     // Stopwatch stopped, elapsed time TextView will not update while location service not running
                     watch.stop();
-
                 } else {
                     // Create text to tell user a service cannot be stopped if it is not running
                     Toast.makeText(getActivity(), "No service is running, cannot perform action!", Toast.LENGTH_SHORT).show();
@@ -134,12 +133,16 @@ public class RecordFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
+                // Check that the location service is not running
                 if(!isLocationServiceRunning()) {
+                    // Call the reset method
                     watch.reset();
+                    // Set the all the text views to 0
                     mCurrent_speedTv.setText("Speed is: 0 knots");
                     mBearingTv.setText("Direction: 0" + "\u00B0");
                     mElapsedTimeTv.setText("Elapsed time: 0");
                 } else if(isLocationServiceRunning()){
+                    // Inform the user that the location service must be stopped before resetting
                     Toast.makeText(getActivity(), "Stop the session before resetting!",Toast.LENGTH_SHORT).show();
                 }
             }
@@ -158,33 +161,37 @@ public class RecordFragment extends Fragment {
                     @SuppressLint({"SetTextI18n", "DefaultLocale"})
                     @Override
                     public void onReceive(Context context, Intent intent) {
-
+                        // Received data is now assigned to variables
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
                         float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED,0);
                         float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
 
+                        // Stopwatch timer is retrieved
                         time = watch.getTime();
 
+                        // Calculate the conversion from m/s to knots
+                        // assign calculated value to variable
                         speedInKnots = speed * 1.194;
+                        // Cast the float to double
                         doubleBearing = (((double) bearing));
-                        timeInSeconds = time /1000;
-
+                        // Calculate conversion from milli-seconds to seconds
+                        // assign calculated value to variable
+                        timeInSeconds = time / 1000;
 
                         // Log the location data
                         Log.d(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
                         Log.d("Speed_before_conversion", "onReceive: Speed before conversion " + speed);
+
+                        // Update the text views displayed in record fragment
+                        // round() method called, double value parsed to it and the number of
+                        // decimal places after the value
                         mCurrent_speedTv.setText("Speed is: " + round(speedInKnots,2) + " knots");
                         mBearingTv.setText("Direction: " + round(doubleBearing, 2) + "\u00B0");
                         mElapsedTimeTv.setText("Elapsed time: " + round(timeInSeconds,2) + " s");
-
-
-
-
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
         );
-
         return view;
     }
 

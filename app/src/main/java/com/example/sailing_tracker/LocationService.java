@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -42,7 +41,7 @@ public class LocationService extends Service {
     Location location;
 
 
-    // Location callback is called every time the location request
+    // Location callback every
     private final LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -50,25 +49,11 @@ public class LocationService extends Service {
             // If both locationResult and last location are not null then...
             // This avoids null pointer exceptions as there are instances where last known location
             // will be null
+
+
+
             if(locationResult != null && locationResult.getLastLocation() != null){
-
                 location = locationResult.getLastLocation();
-                // ...assign the user current location to lat and long variables
-
-                // Variables needed for log
-                double latitude = locationResult.getLastLocation().getLatitude();
-                double longitude = locationResult.getLastLocation().getLongitude();
-                double speed = ((double) locationResult.getLastLocation().getSpeed());
-                double bearing = locationResult.getLastLocation().getBearing();
-
-
-
-                // Output to log
-                Log.d("Broadcast", "Lat: "+ latitude + "," + "Long: " + longitude);
-                Log.d("Broadcast", "Success: Send broadcast parsing location");
-                Log.d("Broadcast", "Speed: " + speed);
-
-
                 // Parse the location to the sendBroadcastMessage method to send data
                 // to receiver in RecordFragment class
                 sendBroadcastMessage(location);
@@ -90,12 +75,14 @@ public class LocationService extends Service {
     private void startLocationService(){
         // Set the id of the channel
         String channelId = "location_notification_channel";
+
         // Init NotificationManager
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // EXPLAIN
+
+        // Create new intent named resultIntent
         Intent resultIntent = new Intent();
-        // EXPLAIN
+        // New pending intent
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 getApplicationContext(),
                 0,
@@ -103,16 +90,14 @@ public class LocationService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
 
-
-        // EXPLAIN
-
+        // Instantiate the builder which is used to create the notification bound to the service
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 getApplicationContext(),
                 channelId
         );
 
 
-        // EXPLAIN
+        // Builds the notification that the service is bound to
         builder.setSmallIcon(R.drawable.ic_sailing_app);
         builder.setContentTitle("Recording session");
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
@@ -124,6 +109,7 @@ public class LocationService extends Service {
         // Check to see whether build is greater than or equal to Oreo due to compatibility
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null){
+                // Instantiate a new notification channel
                 NotificationChannel notificationChannel = new NotificationChannel(
                         channelId,
                         "LocationService",
@@ -131,12 +117,27 @@ public class LocationService extends Service {
                 notificationChannel.setDescription("This channel is used by location service");
                 notificationManager.createNotificationChannel(notificationChannel);
             }
+
+            // Instantiate location request
             LocationRequest locationRequest = new LocationRequest();
-            locationRequest.setInterval(100); // Store me in a constant
-            locationRequest.setFastestInterval(100); // Store me in a constant
+
+            // Set the parameters of the location request
+            // Interval is the frequency of the callback
+            locationRequest.setInterval(LOCATION_REQUEST_DEFAULT_INTERVAL);
+            locationRequest.setFastestInterval(LOCATION_REQUEST_FASTEST_INTERVAL);
+
+            // Tells fusedLocationClientProvider to use services which provide high
+            // levels of accuracy as fusedLocationClientProvider includes more than one
+            // method of recording location
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
+            // Get the fused location provider from location services class and
+            // call the requestLocationUpdates method
             LocationServices.getFusedLocationProviderClient(this)
-                    .requestLocationUpdates(locationRequest, locationCallback, null); // May cause error
+                    .requestLocationUpdates(locationRequest, locationCallback, null);
+
+            // Start the foreground service
             startForeground(ConstantsForLocationService.LOCATION_SERVICE_ID, builder.build());
             }
         }
@@ -146,8 +147,6 @@ public class LocationService extends Service {
 
 
     private void stopLocationService(){
-        // Log for debugging purposes
-        Log.d(TAG, "stopLocationService: Stopping service");
         // Call the location services class and get the FusedLocationProviderClient
         // call the remove location services class relating to location callback
         LocationServices.getFusedLocationProviderClient(this)
