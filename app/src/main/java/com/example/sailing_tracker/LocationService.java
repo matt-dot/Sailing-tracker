@@ -34,11 +34,15 @@ public class LocationService extends Service {
             EXTRA_SPEED = "extra_speed",
             EXTRA_BEARING = "extra_bearing";
 
+    // Declare the constants which hold the frequency of the call backs
+    // Meaning every 100 ms the callback is called.
+    public static final int LOCATION_REQUEST_DEFAULT_INTERVAL = 100, LOCATION_REQUEST_FASTEST_INTERVAL = 10;
+
 
     Location location;
 
 
-    // Location callback is called evertime
+    // Location callback is called every time the location request
     private final LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -80,10 +84,11 @@ public class LocationService extends Service {
     }
 
 
-    // TODO: 07/01/2021 Comment me 
+
     @SuppressLint("MissingPermission")
     private void startLocationService(){
         // Set the id of the channel
+        // The notification
         String channelId = "location_notification_channel";
         // Init NotificationManager
         NotificationManager notificationManager =
@@ -101,7 +106,7 @@ public class LocationService extends Service {
                 channelId
         );
         builder.setSmallIcon(R.drawable.ic_sailing_app);
-        builder.setContentTitle("Location Service");
+        builder.setContentTitle("Recording session");
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         builder.setContentText("Running");
         builder.setContentIntent(pendingIntent);

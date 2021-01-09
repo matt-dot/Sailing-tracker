@@ -48,7 +48,7 @@ public class RecordFragment extends Fragment {
 
     // Declare variables to be assigned to xml elements
     TextView mCurrent_speedTv, mBearingTv, mElapsedTimeTv;
-    Button mButtonStartLocationUpdates, mButtonStopLocationUpdates;
+    Button mButtonStartLocationUpdates, mButtonStopLocationUpdates, mButtonReset;
 
 
 
@@ -74,7 +74,7 @@ public class RecordFragment extends Fragment {
         mCurrent_speedTv = view.findViewById(R.id.current_speedTv);
         mBearingTv = view.findViewById(R.id.bearingTv);
         mElapsedTimeTv = view.findViewById(R.id.elapsed_timeTv);
-
+        mButtonReset = view.findViewById(R.id.buttonReset);
 
         /*
         Set an onClickListener on the start button. When the start button is clicked,
@@ -83,23 +83,27 @@ public class RecordFragment extends Fragment {
         mButtonStartLocationUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Log used for debugging
-                Log.d(TAG, "Click of start location service");
                 // Permissions check
                 // If permissions are not granted the if statement is validated and a permissions request is called
                 // This displays a window to the user to allow them to allow permissions - as they are essential to the application
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
                             getActivity(),
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             PERMISSION_FINE_LOCATION_CODE
                     );
-                } else {
+
+                    // This else if avoid a fatal except caused by the stopwatch class if the record button
+                    // is pressed more than once
+                } else if (!isLocationServiceRunning()) {
                     // User has already granted permissions so the app will function properly
                     // Start the stopwatch
                     watch.start();
                     // Call the method starLocationService
                     startLocationService();
+                } else if (isLocationServiceRunning()){
+                    Toast.makeText(getActivity(), "Session has already been started!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -114,12 +118,36 @@ public class RecordFragment extends Fragment {
                 if(isLocationServiceRunning()){
                     // Call stop location service method - stops the location service
                     stopLocationService();
+                    // Stopwatch stopped, elapsed time TextView will not update while location service not running
+                    watch.stop();
 
+                } else {
+                    // Create text to tell user a service cannot be stopped if it is not running
+                    Toast.makeText(getActivity(), "No service is running, cannot perform action!", Toast.LENGTH_SHORT).show();
                 }
-                // Stopwatch stopped, elapsed time TextView will not update while location service not running
-                watch.stop();
+
             }
         });
+
+        // Button reset text views and stopwatch
+        mButtonReset.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View v) {
+                if(!isLocationServiceRunning()) {
+                    watch.reset();
+                    mCurrent_speedTv.setText("Speed is: 0 knots");
+                    mBearingTv.setText("Direction: 0" + "\u00B0");
+                    mElapsedTimeTv.setText("Elapsed time: 0");
+                } else if(isLocationServiceRunning()){
+                    Toast.makeText(getActivity(), "Stop the session before resetting!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+
 
 
         /*
@@ -163,14 +191,19 @@ public class RecordFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if(requestCode == PERMISSION_FINE_LOCATION_CODE && grantResults.length > 0){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 startLocationService();
             } else {
-                Toast.makeText(getActivity(), "Permissions denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Permissions denied - " +
+                        "location permissions are required to use core functionality of this app",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
+
+
     private boolean isLocationServiceRunning() {
         ActivityManager activityManager =
                 (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
