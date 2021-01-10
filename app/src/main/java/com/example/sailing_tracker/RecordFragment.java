@@ -55,7 +55,7 @@ public class RecordFragment extends Fragment {
 
     // Declare variables to be assigned to xml elements
     TextView mCurrent_speedTv, mBearingTv, mElapsedTimeTv;
-    Button mButtonStartLocationUpdates, mButtonStopLocationUpdates, mButtonReset;
+    Button mButtonStartLocationUpdates, mButtonStopLocationUpdates, mButtonReset, mButtonUpload;
 
     FirebaseAuth mAuth;
 
@@ -86,6 +86,8 @@ public class RecordFragment extends Fragment {
         mBearingTv = view.findViewById(R.id.bearingTv);
         mElapsedTimeTv = view.findViewById(R.id.elapsed_timeTv);
         mButtonReset = view.findViewById(R.id.buttonReset);
+        mButtonUpload = view.findViewById(R.id.buttonUpload);
+
 
         /*
         Set an onClickListener on the start button. When the start button is clicked,
@@ -158,6 +160,14 @@ public class RecordFragment extends Fragment {
                     // Inform the user that the location service must be stopped before resetting
                     Toast.makeText(getActivity(), "Stop the session before resetting!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+
+        mButtonUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent (getActivity(), PublishSessionActivity.class));
             }
         });
 
