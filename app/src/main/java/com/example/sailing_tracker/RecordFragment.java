@@ -61,16 +61,12 @@ public class RecordFragment extends Fragment {
 
     String sessionID;
 
+    HashMap<Object, Double> latLongStoreServer = new HashMap<>();
 
 
-
-
-
-
-    public RecordFragment(){
+    public RecordFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -78,10 +74,6 @@ public class RecordFragment extends Fragment {
         // Assign view to the inflated xml layout
         View view = inflater.inflate(R.layout.fragment_record, container, false);
         mAuth = FirebaseAuth.getInstance();
-
-
-
-
 
 
         // Instantiate the stopwatch class
@@ -120,10 +112,10 @@ public class RecordFragment extends Fragment {
                     // Start the stopwatch
                     watch.start();
                     UUID uuid = UUID.randomUUID();
-                     sessionID = uuid.toString();
+                    sessionID = uuid.toString();
                     // Call the method starLocationService
                     startLocationService();
-                } else if (isLocationServiceRunning()){
+                } else if (isLocationServiceRunning()) {
                     Toast.makeText(getActivity(), "Session has already been started!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -136,7 +128,7 @@ public class RecordFragment extends Fragment {
         mButtonStopLocationUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isLocationServiceRunning()){
+                if (isLocationServiceRunning()) {
                     // Call stop location service method - stops the location service
                     stopLocationService();
                     // Stopwatch stopped, elapsed time TextView will not update while location service not running
@@ -155,16 +147,16 @@ public class RecordFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Check that the location service is not running
-                if(!isLocationServiceRunning()) {
+                if (!isLocationServiceRunning()) {
                     // Call the reset method
                     watch.reset();
                     // Set the all the text views to 0
                     mCurrent_speedTv.setText("Speed is: 0 knots");
                     mBearingTv.setText("Direction: 0" + "\u00B0");
                     mElapsedTimeTv.setText("Elapsed time: 0");
-                } else if(isLocationServiceRunning()){
+                } else if (isLocationServiceRunning()) {
                     // Inform the user that the location service must be stopped before resetting
-                    Toast.makeText(getActivity(), "Stop the session before resetting!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Stop the session before resetting!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -183,19 +175,11 @@ public class RecordFragment extends Fragment {
                     @Override
                     public void onReceive(Context context, Intent intent) {
 
-
-
-
-
-
-
-
                         // Received data is now assigned to variables
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
-                        float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED,0);
+                        float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED, 0);
                         float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
-
 
 
                         // Stopwatch timer is retrieved
@@ -217,9 +201,11 @@ public class RecordFragment extends Fragment {
                         // Update the text views displayed in record fragment
                         // round() method called, double value parsed to it and the number of
                         // decimal places after the value
-                        mCurrent_speedTv.setText("Speed is: " + round(speedInKnots,2) + " knots");
+                        mCurrent_speedTv.setText("Speed is: " + round(speedInKnots, 2) + " knots");
                         mBearingTv.setText("Direction: " + round(doubleBearing, 2) + "\u00B0");
-                        mElapsedTimeTv.setText("Elapsed time: " + round(timeInSeconds,2) + " s");
+                        mElapsedTimeTv.setText("Elapsed time: " + round(timeInSeconds, 2) + " s");
+
+
 
 
 
@@ -227,21 +213,18 @@ public class RecordFragment extends Fragment {
                         String uid = user.getUid();
                         Log.d(TAG, "Current user uid: " + uid);
 
+                            // Put info into HashMap
+                            latLongStoreServer.put("longitude", longitude);
+                            latLongStoreServer.put("latitude", latitude);
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            // Path toe store user data named "Users"
+                            DatabaseReference reference = database.getReference("Users/" + uid);
+                            // Put data within HashMap in database
+                            reference.child("Sessions").child(sessionID).setValue(latLongStoreServer);
 
 
 
-
-                        HashMap<Object, Double> hashMap = new HashMap<>();
-                        // Put info into HashMap
-                        hashMap.put("longitude", longitude);
-                        hashMap.put("latitude", latitude);
-
-                        FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        // Path toe store user data named "Users"
-                        DatabaseReference reference = database.getReference("Users/" + uid);
-                        // Put data within HashMap in database
-                        reference.child("Sessions").child(sessionID).setValue(hashMap);
-                        // Call the updateUI method, this changes the UI to the profile
 
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
@@ -253,12 +236,12 @@ public class RecordFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == PERMISSION_FINE_LOCATION_CODE && grantResults.length > 0){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == PERMISSION_FINE_LOCATION_CODE && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationService();
             } else {
                 Toast.makeText(getActivity(), "Permissions denied - " +
-                        "location permissions are required to use core functionality of this app",
+                                "location permissions are required to use core functionality of this app",
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -268,9 +251,9 @@ public class RecordFragment extends Fragment {
     private boolean isLocationServiceRunning() {
         ActivityManager activityManager =
                 (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-        if (activityManager != null){
+        if (activityManager != null) {
             for (ActivityManager.RunningServiceInfo service :
-                activityManager.getRunningServices(MAX_VALUE)) {
+                    activityManager.getRunningServices(MAX_VALUE)) {
                 if (LocationService.class.getName().equals(service.service.getClassName())) {
                     if (service.foreground) {
                         return true;
@@ -278,11 +261,12 @@ public class RecordFragment extends Fragment {
                 }
             }
             return false;
-            }
-        return false;
         }
-    private void startLocationService(){
-        if(!isLocationServiceRunning()){
+        return false;
+    }
+
+    private void startLocationService() {
+        if (!isLocationServiceRunning()) {
             Intent startIntent = new Intent(getActivity().getApplicationContext(), LocationService.class);
             startIntent.setAction(ConstantsForLocationService.ACTION_START_LOCATION_SERVICE);
             getActivity().startService(startIntent);
@@ -291,8 +275,9 @@ public class RecordFragment extends Fragment {
         }
 
     }
-    private void stopLocationService(){
-        if(isLocationServiceRunning()){
+
+    private void stopLocationService() {
+        if (isLocationServiceRunning()) {
             Toast.makeText(getActivity(), "Location service stopped", Toast.LENGTH_SHORT).show();
             Log.d("LocationService", "stopLocationService: Sending data to service.....");
             Intent stopIntent = new Intent(getActivity(), LocationService.class);
@@ -301,6 +286,7 @@ public class RecordFragment extends Fragment {
 
         }
     }
+
     private static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -312,19 +298,11 @@ public class RecordFragment extends Fragment {
 
 
 
-    }
-
-class RandomStringUUID {
-    public static void main(String[] args) {
-        // Creating a random UUID (Universally unique identifier).
-        UUID uuid = UUID.randomUUID();
-        String randomUUIDString = uuid.toString();
-
-        System.out.println("Random UUID String = " + randomUUIDString);
-        System.out.println("UUID version       = " + uuid.version());
-        System.out.println("UUID variant       = " + uuid.variant());
-    }
 }
+
+
+
+
 
 
 

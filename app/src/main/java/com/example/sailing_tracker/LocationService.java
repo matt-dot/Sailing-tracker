@@ -41,6 +41,8 @@ public class LocationService extends Service {
     Location location;
 
 
+
+
     // Location callback every
     private final LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -50,12 +52,10 @@ public class LocationService extends Service {
             // This avoids null pointer exceptions as there are instances where last known location
             // will be null
 
-
-
             if(locationResult != null && locationResult.getLastLocation() != null){
                 location = locationResult.getLastLocation();
                 // Parse the location to the sendBroadcastMessage method to send data
-                // to receiver in RecordFragment class
+                // to receiver in RecordFragment classZ
                 sendBroadcastMessage(location);
             }
 
