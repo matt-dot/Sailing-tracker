@@ -120,7 +120,6 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("email", email);
                             hashMap.put("uid", uid);
                             hashMap.put("name", ""); // To be added later in profile
-                            hashMap.put("phone", ""); //
                             hashMap.put("image", ""); //
                             hashMap.put("boatClass", boatClass); //
                             // Firebase database instance

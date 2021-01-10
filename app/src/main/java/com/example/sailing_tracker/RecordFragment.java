@@ -24,10 +24,17 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.UUID;
 
 import static java.lang.Integer.MAX_VALUE;
 
@@ -50,6 +57,12 @@ public class RecordFragment extends Fragment {
     TextView mCurrent_speedTv, mBearingTv, mElapsedTimeTv;
     Button mButtonStartLocationUpdates, mButtonStopLocationUpdates, mButtonReset;
 
+    FirebaseAuth mAuth;
+
+    String sessionID;
+
+
+
 
 
 
@@ -64,6 +77,12 @@ public class RecordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Assign view to the inflated xml layout
         View view = inflater.inflate(R.layout.fragment_record, container, false);
+        mAuth = FirebaseAuth.getInstance();
+
+
+
+
+
 
         // Instantiate the stopwatch class
         watch = new StopWatch();
@@ -100,6 +119,8 @@ public class RecordFragment extends Fragment {
                     // User has already granted permissions so the app will function properly
                     // Start the stopwatch
                     watch.start();
+                    UUID uuid = UUID.randomUUID();
+                     sessionID = uuid.toString();
                     // Call the method starLocationService
                     startLocationService();
                 } else if (isLocationServiceRunning()){
@@ -161,11 +182,21 @@ public class RecordFragment extends Fragment {
                     @SuppressLint({"SetTextI18n", "DefaultLocale"})
                     @Override
                     public void onReceive(Context context, Intent intent) {
+
+
+
+
+
+
+
+
                         // Received data is now assigned to variables
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
                         float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED,0);
                         float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
+
+
 
                         // Stopwatch timer is retrieved
                         time = watch.getTime();
@@ -189,6 +220,29 @@ public class RecordFragment extends Fragment {
                         mCurrent_speedTv.setText("Speed is: " + round(speedInKnots,2) + " knots");
                         mBearingTv.setText("Direction: " + round(doubleBearing, 2) + "\u00B0");
                         mElapsedTimeTv.setText("Elapsed time: " + round(timeInSeconds,2) + " s");
+
+
+
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        String uid = user.getUid();
+                        Log.d(TAG, "Current user uid: " + uid);
+
+
+
+
+
+                        HashMap<Object, Double> hashMap = new HashMap<>();
+                        // Put info into HashMap
+                        hashMap.put("longitude", longitude);
+                        hashMap.put("latitude", latitude);
+
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        // Path toe store user data named "Users"
+                        DatabaseReference reference = database.getReference("Users/" + uid);
+                        // Put data within HashMap in database
+                        reference.child("Sessions").child(sessionID).setValue(hashMap);
+                        // Call the updateUI method, this changes the UI to the profile
+
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
         );
@@ -235,6 +289,7 @@ public class RecordFragment extends Fragment {
             Toast.makeText(getActivity(), "Location service started", Toast.LENGTH_SHORT).show();
 
         }
+
     }
     private void stopLocationService(){
         if(isLocationServiceRunning()){
@@ -256,8 +311,20 @@ public class RecordFragment extends Fragment {
 
 
 
+
     }
 
+class RandomStringUUID {
+    public static void main(String[] args) {
+        // Creating a random UUID (Universally unique identifier).
+        UUID uuid = UUID.randomUUID();
+        String randomUUIDString = uuid.toString();
+
+        System.out.println("Random UUID String = " + randomUUIDString);
+        System.out.println("UUID version       = " + uuid.version());
+        System.out.println("UUID variant       = " + uuid.variant());
+    }
+}
 
 
 
