@@ -19,12 +19,12 @@
             android:padding="10dp"
             android:singleLine="true" />
 
-        <ImageView
-            android:id="@+id/pImageIv"
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            android:minHeight="200dp" />
+            android:layout_height="500dp"
+            tools:context=".MapsActivity" />
 
         <EditText
             android:id="@+id/pDescriptionEt"

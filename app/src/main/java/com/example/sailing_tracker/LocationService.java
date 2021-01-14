@@ -185,6 +185,7 @@ public class LocationService extends Service {
             intent.putExtra(EXTRA_LONGITUDE, location.getLongitude());
             intent.putExtra(EXTRA_SPEED, location.getSpeed());
             intent.putExtra(EXTRA_BEARING, location.getBearing());
+
             // Send the data to receiver
             LocalBroadcastManager.getInstance(LocationService.this).sendBroadcast(intent);
         }

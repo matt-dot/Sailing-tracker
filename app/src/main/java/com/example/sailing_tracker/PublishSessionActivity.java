@@ -9,13 +9,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,15 +40,16 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 
-public class PublishSessionActivity extends AppCompatActivity {
+public class PublishSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    GoogleMap mMap;
 
     FirebaseAuth mAuth;
 
 
     // Views
     EditText titleEt, descriptionEt;
-    ImageView imageIv;
+
     Button publishButton;
 
     String email, uid, name;
@@ -57,10 +65,27 @@ public class PublishSessionActivity extends AppCompatActivity {
     Toolbar mToolBar;
 
 
+    String sessionID;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_session_acitivity);
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
+
+
+
+
+
+
+
         pd = new ProgressDialog(this);
 
 
@@ -238,5 +263,54 @@ public class PublishSessionActivity extends AppCompatActivity {
             startActivity(new Intent(PublishSessionActivity.this, MainActivity.class));
 
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        RecordFragment recordFragment = new RecordFragment();
+         sessionID = recordFragment.getSessionID();
+
+        mMap = googleMap;
+
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(-35.016, 143.321),
+                        new LatLng(-34.747, 145.592),
+                        new LatLng(-34.364, 147.891),
+                        new LatLng(-33.501, 150.217),
+                        new LatLng(-32.306, 149.248),
+                        new LatLng(-32.491, 147.309)));
+        // Store a data object with the polyline, used here to indicate an arbitrary type.
+        polyline1.setTag("A");
+
+
+
+        Query locationQuery = dbRef.orderByChild("Sessions").equalTo(sessionID);
+        locationQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot : dataSnapshot.getChildren()){
+
+
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        }
+
+
     }
 }

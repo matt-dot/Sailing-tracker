@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -33,13 +34,13 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static java.lang.Integer.MAX_VALUE;
 
 
-public class RecordFragment extends Fragment {
+public class RecordFragment extends Fragment  {
 
     // Declare the StopWatch
     StopWatch watch;
@@ -60,8 +61,11 @@ public class RecordFragment extends Fragment {
     FirebaseAuth mAuth;
 
     String sessionID;
+    LatLng latLng;
 
-    HashMap<Object, Double> latLongStoreServer = new HashMap<>();
+
+
+    ArrayList<LatLng> latLongArray = new ArrayList<>(); // Create an ArrayList object
 
 
     public RecordFragment() {
@@ -156,6 +160,20 @@ public class RecordFragment extends Fragment {
                     mCurrent_speedTv.setText("Speed is: 0 knots");
                     mBearingTv.setText("Direction: 0" + "\u00B0");
                     mElapsedTimeTv.setText("Elapsed time: 0");
+
+
+                    // Clear all recorded data from database
+                    latLongArray.clear();
+                    FirebaseUser user = mAuth.getCurrentUser();
+
+                    String uid = user.getUid();
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    // Path toe store user data named "Users"
+                    DatabaseReference reference = database.getReference("Users/" + uid);
+                    // Put data within HashMap in database
+                    reference.child("Sessions").child(sessionID).setValue(latLongArray);
+
                 } else if (isLocationServiceRunning()) {
                     // Inform the user that the location service must be stopped before resetting
                     Toast.makeText(getActivity(), "Stop the session before resetting!", Toast.LENGTH_SHORT).show();
@@ -185,11 +203,13 @@ public class RecordFragment extends Fragment {
                     @Override
                     public void onReceive(Context context, Intent intent) {
 
+
                         // Received data is now assigned to variables
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
                         float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED, 0);
                         float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
+
 
 
                         // Stopwatch timer is retrieved
@@ -218,20 +238,22 @@ public class RecordFragment extends Fragment {
 
 
 
-
                         FirebaseUser user = mAuth.getCurrentUser();
+
                         String uid = user.getUid();
                         Log.d(TAG, "Current user uid: " + uid);
 
-                            // Put info into HashMap
-                            latLongStoreServer.put("longitude", longitude);
-                            latLongStoreServer.put("latitude", latitude);
+                        latLng = new LatLng(10, 10);
+
+
+                            latLongArray.add(latLng);
+
 
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             // Path toe store user data named "Users"
                             DatabaseReference reference = database.getReference("Users/" + uid);
                             // Put data within HashMap in database
-                            reference.child("Sessions").child(sessionID).setValue(latLongStoreServer);
+                            reference.child("Sessions").child(sessionID).setValue(latLongArray);
 
 
 
@@ -304,6 +326,16 @@ public class RecordFragment extends Fragment {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+
+    public String getSessionID() {
+        return sessionID;
+    }
+
+
+
+
+
+
 
 
 
