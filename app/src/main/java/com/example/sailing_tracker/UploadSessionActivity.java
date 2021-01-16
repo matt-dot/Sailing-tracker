@@ -67,7 +67,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
     Toolbar mToolBar;
 
-    RecordFragment recordFragment = new RecordFragment();
 
 
 
@@ -79,7 +78,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
-    ArrayList <LatLng> arrayList = new ArrayList();
+
 
     public void receiveSessionID(String receivedSessionID){
         Log.d("Reeee", "receiveSessionID: " + receivedSessionID);
