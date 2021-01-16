@@ -16,14 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -38,6 +33,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -56,10 +53,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     String email, uid, name;
 
     DatabaseReference dbRef;
-    DatabaseReference dbLocationRef;
+    private DatabaseReference mDatabase;
 
 
-    DataSnapshot dataSnapshot;
 
 
     ProgressDialog pd;
@@ -308,48 +304,34 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         Log.d("SessionIDCheck", "onMapReady: " + sessionIDForPath);
         Log.d("SessionIDCheck", "onMapReady() returned: " + sessionIDForPath);
 
+        String uid = mAuth.getCurrentUser().getUid();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
         mMap = googleMap;
-
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
-                .clickable(true)
-                .add(
-                        new LatLng(-35.016, 143.321),
-                        new LatLng(-34.747, 145.592),
-                        new LatLng(-34.364, 147.891),
-                        new LatLng(-33.501, 150.217),
-                        new LatLng(-32.306, 149.248),
-                        new LatLng(-32.491, 147.309)));
-        // Store a data object with the polyline, used here to indicate an arbitrary type.
-        polyline1.setTag("A");
-
-
-
-        dbLocationRef = FirebaseDatabase.getInstance().getReference("Users/Sessions");
-
-
-        Query locationQuery = dbLocationRef.orderByChild("Sessions").equalTo(sessionIDForPath);
-        locationQuery.addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).addValueEventListener(new ValueEventListener(){
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Check  until required data got
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    indexOne = Double.valueOf(""+ds.child("0").getValue());
-                }
-                Log.d("OnDataChange", "ARRAY VALUE: " + indexOne);
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot){
+                for(DataSnapshot data: dataSnapshot.getChildren()){
 
+                    Object latitude= data.child("latitude").getValue();
+                    Object longitude = data.child("longitude").getValue();
+
+                    Log.d("LatAndLong", "Latitude: " + latitude);
+                    Log.d("LatAndLong", "Longitude: " + longitude);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
+
         });
+
+
 
 
         Log.d("SessionIDCheck", "onMapReady() returned1: " + sessionIDForPath);
