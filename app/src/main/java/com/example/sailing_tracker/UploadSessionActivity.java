@@ -39,7 +39,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UploadSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -70,9 +69,13 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
-    String sessionIDForPath;
+    public static String sessionIDForPath;
 
-    String a;
+
+
+    Double latZero;
+    Double indexOne;
+
 
 
 
@@ -88,19 +91,12 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         Log.d("Reeee", "Session: " + sessionIDForPath);
 
 
-        receive(sessionIDForPath);
 
 
-    }
-
-    private void receive(String sessionIDForPath){
-
-        a = sessionIDForPath;
-
-
-        Log.d("SessionIDCheck", "receive: " + a);
 
     }
+
+
 
 
 
@@ -168,7 +164,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
             }
         });
 
-        Log.d("SessionIDCheck", "OnCreate session ID check " + a);
+        Log.d("SessionIDCheck", "OnCreate session ID check " + sessionIDForPath);
     }
 
 
@@ -309,10 +305,11 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        Log.d("SessionIDCheck", "onMapReady: " + a);
-        Log.d("SessionIDCheck", "onMapReady() returned: " + a);
+        Log.d("SessionIDCheck", "onMapReady: " + sessionIDForPath);
+        Log.d("SessionIDCheck", "onMapReady() returned: " + sessionIDForPath);
 
         mMap = googleMap;
+
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
@@ -333,23 +330,19 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
-       // dbLocationRef = FirebaseDatabase.getInstance().getReference("Sessions");
+        dbLocationRef = FirebaseDatabase.getInstance().getReference("Users/Sessions");
 
 
-        Query locationQuery = dbRef.orderByChild("Sessions").equalTo(sessionIDForPath);
+        Query locationQuery = dbLocationRef.orderByChild("Sessions").equalTo(sessionIDForPath);
         locationQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check  until required data got
-                Log.d("OnDataChange", "DATA change received: NIce");
-                //for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Double latZero = (Double) dataSnapshot.child("0").child("latitude").getValue();
-                    //String longZero = "" + dataSnapshot.child("0").getValue();
-                    Log.d("OnDataChange", "ARRAY VALUE: " + latZero);
-                    Log.d("OnDataChange", "onDataChange: " + sessionIDForPath);
-                //}
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    indexOne = Double.valueOf(""+ds.child("0").getValue());
+                }
+                Log.d("OnDataChange", "ARRAY VALUE: " + indexOne);
 
-             
             }
 
             @Override
