@@ -68,6 +68,8 @@ public class RecordFragment extends Fragment  {
     ArrayList<LatLng> latLongArray = new ArrayList<>(); // Create an ArrayList object
 
 
+
+
     public RecordFragment() {
         // Required empty public constructor
     }
@@ -78,6 +80,8 @@ public class RecordFragment extends Fragment  {
         // Assign view to the inflated xml layout
         View view = inflater.inflate(R.layout.fragment_record, container, false);
         mAuth = FirebaseAuth.getInstance();
+
+
 
 
         // Instantiate the stopwatch class
@@ -119,11 +123,14 @@ public class RecordFragment extends Fragment  {
                     watch.start();
                     UUID uuid = UUID.randomUUID();
                     sessionID = uuid.toString();
+                    UploadSessionActivity uploadSessionActivity = new UploadSessionActivity();
+                    uploadSessionActivity.receiveSessionID(sessionID);
                     // Call the method starLocationService
                     startLocationService();
                 } else if (isLocationServiceRunning()) {
                     Toast.makeText(getActivity(), "Session has already been started!", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -139,6 +146,7 @@ public class RecordFragment extends Fragment  {
                     stopLocationService();
                     // Stopwatch stopped, elapsed time TextView will not update while location service not running
                     watch.stop();
+
                 } else {
                     // Create text to tell user a service cannot be stopped if it is not running
                     Toast.makeText(getActivity(), "No service is running, cannot perform action!", Toast.LENGTH_SHORT).show();
@@ -166,13 +174,14 @@ public class RecordFragment extends Fragment  {
                     latLongArray.clear();
                     FirebaseUser user = mAuth.getCurrentUser();
 
+                    assert user != null;
                     String uid = user.getUid();
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     // Path toe store user data named "Users"
                     DatabaseReference reference = database.getReference("Users/" + uid);
                     // Put data within HashMap in database
-                    reference.child("Sessions").child(sessionID).setValue(latLongArray);
+                    reference.child("Sessions").child(String.valueOf(sessionID)).setValue(latLongArray);
 
                 } else if (isLocationServiceRunning()) {
                     // Inform the user that the location service must be stopped before resetting
@@ -185,7 +194,7 @@ public class RecordFragment extends Fragment  {
         mButtonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent (getActivity(), PublishSessionActivity.class));
+                startActivity(new Intent (getActivity(), UploadSessionActivity.class));
             }
         });
 
@@ -243,9 +252,9 @@ public class RecordFragment extends Fragment  {
                         String uid = user.getUid();
                         Log.d(TAG, "Current user uid: " + uid);
 
-                        latLng = new LatLng(10, 10);
 
 
+                            latLng = new LatLng(latitude, longitude);
                             latLongArray.add(latLng);
 
 
@@ -261,6 +270,7 @@ public class RecordFragment extends Fragment  {
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
         );
+
         return view;
     }
 
@@ -316,6 +326,7 @@ public class RecordFragment extends Fragment  {
             stopIntent.setAction(ConstantsForLocationService.ACTION_STOP_LOCATION_SERVICE);
             getActivity().startService(stopIntent);
 
+
         }
     }
 
@@ -327,9 +338,20 @@ public class RecordFragment extends Fragment  {
         return bd.doubleValue();
     }
 
+
+
     public String getSessionID() {
-        return sessionID;
+
+        Log.d("SessionID", "getSessionID: " + sessionID);
+
+
+
+
+
+        return null;
     }
+
+
 
 
 

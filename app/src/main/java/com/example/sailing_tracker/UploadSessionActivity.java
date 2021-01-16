@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,9 +39,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PublishSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class UploadSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap mMap;
 
@@ -55,6 +57,7 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
     String email, uid, name;
 
     DatabaseReference dbRef;
+    DatabaseReference dbLocationRef;
 
 
     DataSnapshot dataSnapshot;
@@ -64,8 +67,44 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
 
     Toolbar mToolBar;
 
+    RecordFragment recordFragment = new RecordFragment();
 
-    String sessionID;
+
+
+    String sessionIDForPath;
+
+    String a;
+
+
+
+
+
+    ArrayList <LatLng> arrayList = new ArrayList();
+
+    public void receiveSessionID(String receivedSessionID){
+        Log.d("Reeee", "receiveSessionID: " + receivedSessionID);
+
+         sessionIDForPath = receivedSessionID;
+
+        Log.d("Reeee", "Session: " + sessionIDForPath);
+
+
+        receive(sessionIDForPath);
+
+
+    }
+
+    private void receive(String sessionIDForPath){
+
+        a = sessionIDForPath;
+
+
+        Log.d("SessionIDCheck", "receive: " + a);
+
+    }
+
+
+
 
 
     @Override
@@ -76,12 +115,8 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
-
-
-
-
-
 
 
 
@@ -133,7 +168,11 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
 
             }
         });
+
+        Log.d("SessionIDCheck", "OnCreate session ID check " + a);
     }
+
+
 
 
     private void uploadData(final String title, final String description, String uri) {
@@ -178,7 +217,7 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
                                         public void onSuccess(Void aVoid) {
                                             // Added to database
                                             pd.dismiss();
-                                            Toast.makeText(PublishSessionActivity.this, "Session published",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(UploadSessionActivity.this, "Session published",Toast.LENGTH_SHORT).show();
 
                                         }
                                     }) .addOnFailureListener(new OnFailureListener() {
@@ -186,7 +225,7 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
                                 public void onFailure(@NonNull Exception e) {
                                     // Failed to add post to database
                                     pd.dismiss();
-                                    Toast.makeText(PublishSessionActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UploadSessionActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -202,7 +241,7 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         pd.dismiss();
-                        Toast.makeText(PublishSessionActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UploadSessionActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -244,7 +283,7 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
             checkUserStatus();
         }
         if (id == R.id.action_showUsers){
-            Intent myIntent = new Intent(PublishSessionActivity.this, UsersActivity.class);
+            Intent myIntent = new Intent(UploadSessionActivity.this, UsersActivity.class);
             startActivity(myIntent);
         }
         return super.onOptionsItemSelected(item);
@@ -260,16 +299,19 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
         }
         else{
             // User is not signed in
-            startActivity(new Intent(PublishSessionActivity.this, MainActivity.class));
+            startActivity(new Intent(UploadSessionActivity.this, MainActivity.class));
 
         }
     }
 
+
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        RecordFragment recordFragment = new RecordFragment();
-         sessionID = recordFragment.getSessionID();
+        Log.d("SessionIDCheck", "onMapReady: " + a);
+        Log.d("SessionIDCheck", "onMapReady() returned: " + a);
 
         mMap = googleMap;
 
@@ -292,25 +334,49 @@ public class PublishSessionActivity extends AppCompatActivity implements OnMapRe
 
 
 
-        Query locationQuery = dbRef.orderByChild("Sessions").equalTo(sessionID);
+       // dbLocationRef = FirebaseDatabase.getInstance().getReference("Sessions");
+
+
+        Query locationQuery = dbRef.orderByChild("Sessions").equalTo(sessionIDForPath);
         locationQuery.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot : dataSnapshot.getChildren()){
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check  until required data got
+                Log.d("OnDataChange", "DATA change received: NIce");
+                //for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Double latZero = (Double) dataSnapshot.child("0").child("latitude").getValue();
+                    //String longZero = "" + dataSnapshot.child("0").getValue();
+                    Log.d("OnDataChange", "ARRAY VALUE: " + latZero);
+                    Log.d("OnDataChange", "onDataChange: " + sessionIDForPath);
+                //}
 
-
-
-
-                }
-
+             
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        }
+        });
 
 
+        Log.d("SessionIDCheck", "onMapReady() returned1: " + sessionIDForPath);
     }
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
