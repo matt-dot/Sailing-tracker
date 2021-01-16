@@ -66,7 +66,7 @@ public class RecordFragment extends Fragment  {
 
 
     ArrayList<LatLng> latLongArray = new ArrayList<>(); // Create an ArrayList object
-
+    UploadSessionActivity uploadSessionActivity = new UploadSessionActivity();
 
 
 
@@ -123,7 +123,6 @@ public class RecordFragment extends Fragment  {
                     watch.start();
                     UUID uuid = UUID.randomUUID();
                     sessionID = uuid.toString();
-                    UploadSessionActivity uploadSessionActivity = new UploadSessionActivity();
                     uploadSessionActivity.receiveSessionID(sessionID);
                     // Call the method starLocationService
                     startLocationService();
