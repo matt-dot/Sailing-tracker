@@ -19,6 +19,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -63,14 +66,13 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     Toolbar mToolBar;
 
 
+    PolylineOptions polyline1;
+
+
 
 
     public static String sessionIDForPath;
 
-
-
-    Double latZero;
-    Double indexOne;
 
 
 
@@ -318,13 +320,46 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                     Object latitude= data.child("latitude").getValue();
                     Object longitude = data.child("longitude").getValue();
 
-                    Log.d("LatAndLong", "Latitude: " + latitude);
-                    Log.d("LatAndLong", "Longitude: " + longitude);
+
+
+                    Double lat = (Double) latitude;
+                    Double lon = (Double) longitude;
+
+                    Log.d("LatAndLong", "Latitude: " + lat);
+                    Log.d("LatAndLong", "Longitude: " + lon);
+
+
+
+                   Polyline polyline = mMap.addPolyline(new PolylineOptions()
+                            .clickable(true)
+                            .add(
+                            new LatLng(lat, lon)));
+
                 }
+
+                /*
+                Polyline polyline2 = mMap.addPolyline(new PolylineOptions()
+                        .clickable(true)
+                        .add(
+                                new LatLng(-35.016, 143.321),
+                                new LatLng(-34.747, 145.592),
+                                new LatLng(-34.364, 147.891),
+                                new LatLng(-33.501, 150.217),
+                                new LatLng(-32.306, 149.248),
+                                new LatLng(-32.491, 147.309)));
+
+                 */
+
+
+
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
+
 
             }
 
