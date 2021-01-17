@@ -178,7 +178,7 @@ public class RecordFragment extends Fragment  {
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     // Path toe store user data named "Users"
-                    DatabaseReference reference = database.getReference("Users/" + uid);
+                    DatabaseReference reference = database.getReference("Users" + uid);
                     // Put data within HashMap in database
                     reference.child("Sessions").child(String.valueOf(sessionID)).setValue(latLongArray);
 
@@ -339,16 +339,7 @@ public class RecordFragment extends Fragment  {
 
 
 
-    public String getSessionID() {
 
-        Log.d("SessionID", "getSessionID: " + sessionID);
-
-
-
-
-
-        return null;
-    }
 
 
 
