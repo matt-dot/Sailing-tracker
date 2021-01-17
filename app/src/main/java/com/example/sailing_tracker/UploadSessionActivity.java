@@ -1,46 +1,48 @@
  package com.example.sailing_tracker;
 
- import android.app.ProgressDialog;
- import android.content.Intent;
- import android.graphics.Color;
- import android.net.Uri;
- import android.os.Bundle;
- import android.util.Log;
- import android.view.Menu;
- import android.view.MenuItem;
- import android.view.View;
- import android.widget.Button;
- import android.widget.EditText;
- import android.widget.Toast;
+ import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
- import androidx.annotation.NonNull;
- import androidx.appcompat.app.AppCompatActivity;
- import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
- import com.google.android.gms.maps.GoogleMap;
- import com.google.android.gms.maps.OnMapReadyCallback;
- import com.google.android.gms.maps.SupportMapFragment;
- import com.google.android.gms.maps.model.LatLng;
- import com.google.android.gms.maps.model.PolylineOptions;
- import com.google.android.gms.tasks.OnFailureListener;
- import com.google.android.gms.tasks.OnSuccessListener;
- import com.google.android.gms.tasks.Task;
- import com.google.firebase.auth.FirebaseAuth;
- import com.google.firebase.auth.FirebaseUser;
- import com.google.firebase.database.DataSnapshot;
- import com.google.firebase.database.DatabaseError;
- import com.google.firebase.database.DatabaseReference;
- import com.google.firebase.database.FirebaseDatabase;
- import com.google.firebase.database.Query;
- import com.google.firebase.database.ValueEventListener;
- import com.google.firebase.storage.FirebaseStorage;
- import com.google.firebase.storage.StorageReference;
- import com.google.firebase.storage.UploadTask;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
- import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
 
- import java.util.ArrayList;
- import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UploadSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -318,6 +320,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
         mMap = googleMap;
         mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).addValueEventListener(new ValueEventListener(){
+            @SuppressLint("MissingPermission")
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot){
                 for(DataSnapshot data: dataSnapshot.getChildren()){
@@ -333,9 +336,11 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                     Log.d("LatAndLong", "Latitude: " + lat);
                     Log.d("LatAndLong", "Longitude: " + lon);
 
+                    // Store the lat and long data into array list
                     coordList.add(new LatLng(lat, lon));
 
                 }
+                FusedLocationProviderClient fusedLocationProviderClient;
 
                 PolylineOptions polylineOptions = new PolylineOptions();
 
@@ -370,7 +375,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
-        Log.d("SessionIDCheck", "onMapReady() returned1: " + sessionIDForPath);
+
     }
 
 
