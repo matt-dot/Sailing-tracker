@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UploadSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
+ public class UploadSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap mMap;
 
@@ -62,6 +62,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     private DatabaseReference mDatabase;
 
 
+    String uriString;
+
 
 
     ProgressDialog pd;
@@ -69,8 +71,11 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     Toolbar mToolBar;
 
 
-    PolylineOptions polyline1;
-    ArrayList<LatLng> coordList = new ArrayList<LatLng>();
+
+    ArrayList<LatLng> coordinateArrayList = new ArrayList<>();
+
+
+
 
 
 
@@ -121,6 +126,12 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
+
+
+
+
+
+
         pd = new ProgressDialog(this);
 
 
@@ -136,11 +147,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         mAuth = FirebaseAuth.getInstance();
         checkUserStatus();
 
-        titleEt = findViewById(R.id.pTitleEt);
-        descriptionEt  = findViewById(R.id.pDescriptionEt);
-        publishButton = findViewById(R.id.pPublishButton);
+
         dbRef = FirebaseDatabase.getInstance().getReference("Users");
-        Query query = dbRef.orderByChild("email").equalTo("email");
+        Query query = dbRef.orderByChild("email").equalTo(email);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -148,13 +157,24 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                     name = "" + ds.child("name").getValue();
                     email = "" + ds.child("email").getValue();
                 }
-             }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
+
+
+        titleEt = findViewById(R.id.pTitleEt);
+        descriptionEt  = findViewById(R.id.pDescriptionEt);
+        publishButton = findViewById(R.id.pPublishButton);
+
+
+
+
+
 
 
         publishButton.setOnClickListener(new View.OnClickListener(){
@@ -164,7 +184,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                 String title = titleEt.getText().toString().trim();
                 String description = descriptionEt.getText().toString().trim();
 
-             uploadData(title, description, "noImage" );
+             uploadData(title, description);
 
             }
         });
@@ -175,7 +195,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
-    private void uploadData(final String title, final String description, String uri) {
+    private void uploadData(final String title, final String description) {
         pd.setMessage("Publishing session...");
         pd.show();
 
@@ -184,11 +204,16 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         String filePathAndName = "Posts/" + "post_" + timeStamp;
 
 
+
+
+
         StorageReference ref = FirebaseStorage.getInstance().getReference().child(filePathAndName);
-        ref.putFile(Uri.parse(uri))
+        ref.putFile(Uri.parse("noImage"))
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful());
 
@@ -205,6 +230,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                             hashMap.put("pTitle", title);
                             hashMap.put("pDescription", description);
                             hashMap.put("pTime", timeStamp);
+                            hashMap.put("pImage", "noImage");
 
 
                             // path to store post data
@@ -337,7 +363,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                     Log.d("LatAndLong", "Longitude: " + lon);
 
                     // Store the lat and long data into array list
-                    coordList.add(new LatLng(lat, lon));
+                    coordinateArrayList.add(new LatLng(lat, lon));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 11));
 
                 }
@@ -347,7 +373,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
                 // Create polyline options with existing LatLng ArrayList
-                polylineOptions.addAll(coordList);
+                polylineOptions.addAll(coordinateArrayList);
                 polylineOptions
                         .width(5)
                         .color(Color.RED);
