@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -338,11 +338,13 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
                     // Store the lat and long data into array list
                     coordList.add(new LatLng(lat, lon));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 11));
 
                 }
-                FusedLocationProviderClient fusedLocationProviderClient;
+
 
                 PolylineOptions polylineOptions = new PolylineOptions();
+
 
                 // Create polyline options with existing LatLng ArrayList
                 polylineOptions.addAll(coordList);
@@ -352,6 +354,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
                // Adding multiple points in map using polyline and arraylist
                 mMap.addPolyline(polylineOptions);
+
+
+
 
 
 
@@ -377,6 +382,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
     }
+
+
 
 
 
