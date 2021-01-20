@@ -246,6 +246,7 @@ public class RecordFragment extends Fragment  {
 
                         FirebaseUser user = mAuth.getCurrentUser();
 
+                        assert user != null;
                         String uid = user.getUid();
                         Log.d(TAG, "Current user uid: " + uid);
 

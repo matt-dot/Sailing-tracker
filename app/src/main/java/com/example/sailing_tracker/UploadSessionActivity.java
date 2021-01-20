@@ -115,8 +115,8 @@ import java.util.HashMap;
          checkUserStatus();
 
 
-         dbRef = FirebaseDatabase.getInstance().getReference("Users/" + uid);
-         Query query = dbRef.orderByChild("email").equalTo(email);
+         dbRef = FirebaseDatabase.getInstance().getReference("Users" + uid);
+         Query query = dbRef.orderByChild(uid).equalTo(uid);
          query.addValueEventListener(new ValueEventListener() {
              @Override
              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -143,7 +143,12 @@ import java.util.HashMap;
                  String title = titleEt.getText().toString().trim();
                  String description = descriptionEt.getText().toString().trim();
 
-                 uploadData(title, description, uid);
+                 uploadData(title, description);
+
+                // startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
+
+
+
 
              }
          });
@@ -152,28 +157,28 @@ import java.util.HashMap;
      }
 
 
-     private void uploadData(final String title, final String description, String uid) {
+     private void uploadData(final String title, final String description) {
          pd.setMessage("Publishing session...");
          pd.show();
          // path to store post data
          FirebaseDatabase database = FirebaseDatabase.getInstance();
-         DatabaseReference reference = database.getReference("Users/" + uid);
+         DatabaseReference reference = database.getReference("Users/" + uid + "/Sessions");
 
-         final String timeStamp = String.valueOf(System.currentTimeMillis());
+
+
 
          HashMap<Object, String> hashMap = new HashMap<>();
          hashMap.put("uid", uid);
          hashMap.put("uName", name);
          hashMap.put("uEmail", email);
-         hashMap.put("pId", timeStamp);
          hashMap.put("pTitle", title);
          hashMap.put("pDescription", description);
-         hashMap.put("pTime", timeStamp);
-
 
 
          // Put data into this reference
-         reference.child("Posts").setValue(hashMap)
+         mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).child("PostData").setValue(hashMap)
+
+        // reference.child(sessionIDForPath).child("PostData").setValue("hashMap")
                  .addOnSuccessListener(new OnSuccessListener<Void>() {
                      @Override
                      public void onSuccess(Void aVoid) {
