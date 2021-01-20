@@ -210,8 +210,6 @@ public class RecordFragment extends Fragment  {
                     @SuppressLint({"SetTextI18n", "DefaultLocale"})
                     @Override
                     public void onReceive(Context context, Intent intent) {
-
-
                         // Received data is now assigned to variables
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
@@ -251,14 +249,12 @@ public class RecordFragment extends Fragment  {
                         String uid = user.getUid();
                         Log.d(TAG, "Current user uid: " + uid);
 
-
-
                             latLng = new LatLng(latitude, longitude);
                             latLongArray.add(latLng);
 
 
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            // Path toe store user data named "Users"
+                            // Path to store user data named "Users"
                             DatabaseReference reference = database.getReference("Users/" + uid);
                             // Put data within HashMap in database
                             reference.child("Sessions").child(sessionID).setValue(latLongArray);

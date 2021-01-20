@@ -4,7 +4,6 @@
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,9 +33,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,33 +41,20 @@ import java.util.HashMap;
 
  public class UploadSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    GoogleMap mMap;
+     GoogleMap mMap;
 
-    FirebaseAuth mAuth;
-
-
-    // Views
-    EditText titleEt, descriptionEt;
-
-    Button publishButton;
-
-    String email, uid, name;
-
-    DatabaseReference dbRef;
-    private DatabaseReference mDatabase;
+     FirebaseAuth mAuth;
 
 
-    String uriString;
+     // Views
+     EditText titleEt, descriptionEt;
 
+     Button publishButton;
 
+     String email, uid, name;
 
-    ProgressDialog pd;
-
-    Toolbar mToolBar;
-
-
-
-    ArrayList<LatLng> coordinateArrayList = new ArrayList<>();
+     DatabaseReference dbRef;
+     private DatabaseReference mDatabase;
 
 
 
@@ -80,199 +62,145 @@ import java.util.HashMap;
 
 
 
+     ProgressDialog pd;
+
+     Toolbar mToolBar;
 
 
-
-    public static String sessionIDForPath;
-
+     ArrayList<LatLng> coordinateArrayList = new ArrayList<>();
 
 
+     public static String sessionIDForPath;
 
 
-
-
-
-
-    public void receiveSessionID(String receivedSessionID){
-        Log.d("Reeee", "receiveSessionID: " + receivedSessionID);
+     public void receiveSessionID(String receivedSessionID) {
+         Log.d("Reeee", "receiveSessionID: " + receivedSessionID);
 
          sessionIDForPath = receivedSessionID;
 
-        Log.d("Reeee", "Session: " + sessionIDForPath);
+         Log.d("Reeee", "Session: " + sessionIDForPath);
 
 
+     }
 
 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_publish_session_acitivity);
 
-    }
+         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                 .findFragmentById(R.id.map);
+         assert mapFragment != null;
+         mapFragment.getMapAsync(this);
 
 
+         pd = new ProgressDialog(this);
+         mAuth = FirebaseAuth.getInstance();
+         FirebaseUser user = mAuth.getCurrentUser();
 
+         assert user != null;
+         final String uid = user.getUid();
 
 
+         // Toolbar init
+         mToolBar = findViewById(R.id.my_toolbar);
+         setSupportActionBar(mToolBar);
+         // Set default toolbar value
+         //mToolBar.setTitle("Home");
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_publish_session_acitivity);
+         mAuth = FirebaseAuth.getInstance();
+         checkUserStatus();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
 
+         dbRef = FirebaseDatabase.getInstance().getReference("Users/" + uid);
+         Query query = dbRef.orderByChild("email").equalTo(email);
+         query.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                     name = "" + ds.child("name").getValue();
+                     email = "" + ds.child("email").getValue();
+                 }
+             }
 
+             @Override
+             public void onCancelled(@NonNull DatabaseError error) {
 
+             }
+         });
 
+         titleEt = findViewById(R.id.pTitleEt);
+         descriptionEt = findViewById(R.id.pDescriptionEt);
+         publishButton = findViewById(R.id.pPublishButton);
 
+         publishButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 // Get data (title, description) from editText
+                 String title = titleEt.getText().toString().trim();
+                 String description = descriptionEt.getText().toString().trim();
 
+                 uploadData(title, description, uid);
 
+             }
+         });
 
+         Log.d("SessionIDCheck", "OnCreate session ID check " + sessionIDForPath);
+     }
 
 
-        pd = new ProgressDialog(this);
+     private void uploadData(final String title, final String description, String uid) {
+         pd.setMessage("Publishing session...");
+         pd.show();
+         // path to store post data
+         FirebaseDatabase database = FirebaseDatabase.getInstance();
+         DatabaseReference reference = database.getReference("Users/" + uid);
 
+         final String timeStamp = String.valueOf(System.currentTimeMillis());
 
+         HashMap<Object, String> hashMap = new HashMap<>();
+         hashMap.put("uid", uid);
+         hashMap.put("uName", name);
+         hashMap.put("uEmail", email);
+         hashMap.put("pId", timeStamp);
+         hashMap.put("pTitle", title);
+         hashMap.put("pDescription", description);
+         hashMap.put("pTime", timeStamp);
 
 
-        // Toolbar init
-        mToolBar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(mToolBar);
-        // Set default toolbar value
-        //mToolBar.setTitle("Home");
 
+         // Put data into this reference
+         reference.child("Posts").setValue(hashMap)
+                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+                     @Override
+                     public void onSuccess(Void aVoid) {
+                         // Added to database
+                         pd.dismiss();
+                         Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
 
-        mAuth = FirebaseAuth.getInstance();
-        checkUserStatus();
+                     }
+                 }).addOnFailureListener(new OnFailureListener() {
+             @Override
+             public void onFailure(@NonNull Exception e) {
+                 // Failed to add post to database
+                 pd.dismiss();
+                 Toast.makeText(UploadSessionActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+             }
+         });
 
 
-        dbRef = FirebaseDatabase.getInstance().getReference("Users");
-        Query query = dbRef.orderByChild("email").equalTo(email);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    name = "" + ds.child("name").getValue();
-                    email = "" + ds.child("email").getValue();
-                }
-            }
+     }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
 
 
 
-        titleEt = findViewById(R.id.pTitleEt);
-        descriptionEt  = findViewById(R.id.pDescriptionEt);
-        publishButton = findViewById(R.id.pPublishButton);
 
 
 
-
-
-
-
-        publishButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                // Get data (title, description) from editText
-                String title = titleEt.getText().toString().trim();
-                String description = descriptionEt.getText().toString().trim();
-
-             uploadData(title, description);
-
-            }
-        });
-
-        Log.d("SessionIDCheck", "OnCreate session ID check " + sessionIDForPath);
-    }
-
-
-
-
-    private void uploadData(final String title, final String description) {
-        pd.setMessage("Publishing session...");
-        pd.show();
-
-        final String timeStamp = String.valueOf(System.currentTimeMillis());
-
-        String filePathAndName = "Posts/" + "post_" + timeStamp;
-
-
-
-
-
-        StorageReference ref = FirebaseStorage.getInstance().getReference().child(filePathAndName);
-        ref.putFile(Uri.parse("noImage"))
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isSuccessful());
-
-                        String downloadUrl = uriTask.getResult().toString();
-
-                        if (uriTask.isSuccessful()){
-                            // Url received upload post to firebase
-
-                            HashMap<Object, String> hashMap = new HashMap<>();
-                            hashMap.put("uid", uid );
-                            hashMap.put("uName", name);
-                            hashMap.put("uEmail", email);
-                            hashMap.put("pId", timeStamp);
-                            hashMap.put("pTitle", title);
-                            hashMap.put("pDescription", description);
-                            hashMap.put("pTime", timeStamp);
-                            hashMap.put("pImage", "noImage");
-
-
-                            // path to store post data
-
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
-                            // Put data into this reference
-                            ref.child(timeStamp).setValue(hashMap)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            // Added to database
-                                            pd.dismiss();
-                                            Toast.makeText(UploadSessionActivity.this, "Session published",Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    }) .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Failed to add post to database
-                                    pd.dismiss();
-                                    Toast.makeText(UploadSessionActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-
-
-
-
-
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        pd.dismiss();
-                        Toast.makeText(UploadSessionActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-    }
 
 
 
