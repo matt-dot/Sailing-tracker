@@ -23,8 +23,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -145,7 +143,7 @@ import java.util.HashMap;
 
                  uploadData(title, description);
 
-                // startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
+                 //startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
 
 
 
@@ -162,7 +160,7 @@ import java.util.HashMap;
          pd.show();
          // path to store post data
          FirebaseDatabase database = FirebaseDatabase.getInstance();
-         DatabaseReference reference = database.getReference("Users/" + uid + "/Sessions");
+
 
 
 
@@ -176,28 +174,15 @@ import java.util.HashMap;
 
 
          // Put data into this reference
-         mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).child("PostData").setValue(hashMap)
+         mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).child("PostData").setValue(hashMap);
+         Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
 
-        // reference.child(sessionIDForPath).child("PostData").setValue("hashMap")
-                 .addOnSuccessListener(new OnSuccessListener<Void>() {
-                     @Override
-                     public void onSuccess(Void aVoid) {
-                         // Added to database
-                         pd.dismiss();
-                         Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
 
-                     }
-                 }).addOnFailureListener(new OnFailureListener() {
-             @Override
-             public void onFailure(@NonNull Exception e) {
-                 // Failed to add post to database
-                 pd.dismiss();
-                 Toast.makeText(UploadSessionActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-             }
-         });
 
 
      }
+
+
 
 
 
@@ -289,11 +274,14 @@ import java.util.HashMap;
 
 
 
-                    Double lat = (Double) latitude;
-                    Double lon = (Double) longitude;
+                    double lat = Double.parseDouble(latitude.toString());
 
-                    Log.d("LatAndLong", "Latitude: " + lat);
-                    Log.d("LatAndLong", "Longitude: " + lon);
+                    double lon = Double.parseDouble(longitude.toString());
+
+
+
+                    Log.d("LatAndLong123", "Latitude: " + latitude);
+                    Log.d("LatAndLong123", "Longitude: " + longitude);
 
                     // Store the lat and long data into array list
                     coordinateArrayList.add(new LatLng(lat, lon));
