@@ -174,7 +174,7 @@ import java.util.HashMap;
          Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
 
 
-         startActivity(new Intent(UploadSessionActivity.this, MainActivity.class));
+         startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
 
 
 
