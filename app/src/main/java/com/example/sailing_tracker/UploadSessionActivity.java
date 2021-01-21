@@ -17,11 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+ import com.google.android.gms.maps.CameraUpdate;
+ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
+ import com.google.android.gms.maps.model.Dash;
+ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,6 +55,8 @@ import java.util.HashMap;
 
      DatabaseReference dbRef;
      private DatabaseReference mDatabase;
+
+     double lat, lon;
 
 
 
@@ -129,7 +133,7 @@ import java.util.HashMap;
 
              }
          });
-
+         // Assign variables to layout elements
          titleEt = findViewById(R.id.pTitleEt);
          descriptionEt = findViewById(R.id.pDescriptionEt);
          publishButton = findViewById(R.id.pPublishButton);
@@ -141,12 +145,8 @@ import java.util.HashMap;
                  String title = titleEt.getText().toString().trim();
                  String description = descriptionEt.getText().toString().trim();
 
+                 // Method call, parsing what was entered into to above elements
                  uploadData(title, description);
-
-                 //startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
-
-
-
 
              }
          });
@@ -158,10 +158,6 @@ import java.util.HashMap;
      private void uploadData(final String title, final String description) {
          pd.setMessage("Publishing session...");
          pd.show();
-         // path to store post data
-         FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-
 
 
 
@@ -178,9 +174,14 @@ import java.util.HashMap;
          Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
 
 
+         startActivity(new Intent(UploadSessionActivity.this, MainActivity.class));
+
+
+
 
 
      }
+
 
 
 
@@ -269,44 +270,47 @@ import java.util.HashMap;
             public void onDataChange(@NotNull DataSnapshot dataSnapshot){
                 for(DataSnapshot data: dataSnapshot.getChildren()){
 
-                    Object latitude= data.child("latitude").getValue();
+
+
+                    // Get LatLng object from the ArrayList stored in db
+                    // and assign to a variable
+                    Object latitude = data.child("latitude").getValue();
                     Object longitude = data.child("longitude").getValue();
 
+                    if(latitude != null && longitude != null) {
+                        // Parse the object to double so it can be added to
+                        // a local double ArrayList
+                        lat = Double.parseDouble(latitude.toString());
+                        lon = Double.parseDouble(longitude.toString());
 
 
-                    double lat = Double.parseDouble(latitude.toString());
+                        // Meaningless logs
+                        Log.d("LatAndLong123", "Latitude: " + latitude);
+                        Log.d("LatAndLong123", "Longitude: " + longitude);
 
-                    double lon = Double.parseDouble(longitude.toString());
+                        // Store the lat and long data into array list
+                        coordinateArrayList.add(new LatLng(lat, lon));
+                        // Move the camera to the last coordinate of the session
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 11));
+                    }
 
 
-
-                    Log.d("LatAndLong123", "Latitude: " + latitude);
-                    Log.d("LatAndLong123", "Longitude: " + longitude);
-
-                    // Store the lat and long data into array list
-                    coordinateArrayList.add(new LatLng(lat, lon));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 11));
 
                 }
 
-
+                // Init Polyline options
                 PolylineOptions polylineOptions = new PolylineOptions();
 
 
                 // Create polyline options with existing LatLng ArrayList
+                // and configure color and width
                 polylineOptions.addAll(coordinateArrayList);
                 polylineOptions
                         .width(5)
                         .color(Color.RED);
 
-               // Adding multiple points in map using polyline and arraylist
+               // Adding multiple points in map using polyline and ArrayList
                 mMap.addPolyline(polylineOptions);
-
-
-
-
-
-
 
 
 
