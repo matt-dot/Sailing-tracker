@@ -171,6 +171,7 @@ public class RecordFragment extends Fragment {
 
                     // Clear all recorded data from database
                     latLongArray.clear();
+                    speedData.clear();
                     FirebaseUser user = mAuth.getCurrentUser();
 
                     assert user != null;
@@ -178,9 +179,13 @@ public class RecordFragment extends Fragment {
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     // Path toe store user data named "Users"
-                    DatabaseReference reference = database.getReference("Users" + uid);
+                    DatabaseReference reference = database.getReference("Users");
                     // Put data within HashMap in database
-                    reference.child("Sessions").child(String.valueOf(sessionID)).setValue(latLongArray);
+                    reference.child(uid).child("Sessions").child(String.valueOf(sessionID)).setValue(latLongArray);
+
+                    DatabaseReference reference2 = database.getReference("Users");
+                    // Put speed data into database
+                    reference2.child(uid).child("Sessions").child(sessionID).child("Speed").setValue(speedData);
 
                 } else if (isLocationServiceRunning()) {
                     // Inform the user that the location service must be stopped before resetting
@@ -276,9 +281,9 @@ public class RecordFragment extends Fragment {
                         reference.child("Sessions").child(sessionID).setValue(latLongArray);
 
 
-                        DatabaseReference reference1 = database.getReference("Users/" + uid + "Sessions");
+                        DatabaseReference reference1 = database.getReference("Users");
                         // Put speed data into database
-                        reference1.child(sessionID).child("Speed").setValue(speedData);
+                        reference1.child(uid).child("Sessions").child(sessionID).child("Speed").setValue(speedData);
 
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)

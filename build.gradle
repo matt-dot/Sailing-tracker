@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         /*Update library, otherwise may get error:
         "Default FirebaseApp is not initialized in this process"*/
         classpath 'com.google.gms:google-services:4.3.4'
