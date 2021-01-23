@@ -48,14 +48,14 @@ public class UsersActivity extends AppCompatActivity{
         mToolBar.setTitle("Users");
 
         // RecyclerView
-        recyclerView = (RecyclerView) findViewById(R.id.users_recyclerView);
+        recyclerView = findViewById(R.id.users_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Init the array list to storing the list of users
         userList = new ArrayList<>();
 
         // Firebase init
-        firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // Method call to populate userList
         getAllUsers();

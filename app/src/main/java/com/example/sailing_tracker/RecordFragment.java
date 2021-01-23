@@ -32,15 +32,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.apache.commons.lang3.time.StopWatch;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static java.lang.Integer.MAX_VALUE;
 
 
-public class RecordFragment extends Fragment  {
+public class RecordFragment extends Fragment {
 
     // Declare the StopWatch
     StopWatch watch;
@@ -64,10 +66,10 @@ public class RecordFragment extends Fragment  {
     LatLng latLng;
 
 
-
     ArrayList<LatLng> latLongArray = new ArrayList<>(); // Create an ArrayList object
     UploadSessionActivity uploadSessionActivity = new UploadSessionActivity();
 
+    ArrayList<Float> speedData = new ArrayList<>();
 
 
     public RecordFragment() {
@@ -80,8 +82,6 @@ public class RecordFragment extends Fragment  {
         // Assign view to the inflated xml layout
         View view = inflater.inflate(R.layout.fragment_record, container, false);
         mAuth = FirebaseAuth.getInstance();
-
-
 
 
         // Instantiate the stopwatch class
@@ -193,7 +193,7 @@ public class RecordFragment extends Fragment  {
         mButtonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent (getActivity(), UploadSessionActivity.class));
+                startActivity(new Intent(getActivity(), UploadSessionActivity.class));
             }
         });
 
@@ -216,8 +216,6 @@ public class RecordFragment extends Fragment  {
                         float speed = intent.getFloatExtra(LocationService.EXTRA_SPEED, 0);
                         float bearing = intent.getFloatExtra(LocationService.EXTRA_BEARING, 0);
 
-
-
                         // Stopwatch timer is retrieved
                         time = watch.getTime();
 
@@ -225,7 +223,7 @@ public class RecordFragment extends Fragment  {
                         // assign calculated value to variable
                         speedInKnots = speed * 1.194;
                         // Cast the float to double
-                        doubleBearing = (((double) bearing));
+                        doubleBearing = bearing;
                         // Calculate conversion from milli-seconds to seconds
                         // assign calculated value to variable
                         timeInSeconds = time / 1000;
@@ -236,38 +234,56 @@ public class RecordFragment extends Fragment  {
 
                         // Update the text views displayed in record fragment
                         // round() method called, double value parsed to it and the number of
-                        // decimal places after the value
+                        // decimal places after the value›
                         mCurrent_speedTv.setText("Speed is: " + round(speedInKnots, 2) + " knots");
                         mBearingTv.setText("Direction: " + round(doubleBearing, 2) + "\u00B0");
                         mElapsedTimeTv.setText("Elapsed time: " + round(timeInSeconds, 2) + " s");
 
 
 
-
+                        // Get the current user
                         FirebaseUser user = mAuth.getCurrentUser();
 
+                        // Get current user id
                         assert user != null;
                         String uid = user.getUid();
+
+                        // Log used for debug
                         Log.d(TAG, "Current user uid: " + uid);
 
-                            latLng = new LatLng(latitude, longitude);
-                            latLongArray.add(latLng);
+                        // Assign the current lat and long to a new LatLng object
+                        latLng = new LatLng(latitude, longitude);
+
+                        // Add the LatLng object to the LatLng arraylist
+                        latLongArray.add(latLng);
+
+                        // Add speed data to the float arraylist
+                        speedData.add(speed);
 
 
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            // Path to store user data named "Users"
-                            DatabaseReference reference = database.getReference("Users/" + uid);
-                            // Put data within HashMap in database
-                            reference.child("Sessions").child(sessionID).setValue(latLongArray);
+
+
+                        // Instantiate Firebase database
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                        // Path to store user data named "Users"
+                        DatabaseReference reference = database.getReference("Users/" + uid);
 
 
 
+
+                        // Put data within arraylist in database
+                        reference.child("Sessions").child(sessionID).setValue(latLongArray);
+
+
+                        DatabaseReference reference1 = database.getReference("Users/" + uid + "Sessions");
+                        // Put speed data into database
+                        reference1.child(sessionID).child("Speed").setValue(speedData);
 
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
         );
-
-        return view;
+        return view; // End of broadcaster receiver
     }
 
     @Override
@@ -284,7 +300,6 @@ public class RecordFragment extends Fragment  {
             }
         }
     }
-
 
     private boolean isLocationServiceRunning() {
         ActivityManager activityManager =
@@ -326,6 +341,7 @@ public class RecordFragment extends Fragment  {
         }
     }
 
+    // Rounding helper method
     private static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -333,20 +349,6 @@ public class RecordFragment extends Fragment  {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
