@@ -1,4 +1,4 @@
-package com.example.sailing_tracker;
+package com.example.sailing_tracker.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.sailing_tracker.Models.ModelUser;
+import com.example.sailing_tracker.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -71,7 +73,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     }
 
     // Constructor
-    AdapterUsers(List<ModelUser> userList) {
+    public AdapterUsers(List<ModelUser> userList) {
         this.userList = userList;
 
 

@@ -32,11 +32,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.apache.commons.lang3.time.StopWatch;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 
 import static java.lang.Integer.MAX_VALUE;
@@ -68,6 +66,7 @@ public class RecordFragment extends Fragment {
 
     ArrayList<LatLng> latLongArray = new ArrayList<>(); // Create an ArrayList object
     UploadSessionActivity uploadSessionActivity = new UploadSessionActivity();
+    HomeFragment homeFragment = new HomeFragment();
 
     ArrayList<Float> speedData = new ArrayList<>();
 
@@ -124,6 +123,7 @@ public class RecordFragment extends Fragment {
                     UUID uuid = UUID.randomUUID();
                     sessionID = uuid.toString();
                     uploadSessionActivity.receiveSessionID(sessionID);
+                    homeFragment.receiveSessionID(sessionID);
                     // Call the method starLocationService
                     startLocationService();
                 } else if (isLocationServiceRunning()) {

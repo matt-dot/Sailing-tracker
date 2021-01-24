@@ -1,4 +1,4 @@
-package com.example.sailing_tracker;
+package com.example.sailing_tracker.Models;
 
 import java.util.List;
 
