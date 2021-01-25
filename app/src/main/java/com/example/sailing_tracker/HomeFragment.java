@@ -26,17 +26,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
 public class HomeFragment extends Fragment{
 
     // Firebase
     FirebaseAuth firebaseAuth;
 
-    RecyclerView recyclerView;
-    List<ModelPost> postList;
+    private RecyclerView recyclerView;
+    private List<ModelPost> postList;
     AdapterPosts adapterPosts;
     public static String sessionIDForPath;
+    int postList2;
+    private static final String TAG = "HomeFragment";
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
 
@@ -50,19 +51,13 @@ public class HomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        final String uid = user.getUid();
-
-
-        // Add the following lines to create RecyclerView
-        recyclerView = view.findViewById(R.id.postsRecyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(adapterPosts);
 
 
 
-        /*
+
+
+
+
         // recycler view and its properties
         recyclerView = view.findViewById(R.id.postsRecyclerView);
 
@@ -72,7 +67,7 @@ public class HomeFragment extends Fragment{
         layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
 
-         */
+
 
 
 
@@ -87,19 +82,22 @@ public class HomeFragment extends Fragment{
 
 
 
-        loadPost(uid, sessionIDForPath);
+
+        loadPost();
 
         return view;
 
     }
 
-    public void loadPost(String uid, String sessionIDForPath) {
-
+    public void loadPost() {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = firebaseUser.getUid();
 
         // Path of all posts
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users" + uid + "Sessions" + sessionIDForPath + "PostData");
+
+
         // Get all data from this reference
-        reference.addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).child("PostData").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 postList.clear();
@@ -113,8 +111,12 @@ public class HomeFragment extends Fragment{
                     // Set adapter to recycler view
                     recyclerView.setAdapter(adapterPosts);
 
-                    Log.d(TAG, "Testing : " + postList);
+                    postList2 = postList.size();
+                    Log.d(TAG, "Testing : " + postList2);
+
                 }
+                Log.d(TAG, "Testing : " + postList2);
+
             }
 
 
@@ -131,6 +133,7 @@ public class HomeFragment extends Fragment{
         // Assign the sessionID from RecordFragment to variable
         // This will be used for database path
         sessionIDForPath = receivedSessionID;
+        Log.d(TAG, "receiveSessionID: " +sessionIDForPath);
 
         // Log to make sure the session ID matches the session ID in
         // generated in record fragment

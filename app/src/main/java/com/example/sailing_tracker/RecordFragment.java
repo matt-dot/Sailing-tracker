@@ -70,6 +70,8 @@ public class RecordFragment extends Fragment {
 
     ArrayList<Float> speedData = new ArrayList<>();
 
+    UUID uuid = UUID.randomUUID();
+
 
     public RecordFragment() {
         // Required empty public constructor
@@ -120,8 +122,9 @@ public class RecordFragment extends Fragment {
                     // User has already granted permissions so the app will function properly
                     // Start the stopwatch
                     watch.start();
-                    UUID uuid = UUID.randomUUID();
-                    sessionID = uuid.toString();
+
+                    sessionID = uuid.toString().trim();
+
                     uploadSessionActivity.receiveSessionID(sessionID);
                     homeFragment.receiveSessionID(sessionID);
                     // Call the method starLocationService
@@ -276,14 +279,17 @@ public class RecordFragment extends Fragment {
 
 
 
+                        if(sessionID != null) {
+                            // Put data within arraylist in database
+                            reference.child("Sessions").child(sessionID).setValue(latLongArray);
 
-                        // Put data within arraylist in database
-                        reference.child("Sessions").child(sessionID).setValue(latLongArray);
 
-
-                        DatabaseReference reference1 = database.getReference("Users");
-                        // Put speed data into database
-                        reference1.child(uid).child("Sessions").child(sessionID).child("Speed").setValue(speedData);
+                            DatabaseReference reference1 = database.getReference("Users");
+                            // Put speed data into database
+                            reference1.child(uid).child("Sessions").child(sessionID).child("Speed").setValue(speedData);
+                        } else if (sessionID == null){
+                            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 }, new IntentFilter(LocationService.ACTION_LOCATION_BROADCAST)
