@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:elevation="3dp"
     android:padding="5dp"
-    app:cardBackgroundColor="@color/White"
+    app:cardBackgroundColor="@color/AntiqueWhite"
     app:cardCornerRadius="3dp"
     app:cardUseCompatPadding="true">
 
@@ -40,6 +41,7 @@
                     android:text="Name"
                     android:textColor="@color/Black"
                     android:textSize="20sp" />
+
                 <TextView
                     android:id="@+id/pTimeTv"
                     android:layout_width="wrap_content"
@@ -50,73 +52,79 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <TextView
             android:id="@+id/pTitleTv"
-            android:text="Title of session"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoLink="all">
+            android:autoLink="all"
+            android:text="Title of session">
 
         </TextView>
+
         <TextView
             android:id="@+id/pDescriptionTv"
-            android:text="Description of session"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoLink="all">
+            android:autoLink="all"
+            android:text="Description of session">
 
         </TextView>
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/uSessionMapView"
+
+        <fragment
+            android:id="@+id/postMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_height="300dp" />
 
         <TextView
             android:id="@+id/pLikesTv"
-            android:text="100 Likes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="100 Likes" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-         />
+            android:layout_height="1dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/likeBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="LIKE"
                 android:background="@color/White"
+                android:drawableStart="@drawable/ic_like"
                 android:drawableLeft="@drawable/ic_like"
                 android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_like"/>
+                android:text="LIKE" />
+
             <Button
                 android:id="@+id/commentBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="COMMENT"
                 android:background="@color/White"
+                android:drawableStart="@drawable/ic_comment"
                 android:drawableLeft="@drawable/ic_comment"
                 android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_comment"/>
+                android:text="COMMENT" />
+
             <Button
                 android:id="@+id/shareBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="SHARE"
                 android:background="@color/White"
+                android:drawableStart="@drawable/ic_share"
                 android:drawableLeft="@drawable/ic_share"
                 android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_share"/>
-
+                android:text="SHARE" />
 
 
         </LinearLayout>

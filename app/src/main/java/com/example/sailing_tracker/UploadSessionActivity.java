@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,12 +20,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,6 +51,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     // Views and elements
     EditText titleEt, descriptionEt;
     Button publishButton;
+
+    TextView pTimeTv;
 
     // Variables to hold data retrieved from db
     String email, uid, name;
@@ -149,6 +150,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         titleEt = findViewById(R.id.pTitleEt);
         descriptionEt = findViewById(R.id.pDescriptionEt);
         publishButton = findViewById(R.id.pPublishButton);
+        pTimeTv = findViewById(R.id.pTimeTv);
 
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +158,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                 // Get data (title, description) from editText
                 String title = titleEt.getText().toString().trim();
                 String description = descriptionEt.getText().toString().trim();
+
+
 
                 // Method call, parsing what was entered into to above elements
                 uploadData(title, description);
@@ -171,6 +175,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         pd.setMessage("Publishing session...");
         pd.show();
 
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+
         // Assign the relevant data to hash map
         HashMap<Object, String> hashMap = new HashMap<>();
         hashMap.put("uid", uid);
@@ -178,10 +184,14 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         hashMap.put("uEmail", email);
         hashMap.put("pTitle", title);
         hashMap.put("pDescription", description);
+        hashMap.put("timeStamp", timeStamp);
 
 
+
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Post");
         // Put data into this reference
-        mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).child("PostData").setValue(hashMap);
+        databaseReference.child(timeStamp).setValue(hashMap);
 
         // Create toast stating success
         Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
@@ -252,17 +262,12 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-
         // Get current user uid
         String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
 
         // Instantiate the firebase database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
-
 
         // Instantiate google map
         mMap = googleMap;
@@ -289,14 +294,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                         // Move the camera to the last coordinate of the session
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 11));
                     }
-
-
                 }
-
                 // Init Polyline options
                 PolylineOptions polylineOptions = new PolylineOptions();
-
-
                 // Create polyline options with existing LatLng ArrayList
                 // and configure color and width
                 polylineOptions.addAll(coordinateArrayList);
@@ -306,10 +306,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
                 // Adding multiple points in map using polyline and ArrayList
                 mMap.addPolyline(polylineOptions);
-
-
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -317,8 +314,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                 Toast.makeText(UploadSessionActivity.this, "Database error has occurred", Toast.LENGTH_SHORT).show();
 
             }
-
-
         });
 
 

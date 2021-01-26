@@ -73,6 +73,9 @@ public class HomeFragment extends Fragment{
 
 
 
+
+
+
         // init post list
         postList = new ArrayList<>();
 
@@ -97,7 +100,7 @@ public class HomeFragment extends Fragment{
 
 
         // Get all data from this reference
-        mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).child("PostData").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Post").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 postList.clear();
@@ -111,11 +114,10 @@ public class HomeFragment extends Fragment{
                     // Set adapter to recycler view
                     recyclerView.setAdapter(adapterPosts);
 
-                    postList2 = postList.size();
-                    Log.d(TAG, "Testing : " + postList2);
+
 
                 }
-                Log.d(TAG, "Testing : " + postList2);
+
 
             }
 

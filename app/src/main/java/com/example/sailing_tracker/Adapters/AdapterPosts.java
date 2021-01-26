@@ -1,7 +1,6 @@
 package com.example.sailing_tracker.Adapters;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +14,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sailing_tracker.Models.ModelPost;
 import com.example.sailing_tracker.R;
+import com.google.android.gms.maps.MapView;
 import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
     Context context;
     List<ModelPost> postList;
+    MapView mMapView;
+
 
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
+    }
+
+    public AdapterPosts() {
+
     }
 
     @NonNull
@@ -36,10 +40,11 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate layout row_post.xml
         View view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
-
-
+        mMapView = (MapView) view.findViewById(R.id.postMap);
         return new MyHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
@@ -54,21 +59,20 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String pTimeStamp = postList.get(position).getpTime();
 
 
+
+        /*
         // Covert timestamp into dd/mm//yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
         String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
-
+         */
 
         holder.uNameTv.setText(uName);
-        holder.pTimeTv.setText(pTime);
+        holder.pTimeTv.setText(pTimeStamp);
         holder.uNameTv.setText(uName);
         holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
-
-
-
 
 
         // Set user dp
