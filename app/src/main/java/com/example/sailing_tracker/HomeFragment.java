@@ -53,11 +53,6 @@ public class HomeFragment extends Fragment{
         firebaseAuth = FirebaseAuth.getInstance();
 
 
-
-
-
-
-
         // recycler view and its properties
         recyclerView = view.findViewById(R.id.postsRecyclerView);
 
@@ -68,22 +63,8 @@ public class HomeFragment extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
 
 
-
-
-
-
-
-
-
-
         // init post list
         postList = new ArrayList<>();
-
-
-
-
-
-
 
 
         loadPost();
@@ -117,6 +98,7 @@ public class HomeFragment extends Fragment{
 
 
                 }
+                Log.d("PostListData", "onDataChange: "+ postList);
 
 
             }

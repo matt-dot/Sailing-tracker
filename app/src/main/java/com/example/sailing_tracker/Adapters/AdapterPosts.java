@@ -1,6 +1,7 @@
 package com.example.sailing_tracker.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate layout row_post.xml
         View view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
-        mMapView = (MapView) view.findViewById(R.id.postMap);
+        //mMapView = (MapView) view.findViewById(R.id.postMap);
         return new MyHolder(view);
     }
 
@@ -69,8 +70,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
          */
 
         holder.uNameTv.setText(uName);
-        holder.pTimeTv.setText(pTimeStamp);
+        Log.d("Name", "onBindViewHolder: " +uName);
+       // holder.pTimeTv.setText(pTimeStamp);
         holder.uNameTv.setText(uName);
+        holder.pTimeTv.setText(uid);
         holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
 
@@ -126,7 +129,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             super(itemView);
             // Init views
             uPictureIv = itemView.findViewById(R.id.uPictureIv);
+
             uNameTv = itemView.findViewById(R.id.uNameTv);
+
             pTitleTv = itemView.findViewById(R.id.pTitleTv);
             pDescriptionTv = itemView.findViewById(R.id.pDescriptionTv);
             pLikesTv = itemView.findViewById(R.id.pLikesTv);
