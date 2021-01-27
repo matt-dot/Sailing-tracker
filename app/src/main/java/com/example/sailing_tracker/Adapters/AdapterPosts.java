@@ -1,6 +1,7 @@
 package com.example.sailing_tracker.Adapters;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,9 @@ import com.example.sailing_tracker.R;
 import com.google.android.gms.maps.MapView;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
@@ -32,17 +35,18 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         this.postList = postList;
     }
 
-    public AdapterPosts() {
 
-    }
 
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate layout row_post.xml
         View view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
-        //mMapView = (MapView) view.findViewById(R.id.postMap);
-        return new MyHolder(view);
+        MyHolder myHolder = new MyHolder(view);
+        return myHolder;
+
+
+
     }
 
 
@@ -58,25 +62,27 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String pTitle = postList.get(position).getpTitle();
         String pDescription = postList.get(position).getpDescription();
         String pTimeStamp = postList.get(position).getpTime();
+        Log.i("TAG", "onBindViewHolder: "+pTimeStamp);
 
 
 
-        /*
-        // Covert timestamp into dd/mm//yyyy hh:mm am/pm
+
+
+        // Cover    t timestamp into dd/mm//yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
         String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
-         */
 
-        holder.uNameTv.setText(uName);
-        Log.d("Name", "onBindViewHolder: " +uName);
-       // holder.pTimeTv.setText(pTimeStamp);
-        holder.uNameTv.setText(uName);
-        holder.pTimeTv.setText(uid);
+
+
+
+
+        holder.uEmailTv.setText(uEmail);
+        holder.pTimeTv.setText(pTime);
         holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
-
+        Log.d("Time", "onBindViewHolder: " + pTimeStamp);
 
         // Set user dp
         try {
@@ -84,6 +90,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         } catch (Exception e){
 
         }
+
+
 
 
         // Handle button clicks
@@ -121,17 +129,15 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
         // Views from row_post.xml
         ImageView uPictureIv;
-        TextView uNameTv, pTitleTv, pDescriptionTv, pLikesTv, pTimeTv;
+        TextView uEmailTv, pTitleTv, pDescriptionTv, pLikesTv, pTimeTv;
         Button likeBtn, commentBtn, shareBtn;
 
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             // Init views
-            uPictureIv = itemView.findViewById(R.id.uPictureIv);
-
-            uNameTv = itemView.findViewById(R.id.uNameTv);
-
+            uPictureIv = itemView.findViewById(R.id.pImageIv);
+            uEmailTv = itemView.findViewById(R.id.uEmailTv);
             pTitleTv = itemView.findViewById(R.id.pTitleTv);
             pDescriptionTv = itemView.findViewById(R.id.pDescriptionTv);
             pLikesTv = itemView.findViewById(R.id.pLikesTv);

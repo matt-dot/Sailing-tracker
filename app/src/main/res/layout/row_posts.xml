@@ -22,7 +22,7 @@
             android:orientation="horizontal">
 
             <com.blogspot.atifsoftwares.circularimageview.CircularImageView
-                android:id="@+id/uPictureIv"
+                android:id="@+id/pImageIv"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
@@ -35,10 +35,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/uNameTv"
+                    android:id="@+id/uEmailTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
+                    android:text="Email"
                     android:textColor="@color/Black"
                     android:textSize="20sp" />
 

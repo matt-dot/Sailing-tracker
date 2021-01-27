@@ -47,6 +47,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
     FirebaseAuth mAuth;
 
+    String imageURL;
+
+    String timeStamp;
 
     // Views and elements
     EditText titleEt, descriptionEt;
@@ -55,7 +58,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     TextView pTimeTv;
 
     // Variables to hold data retrieved from db
-    String email, uid, name;
+    String email, uid, name, dp;
 
     // Database reference
     DatabaseReference dbRef;
@@ -74,6 +77,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
     public static String sessionIDForPath;
+
 
 
     public void receiveSessionID(String receivedSessionID) {
@@ -108,6 +112,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         assert user != null;
         // Get the uid of the user
         final String uid = user.getUid();
+        final String userEmail = user.getEmail();
+        final String userName = user.getDisplayName();
+        System.out.println(userName);
 
 
         // Toolbar init
@@ -123,10 +130,10 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
         // Create a database reference
         // Reference to User/ uid (of current user)
-        dbRef = FirebaseDatabase.getInstance().getReference("Users" + uid);
+        dbRef = FirebaseDatabase.getInstance().getReference("Users" + uid );
 
         // Create a query which checks against the uid
-        Query query = dbRef.orderByChild(uid).equalTo(uid);
+        Query query = dbRef.orderByChild("email").equalTo(email);
         query.addValueEventListener(new ValueEventListener() {
             // Create dataSnapshot to iterate over
             @Override
@@ -134,8 +141,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     // Get value of name and email from database and
                     // assign to variables
-                    name = "" + ds.child("name").getValue();
-                    email = "" + ds.child("email").getValue();
+                     dp = "" + ds.child("image").getValue();
+                     email = "" + ds.child("email").getValue();
+
                 }
             }
 
@@ -160,6 +168,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                 String description = descriptionEt.getText().toString().trim();
 
 
+                Log.i("imageURL", "onClick: " + dp);
+                Log.i("imageURL", "onClick: " + email);
+
 
                 // Method call, parsing what was entered into to above elements
                 uploadData(title, description);
@@ -175,7 +186,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         pd.setMessage("Publishing session...");
         pd.show();
 
-        String timeStamp = String.valueOf(System.currentTimeMillis());
+        timeStamp = String.valueOf(System.currentTimeMillis());
 
         // Assign the relevant data to hash map
         HashMap<Object, String> hashMap = new HashMap<>();
@@ -184,12 +195,13 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         hashMap.put("uEmail", email);
         hashMap.put("pTitle", title);
         hashMap.put("pDescription", description);
-        hashMap.put("timeStamp", timeStamp);
+        hashMap.put("pTime", timeStamp);
+        hashMap.put("uDp", dp);
 
 
 
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Post");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
         // Put data into this reference
         databaseReference.child(timeStamp).setValue(hashMap);
 

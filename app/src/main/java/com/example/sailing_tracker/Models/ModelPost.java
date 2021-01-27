@@ -4,7 +4,7 @@ public class ModelPost {
     String pId, pTitle, pDescription, pTime, uid, uEmail, uDp, uName;
 
     public ModelPost(){
-
+        // Constructor
     }
 
     public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName) {
@@ -16,7 +16,11 @@ public class ModelPost {
         this.uEmail = uEmail;
         this.uDp = uDp;
         this.uName = uName;
+
+
     }
+
+
 
     public String getpId() {
         return pId;

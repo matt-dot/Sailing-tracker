@@ -35,7 +35,7 @@ public class HomeFragment extends Fragment{
     private List<ModelPost> postList;
     AdapterPosts adapterPosts;
     public static String sessionIDForPath;
-    int postList2;
+
     private static final String TAG = "HomeFragment";
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -51,7 +51,6 @@ public class HomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
 
         // recycler view and its properties
         recyclerView = view.findViewById(R.id.postsRecyclerView);
@@ -81,7 +80,7 @@ public class HomeFragment extends Fragment{
 
 
         // Get all data from this reference
-        mDatabase.child("Post").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Posts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 postList.clear();
