@@ -51,7 +51,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
     FirebaseAuth mAuth;
 
-    String imageURL;
+
 
     String timeStamp;
 
@@ -118,7 +118,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
         assert user != null;
         // Get the uid of the user
-        final String uid = user.getUid();
+
 
 
 
@@ -138,8 +138,31 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         // Reference to User/ uid (of current user)
         mDatabase = getInstance().getReference("Users");
 
-        Query query = mDatabase.orderByChild("email").equalTo(user.getEmail());
-        query.addValueEventListener(new ValueEventListener() {
+
+
+        mDatabase = getInstance().getReference("Users");
+
+        /*
+
+        Query latlngDataQuery = mDatabase.orderByChild("email").equalTo(user.getEmail());
+        latlngDataQuery.orderByChild("Sessions" + sessionIDForPath).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()){
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        })
+
+         */
+
+        Query imageQuery = mDatabase.orderByChild("email").equalTo(user.getEmail());
+        imageQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check  until required data got
@@ -151,6 +174,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
             }
+
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -173,7 +199,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                 String description = descriptionEt.getText().toString().trim();
 
 
-                Log.i("imageURL", "onClick: " + dp);
+
 
 
                 // Method call, parsing what was entered into to above elements

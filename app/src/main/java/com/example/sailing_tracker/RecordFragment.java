@@ -184,7 +184,7 @@ public class RecordFragment extends Fragment {
                     // Path toe store user data named "Users"
                     DatabaseReference reference = database.getReference("Users");
                     // Put data within HashMap in database
-                    reference.child(uid).child("Sessions").child(String.valueOf(sessionID)).setValue(latLongArray);
+                    reference.child(uid).child("Sessions").child(sessionID).setValue(latLongArray);
 
                     DatabaseReference reference2 = database.getReference("Users");
                     // Put speed data into database
@@ -281,7 +281,7 @@ public class RecordFragment extends Fragment {
 
                         if(sessionID != null) {
                             // Put data within arraylist in database
-                            reference.child("Sessions").child(sessionID).setValue(latLongArray);
+                            reference.child("Sessions").child(sessionID).child("LatLngData").setValue(latLongArray);
 
 
                             DatabaseReference reference1 = database.getReference("Users");
