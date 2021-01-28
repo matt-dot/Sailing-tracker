@@ -42,8 +42,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate layout row_post.xml
         View view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
-        MyHolder myHolder = new MyHolder(view);
-        return myHolder;
+        return new MyHolder(view);
 
 
 

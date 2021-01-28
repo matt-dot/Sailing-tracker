@@ -26,6 +26,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class UploadSessionActivity extends AppCompatActivity implements OnMapReadyCallback {
     // Google map declaration
@@ -60,8 +64,11 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     // Variables to hold data retrieved from db
     String email, uid, name, dp;
 
+
+
+
     // Database reference
-    DatabaseReference dbRef;
+
     private DatabaseReference mDatabase;
 
     // Variables to hold data retrieved from
@@ -112,9 +119,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         assert user != null;
         // Get the uid of the user
         final String uid = user.getUid();
-        final String userEmail = user.getEmail();
-        final String userName = user.getDisplayName();
-        System.out.println(userName);
+
+
 
 
         // Toolbar init
@@ -130,21 +136,20 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
         // Create a database reference
         // Reference to User/ uid (of current user)
-        dbRef = FirebaseDatabase.getInstance().getReference("Users" + uid );
+        mDatabase = getInstance().getReference("Users");
 
-        // Create a query which checks against the uid
-        Query query = dbRef.orderByChild("email").equalTo(email);
+        Query query = mDatabase.orderByChild("email").equalTo(user.getEmail());
         query.addValueEventListener(new ValueEventListener() {
-            // Create dataSnapshot to iterate over
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check  until required data got
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    // Get value of name and email from database and
-                    // assign to variables
-                     dp = "" + ds.child("image").getValue();
-                     email = "" + ds.child("email").getValue();
+                    // Get data
+                    dp = "" + ds.child("image").getValue().toString();
 
                 }
+
+
             }
 
             @Override
@@ -169,7 +174,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
                 Log.i("imageURL", "onClick: " + dp);
-                Log.i("imageURL", "onClick: " + email);
 
 
                 // Method call, parsing what was entered into to above elements
@@ -196,6 +200,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         hashMap.put("pTitle", title);
         hashMap.put("pDescription", description);
         hashMap.put("pTime", timeStamp);
+        if (dp == null){
+            dp = "null";
+        }
         hashMap.put("uDp", dp);
 
 
@@ -203,10 +210,22 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
         // Put data into this reference
-        databaseReference.child(timeStamp).setValue(hashMap);
+        databaseReference.child(timeStamp).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        pd.dismiss();
+                        Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(UploadSessionActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         // Create toast stating success
-        Toast.makeText(UploadSessionActivity.this, "Session published", Toast.LENGTH_SHORT).show();
 
         // Move to home fragment
         startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
