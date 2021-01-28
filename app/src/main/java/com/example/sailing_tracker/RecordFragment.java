@@ -127,6 +127,7 @@ public class RecordFragment extends Fragment {
 
                     uploadSessionActivity.receiveSessionID(sessionID);
                     homeFragment.receiveSessionID(sessionID);
+
                     // Call the method starLocationService
                     startLocationService();
                 } else if (isLocationServiceRunning()) {

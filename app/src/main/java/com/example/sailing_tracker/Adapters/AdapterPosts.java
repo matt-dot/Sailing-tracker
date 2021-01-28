@@ -1,6 +1,9 @@
 package com.example.sailing_tracker.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,19 +15,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sailing_tracker.Models.ModelPost;
 import com.example.sailing_tracker.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import static android.content.ContentValues.TAG;
+import static com.example.sailing_tracker.HomeFragment.sessionIDForPath;
+
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
@@ -34,11 +52,14 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
+
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
 
+
     }
+
 
 
 
@@ -48,6 +69,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         // Inflate layout row_post.xml
         view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
         return new MyHolder(view);
+
 
 
 
@@ -72,7 +94,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
-        // Cover    t timestamp into dd/mm//yyyy hh:mm am/pm
+
+
+        // Covert timestamp into dd/mm//yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
         String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
@@ -145,8 +169,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
        return postList.size();
     }
 
+
+
     // View holder class
-    static class MyHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
+    public static class MyHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
         
 
@@ -158,8 +184,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         Button likeBtn, commentBtn, shareBtn;
         MapView mapView;
         GoogleMap mapCurrent;
+        private DatabaseReference mDatabase;
+        ArrayList<ArrayList<LatLng>> latLngArrayList = new ArrayList<ArrayList<LatLng>>();
+        double lat, lon;
 
-        Context context = view.getContext();
 
 
 
@@ -177,6 +205,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             pTimeTv = itemView.findViewById(R.id.pTimeTv);
             mapView = itemView.findViewById(R.id.postMap);
 
+
             if (mapView != null)
             {
                 mapView.onCreate(null);
@@ -187,10 +216,66 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            MapsInitializer.initialize(context.getApplicationContext());
+
+
+
+            // Instantiate the firebase database reference
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            // Instantiate google map
             mapCurrent = googleMap;
+
+
+
+            // Path where to save data to
+            mDatabase.child("Sessions").child(sessionIDForPath).child("LatLngData").addValueEventListener(new ValueEventListener() {
+                @SuppressLint("MissingPermission")
+                @Override
+                public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        // Get LatLng object from the ArrayList stored in db
+                        // and assign to a variable
+                        Object latitude = data.child("latitude").getValue();
+                        Object longitude = data.child("longitude").getValue();
+
+                        if (latitude != null && longitude != null) {
+                            // Parse the object to double so it can be added to
+                            // a local double ArrayList
+                            lat = Double.parseDouble(latitude.toString());
+                            lon = Double.parseDouble(longitude.toString());
+
+                            // Store the lat and long data into array list
+                            latLngArrayList.add(new LatLng(lat, lon));
+                            // Move the camera to the last coordinate of the session
+                            mapCurrent.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 11));
+                        }
+                    }
+                    // Init Polyline options
+                    PolylineOptions polylineOptions = new PolylineOptions();
+                    // Create polyline options with existing LatLng ArrayList
+                    // and configure color and width
+                    polylineOptions.addAll(latLngArrayList);
+                    polylineOptions
+                            .width(5)
+                            .color(Color.RED);
+
+                    // Adding multiple points in map using polyline and ArrayList
+                    mapCurrent.addPolyline(polylineOptions);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Toast to user showing database error
+                    Log.e(TAG, "onCancelled: "+error.getMessage());
+
+                }
+            });
         }
     }
 }
+
+
+

@@ -330,7 +330,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         mMap = googleMap;
 
         // Path where to save data to
-        mDatabase.child("Users").child(uid).child("Sessions").child(sessionIDForPath).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Sessions").child(sessionIDForPath).child("LatLngData").addValueEventListener(new ValueEventListener() {
             @SuppressLint("MissingPermission")
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
