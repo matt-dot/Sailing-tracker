@@ -1,13 +1,21 @@
 package com.example.sailing_tracker.Models;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+
 public class ModelPost {
     String pId, pTitle, pDescription, pTime, uid, uEmail, uDp, uName;
+    ArrayList<LatLng> latLongArrayList = new ArrayList<>(); // Create an ArrayList object
+
+
+
 
     public ModelPost(){
         // Constructor
     }
 
-    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName) {
+    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName, ArrayList<LatLng> latLongArrayList){
         this.pId = pId;
         this.pTitle = pTitle;
         this.pDescription = pDescription;
@@ -16,11 +24,21 @@ public class ModelPost {
         this.uEmail = uEmail;
         this.uDp = uDp;
         this.uName = uName;
+        this.latLongArrayList = latLongArrayList;
+
 
 
     }
 
 
+
+    public ArrayList<LatLng> getLatLongArrayList() {
+        return latLongArrayList;
+    }
+
+    public void setLatLongArrayList(ArrayList<LatLng> latLongArrayList) {
+        this.latLongArrayList = latLongArrayList;
+    }
 
     public String getpId() {
         return pId;

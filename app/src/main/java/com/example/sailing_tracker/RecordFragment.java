@@ -275,7 +275,7 @@ public class RecordFragment extends Fragment {
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                         // Path to store user data named "Users"
-                        DatabaseReference reference = database.getReference("Users/" + uid);
+                        DatabaseReference reference = database.getReference();
 
 
 
@@ -284,9 +284,9 @@ public class RecordFragment extends Fragment {
                             reference.child("Sessions").child(sessionID).child("LatLngData").setValue(latLongArray);
 
 
-                            DatabaseReference reference1 = database.getReference("Users");
+                            DatabaseReference reference1 = database.getReference();
                             // Put speed data into database
-                            reference1.child(uid).child("Sessions").child(sessionID).child("Speed").setValue(speedData);
+                            reference1.child("Sessions").child(sessionID).child("Speed").setValue(speedData);
                         } else if (sessionID == null){
                             Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                         }

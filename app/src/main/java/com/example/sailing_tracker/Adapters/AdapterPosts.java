@@ -16,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sailing_tracker.Models.ModelPost;
 import com.example.sailing_tracker.R;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -27,12 +30,14 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
     Context context;
     List<ModelPost> postList;
-    MapView mMapView;
+    View view;
+
 
 
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
+
     }
 
 
@@ -41,7 +46,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate layout row_post.xml
-        View view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
+        view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
         return new MyHolder(view);
 
 
@@ -115,8 +120,25 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
+        GoogleMap thisMap = holder.mapCurrent;
+
+
+
 
     }
+
+    @Override
+    public void onViewRecycled(MyHolder holder)
+    {
+        // Cleanup MapView here?
+        if (holder.mapCurrent != null)
+        {
+            holder.mapCurrent.clear();
+            holder.mapCurrent.setMapType(GoogleMap.MAP_TYPE_NONE);
+        }
+    }
+
+
 
     @Override
     public int getItemCount() {
@@ -124,12 +146,21 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     }
 
     // View holder class
-    static class MyHolder extends RecyclerView.ViewHolder{
+    static class MyHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
+
+        
+
+
 
         // Views from row_post.xml
         ImageView uPictureIv;
         TextView uEmailTv, pTitleTv, pDescriptionTv, pLikesTv, pTimeTv;
         Button likeBtn, commentBtn, shareBtn;
+        MapView mapView;
+        GoogleMap mapCurrent;
+
+        Context context = view.getContext();
+
 
 
         public MyHolder(@NonNull View itemView) {
@@ -144,6 +175,22 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             commentBtn = itemView.findViewById(R.id.commentBtn);
             shareBtn = itemView.findViewById(R.id.shareBtn);
             pTimeTv = itemView.findViewById(R.id.pTimeTv);
+            mapView = itemView.findViewById(R.id.postMap);
+
+            if (mapView != null)
+            {
+                mapView.onCreate(null);
+                mapView.onResume();
+                mapView.getMapAsync(this);
+            }
+
+
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            MapsInitializer.initialize(context.getApplicationContext());
+            mapCurrent = googleMap;
         }
     }
 }
