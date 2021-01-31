@@ -70,7 +70,6 @@ public class RecordFragment extends Fragment {
 
     ArrayList<Float> speedData = new ArrayList<>();
 
-    UUID uuid = UUID.randomUUID();
 
 
     public RecordFragment() {
@@ -83,6 +82,9 @@ public class RecordFragment extends Fragment {
         // Assign view to the inflated xml layout
         View view = inflater.inflate(R.layout.fragment_record, container, false);
         mAuth = FirebaseAuth.getInstance();
+        final UUID uuid = UUID.randomUUID();
+
+
 
 
         // Instantiate the stopwatch class
@@ -124,6 +126,10 @@ public class RecordFragment extends Fragment {
                     watch.start();
 
                     sessionID = uuid.toString().trim();
+
+
+                    Log.i("CheckingUUID", "onClick: " +sessionID);
+
 
                     uploadSessionActivity.receiveSessionID(sessionID);
                     homeFragment.receiveSessionID(sessionID);
@@ -176,20 +182,20 @@ public class RecordFragment extends Fragment {
                     // Clear all recorded data from database
                     latLongArray.clear();
                     speedData.clear();
-                    FirebaseUser user = mAuth.getCurrentUser();
 
-                    assert user != null;
-                    String uid = user.getUid();
+
+
+
+
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     // Path toe store user data named "Users"
-                    DatabaseReference reference = database.getReference("Users");
+                    DatabaseReference reference = database.getReference();
                     // Put data within HashMap in database
-                    reference.child(uid).child("Sessions").child(sessionID).setValue(latLongArray);
+                    reference.child("Sessions").child(sessionID).child("LatLngData").setValue(latLongArray);
 
-                    DatabaseReference reference2 = database.getReference("Users");
                     // Put speed data into database
-                    reference2.child(uid).child("Sessions").child(sessionID).child("Speed").setValue(speedData);
+                    reference.child("Sessions").child(sessionID).child("SpeedData").setValue(speedData);
 
                 } else if (isLocationServiceRunning()) {
                     // Inform the user that the location service must be stopped before resetting
@@ -202,6 +208,7 @@ public class RecordFragment extends Fragment {
         mButtonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 startActivity(new Intent(getActivity(), UploadSessionActivity.class));
             }
         });
@@ -278,6 +285,8 @@ public class RecordFragment extends Fragment {
                         // Path to store user data named "Users"
                         DatabaseReference reference = database.getReference();
 
+                        Log.i("CheckingUUID", "onReceive: " +sessionID);
+
 
 
                         if(sessionID != null) {
@@ -289,7 +298,7 @@ public class RecordFragment extends Fragment {
                             // Put speed data into database
                             reference1.child("Sessions").child(sessionID).child("Speed").setValue(speedData);
                         } else if (sessionID == null){
-                            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Error null sessionID", Toast.LENGTH_SHORT).show();
                         }
 
                     }

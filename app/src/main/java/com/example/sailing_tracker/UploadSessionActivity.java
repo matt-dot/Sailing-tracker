@@ -41,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
@@ -104,6 +103,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_session_acitivity);
 
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -140,26 +140,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
-        mDatabase = getInstance().getReference("Users");
 
-        /*
 
-        Query latlngDataQuery = mDatabase.orderByChild("email").equalTo(user.getEmail());
-        latlngDataQuery.orderByChild("Sessions" + sessionIDForPath).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()){
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        })
-
-         */
 
         Query imageQuery = mDatabase.orderByChild("email").equalTo(user.getEmail());
         imageQuery.addValueEventListener(new ValueEventListener() {
@@ -178,6 +160,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Toast to explain to user the error
@@ -185,6 +168,11 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
             }
         });
+
+
+
+
+
         // Assign variables to layout elements
         titleEt = findViewById(R.id.pTitleEt);
         descriptionEt = findViewById(R.id.pDescriptionEt);
@@ -226,6 +214,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         hashMap.put("pTitle", title);
         hashMap.put("pDescription", description);
         hashMap.put("pTime", timeStamp);
+        Log.i("checkts", "uploadData: " + timeStamp);
         if (dp == null){
             dp = "null";
         }
@@ -236,7 +225,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
         // Put data into this reference
-        databaseReference.child(timeStamp).setValue(hashMap)
+        databaseReference.child(sessionIDForPath).setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -251,7 +240,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
             }
         });
 
-        // Create toast stating success
+
+
 
         // Move to home fragment
         startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
@@ -319,8 +309,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // Get current user uid
-        String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+
 
 
         // Instantiate the firebase database reference
@@ -328,7 +318,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
         // Instantiate google map
         mMap = googleMap;
-
+        Log.i("SessionID", "onMapReady: " + sessionIDForPath);
         // Path where to save data to
         mDatabase.child("Sessions").child(sessionIDForPath).child("LatLngData").addValueEventListener(new ValueEventListener() {
             @SuppressLint("MissingPermission")
@@ -363,6 +353,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
                 // Adding multiple points in map using polyline and ArrayList
                 mMap.addPolyline(polylineOptions);
+
             }
 
             @Override

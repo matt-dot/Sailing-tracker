@@ -1,8 +1,6 @@
 package com.example.sailing_tracker.Adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -20,27 +18,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sailing_tracker.Models.ModelPost;
 import com.example.sailing_tracker.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static android.content.ContentValues.TAG;
 import static com.example.sailing_tracker.HomeFragment.sessionIDForPath;
 
 
@@ -57,6 +47,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         this.context = context;
         this.postList = postList;
 
+
+    }
+    public void receiveSessionID(String receivedSessionID) {
+        // Assign the sessionID from RecordFragment to variable
+        // This will be used for database path
+        sessionIDForPath = receivedSessionID;
+
+        // Log to make sure the session ID matches the session ID in
+        // generated in record fragment
+        Log.d("SessionIdCheck", "Session: " + sessionIDForPath);
 
     }
 
@@ -79,6 +79,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+
+
         // Get data
         String uid = postList.get(position).getUid();
         String uEmail = postList.get(position).getuEmail();
@@ -88,7 +90,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String pTitle = postList.get(position).getpTitle();
         String pDescription = postList.get(position).getpDescription();
         String pTimeStamp = postList.get(position).getpTime();
-        Log.i("TAG", "onBindViewHolder: "+pTimeStamp);
+
+        Log.i("checkts", "onBindViewHolder: "+pTimeStamp);
 
 
 
@@ -106,11 +109,18 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
+
+
+
+
+
+
+
         holder.uEmailTv.setText(uEmail);
         holder.pTimeTv.setText(pTime);
         holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
-        Log.d("Time", "onBindViewHolder: " + pTimeStamp);
+        Log.d("Time", "onBindViewHolder: " + pTime);
 
         // Set user dp
         try {
@@ -185,7 +195,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         MapView mapView;
         GoogleMap mapCurrent;
         private DatabaseReference mDatabase;
-        ArrayList<ArrayList<LatLng>> latLngArrayList = new ArrayList<ArrayList<LatLng>>();
+        ArrayList<LatLng> latLngArrayList = new ArrayList<LatLng>();
         double lat, lon;
 
 
@@ -228,10 +238,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             // Instantiate google map
             mapCurrent = googleMap;
 
+/*
 
-
-            // Path where to save data to
-            mDatabase.child("Sessions").child(sessionIDForPath).child("LatLngData").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Posts").addValueEventListener(new ValueEventListener() {
                 @SuppressLint("MissingPermission")
                 @Override
                 public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
@@ -273,8 +282,14 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
                 }
             });
+
+ */
         }
+
+
     }
+
+
 }
 
 
