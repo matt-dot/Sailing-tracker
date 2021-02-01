@@ -18,7 +18,9 @@ public class ModelUser {
         this.image = image;
         this.boatClass = boatClass;
         this.uid = uid;
+
     }
+
 
     public String getName() {
         return name;

@@ -219,6 +219,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
             dp = "null";
         }
         hashMap.put("uDp", dp);
+        hashMap.put("pSessionID", sessionIDForPath);
 
 
 

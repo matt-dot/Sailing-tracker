@@ -82,7 +82,6 @@ public class RecordFragment extends Fragment {
         // Assign view to the inflated xml layout
         View view = inflater.inflate(R.layout.fragment_record, container, false);
         mAuth = FirebaseAuth.getInstance();
-        final UUID uuid = UUID.randomUUID();
 
 
 
@@ -124,6 +123,7 @@ public class RecordFragment extends Fragment {
                     // User has already granted permissions so the app will function properly
                     // Start the stopwatch
                     watch.start();
+                    final UUID uuid = UUID.randomUUID();
 
                     sessionID = uuid.toString().trim();
 
@@ -374,6 +374,9 @@ public class RecordFragment extends Fragment {
 
 }
 
+
+// Query for the same session id as post
+// Get data from the session id node to display in mapview
 
 
 
