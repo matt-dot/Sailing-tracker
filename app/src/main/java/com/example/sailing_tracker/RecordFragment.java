@@ -68,13 +68,13 @@ public class RecordFragment extends Fragment {
     UploadSessionActivity uploadSessionActivity = new UploadSessionActivity();
     HomeFragment homeFragment = new HomeFragment();
 
+
     ArrayList<Float> speedData = new ArrayList<>();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
 
-    public RecordFragment() {
-        // Required empty public constructor
-    }
+
 
 
     @Override
@@ -280,12 +280,11 @@ public class RecordFragment extends Fragment {
 
 
                         // Instantiate Firebase database
-                        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                         // Path to store user data named "Users"
                         DatabaseReference reference = database.getReference();
 
-                        Log.i("CheckingUUID", "onReceive: " +sessionID);
+
 
 
 
@@ -294,9 +293,9 @@ public class RecordFragment extends Fragment {
                             reference.child("Sessions").child(sessionID).child("LatLngData").setValue(latLongArray);
 
 
-                            DatabaseReference reference1 = database.getReference();
+
                             // Put speed data into database
-                            reference1.child("Sessions").child(sessionID).child("Speed").setValue(speedData);
+                            //reference.child("Sessions").child(sessionID).child("Speed").setValue(speedData);
                         } else if (sessionID == null){
                             Toast.makeText(context, "Error null sessionID", Toast.LENGTH_SHORT).show();
                         }
@@ -377,6 +376,9 @@ public class RecordFragment extends Fragment {
 
 // Query for the same session id as post
 // Get data from the session id node to display in mapview
+
+// Bug where second time session initiated data is written to previous UUID as well as new
+
 
 
 
