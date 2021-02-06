@@ -5,15 +5,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-
 public class MainActivity extends AppCompatActivity {
     // Views
     Button mRegisterBtn, mLoginBtn;
+    ImageView mGybeLogo;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         // Init views
         mRegisterBtn = findViewById(R.id.registerBtn);
         mLoginBtn = findViewById(R.id.signIn_btn);
+
+
 
         // Register button click
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
