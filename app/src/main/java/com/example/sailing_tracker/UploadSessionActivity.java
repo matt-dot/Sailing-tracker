@@ -63,6 +63,10 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     // Variables to hold data retrieved from db
     String email, uid, name, dp;
 
+    public static double averageSpeed;
+
+
+
 
 
 
@@ -83,6 +87,17 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
     public static String sessionIDForPath;
+
+    public void receiveAverageSpeed(double receivedAverageSpeed) {
+        // Assign the sessionID from RecordFragment to variable
+        // This will be used for database path
+        averageSpeed = receivedAverageSpeed;
+
+
+        // Log to make sure the session ID matches the session ID in
+        // generated in record fragment
+        Log.d("AverageSpeedCheck", "Session: " + averageSpeed);
+    }
 
 
 
@@ -191,7 +206,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
                 // Method call, parsing what was entered into to above elements
-                uploadData(title, description);
+                uploadData(title, description, averageSpeed);
 
             }
         });
@@ -199,7 +214,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     }
 
     // Method which uploads data related to the post
-    private void uploadData(final String title, final String description) {
+    private void uploadData(final String title, final String description, double averageSpeed) {
         // Show the status of upload
         pd.setMessage("Publishing session...");
         pd.show();
@@ -220,6 +235,8 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         }
         hashMap.put("uDp", dp);
         hashMap.put("pSessionID", sessionIDForPath);
+        hashMap.put("pSpeed", String.valueOf((averageSpeed)));
+        Log.d("AverageSpeedCheck", "Session: " + averageSpeed);
 
 
 
@@ -306,6 +323,9 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     }
 
 
+
+
+
     // Generate map
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -367,7 +387,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
     }
-
 
 }
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -63,20 +65,24 @@ public class RecordFragment extends Fragment {
     String sessionID;
     LatLng latLng;
 
+    double totalSpeed;
+    double averageSpeed;
+
 
     ArrayList<LatLng> latLongArray = new ArrayList<>(); // Create an ArrayList object
     UploadSessionActivity uploadSessionActivity = new UploadSessionActivity();
     HomeFragment homeFragment = new HomeFragment();
 
-
     ArrayList<Float> speedData = new ArrayList<>();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    int i = 0;
 
 
 
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Assign view to the inflated xml layout
@@ -221,11 +227,12 @@ public class RecordFragment extends Fragment {
         /*
         The data sent from the service is handled below
          */
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(
                 new BroadcastReceiver() {
                     @SuppressLint({"SetTextI18n", "DefaultLocale"})
                     @Override
                     public void onReceive(Context context, Intent intent) {
+                        i++;
                         // Received data is now assigned to variables
                         double latitude = intent.getDoubleExtra(LocationService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocationService.EXTRA_LONGITUDE, 0);
@@ -238,6 +245,11 @@ public class RecordFragment extends Fragment {
                         // Calculate the conversion from m/s to knots
                         // assign calculated value to variable
                         speedInKnots = speed * 1.194;
+
+
+
+
+
                         // Cast the float to double
                         doubleBearing = bearing;
                         // Calculate conversion from milli-seconds to seconds
@@ -254,6 +266,10 @@ public class RecordFragment extends Fragment {
                         mCurrent_speedTv.setText("Speed is: " + round(speedInKnots, 2) + " knots");
                         mBearingTv.setText("Direction: " + round(doubleBearing, 2) + "\u00B0");
                         mElapsedTimeTv.setText("Elapsed time: " + round(timeInSeconds, 2) + " s");
+
+
+                        totalSpeed(speedInKnots);
+
 
 
 
@@ -293,11 +309,9 @@ public class RecordFragment extends Fragment {
                             reference.child("Sessions").child(sessionID).child("LatLngData").setValue(latLongArray);
 
 
-
-                            // Put speed data into database
-                            //reference.child("Sessions").child(sessionID).child("Speed").setValue(speedData);
-                        } else if (sessionID == null){
+                        } else {
                             Toast.makeText(context, "Error null sessionID", Toast.LENGTH_SHORT).show();
+                            Log.i("SessionIdNull", "onReceive: " + sessionID);
                         }
 
                     }
@@ -306,6 +320,20 @@ public class RecordFragment extends Fragment {
         return view; // End of broadcaster receiver
     }
 
+    private void totalSpeed(double speedCalc){
+
+        totalSpeed = totalSpeed + speedCalc;
+        Log.i("AverageSpeedCalculation", "averageSpeed: " + totalSpeed);
+        meanCalculation(totalSpeed);
+    }
+
+    private void meanCalculation(double totalSpeed){
+        averageSpeed = totalSpeed / i;
+        Log.i("AverageSpeedValue", "meanCalculation: " + averageSpeed);
+        uploadSessionActivity.receiveAverageSpeed(averageSpeed);
+
+
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

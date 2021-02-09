@@ -1,7 +1,16 @@
 package com.example.sailing_tracker.Models;
 
 public class ModelPost {
-    String pId, pTitle, pDescription, pTime, uid, uEmail, uDp, uName, pSessionID;
+    String pId;
+    String pTitle;
+    String pDescription;
+    String pTime;
+    String uid;
+    String uEmail;
+    String uDp;
+    String uName;
+    String pSessionID;
+    String pSpeed;
 
 
 
@@ -11,7 +20,7 @@ public class ModelPost {
         // Constructor
     }
 
-    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName, String pSessionID) {
+    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName, String pSessionID, String pSpeed) {
         this.pId = pId;
         this.pTitle = pTitle;
         this.pDescription = pDescription;
@@ -21,11 +30,22 @@ public class ModelPost {
         this.uDp = uDp;
         this.uName = uName;
         this.pSessionID = pSessionID;
+        this.pSpeed = pSpeed;
 
 
 
 
     }
+
+
+    public String getpSpeed() {
+        return pSpeed;
+    }
+
+    public void setpSpeed(String pSpeed) {
+        this.pSpeed = pSpeed;
+    }
+
 
 
     public String getpSessionID() {

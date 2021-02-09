@@ -64,6 +64,17 @@
         </TextView>
 
         <TextView
+            android:id="@+id/pAverageSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:text="Average Speed">
+
+        </TextView>
+
+
+
+        <TextView
             android:id="@+id/pDescriptionTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

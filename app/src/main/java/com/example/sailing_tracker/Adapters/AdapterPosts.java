@@ -88,6 +88,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
 
@@ -102,6 +103,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String pDescription = postList.get(position).getpDescription();
         String pTimeStamp = postList.get(position).getpTime();
         String pSessionID = postList.get(position).getpSessionID();
+        String pSpeed = postList.get(position).getpSpeed();
 
         Log.i("checkts", "onBindViewHolder: "+pTimeStamp);
 
@@ -121,6 +123,13 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
+        //System.out.println(pSpeed);
+
+
+
+
+
+        Log.i("SpeedInRec", "before conversion: " + pSpeed);
 
 
 
@@ -131,6 +140,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
+        holder.pAverageSpeedTv.setText(pSpeed);
         holder.uEmailTv.setText(uEmail);
         holder.pTimeTv.setText(pTime);
         holder.pTitleTv.setText(pTitle);
@@ -200,13 +210,13 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     // View holder class
     public static class MyHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
-        
+
 
 
 
         // Views from row_post.xml
         ImageView uPictureIv;
-        TextView uEmailTv, pTitleTv, pDescriptionTv, pLikesTv, pTimeTv;
+        TextView uEmailTv, pTitleTv, pDescriptionTv, pLikesTv, pTimeTv, pAverageSpeedTv;
         Button likeBtn, commentBtn, shareBtn;
         MapView mapView;
         GoogleMap mapCurrent;
@@ -230,7 +240,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             shareBtn = itemView.findViewById(R.id.shareBtn);
             pTimeTv = itemView.findViewById(R.id.pTimeTv);
             mapView = itemView.findViewById(R.id.postMap);
-
+            pAverageSpeedTv = itemView.findViewById(R.id.pAverageSpeed);
 
             if (mapView != null)
             {

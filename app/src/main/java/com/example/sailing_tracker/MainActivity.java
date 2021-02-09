@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
     // Views
     Button mRegisterBtn, mLoginBtn;
-    ImageView mGybeLogo;
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override

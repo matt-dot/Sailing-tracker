@@ -35,6 +35,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
             mNameTv = itemView.findViewById(R.id.nameTv);
             mEmailTv = itemView.findViewById(R.id.emailTv);
             mBoatClassTv = itemView.findViewById(R.id.boatClassTv);
+
         }
     }
 
@@ -56,7 +57,9 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         String userEmail = userList.get(position).getEmail();
         String userBoatClass = userList.get(position).getBoatClass();
 
+
         // Set data
+
         holder.mNameTv.setText(userName);
         holder.mEmailTv.setText(userEmail);
         holder.mBoatClassTv.setText(userBoatClass);
