@@ -98,9 +98,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
         return new MyHolder(view);
 
-
-
-
     }
 
 
@@ -111,11 +108,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
         // Get data
-        String uid = postList.get(position).getUid();
         String uEmail = postList.get(position).getuEmail();
-        String uName = postList.get(position).getuName();
         String uDp = postList.get(position).getuDp();
-        String pId = postList.get(position).getpId();
         final String pTitle = postList.get(position).getpTitle();
         final String pDescription = postList.get(position).getpDescription();
         String pTimeStamp = postList.get(position).getpTime();
@@ -123,37 +117,11 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         final String pSpeed = postList.get(position).getpSpeed();
         String pLikes = postList.get(position).getpLikes();
 
-        Log.i("checkts", "onBindViewHolder: "+pTimeStamp);
-
-        Log.i("SessionId_check", "onBindViewHolder: "+pSessionID);
-
-
-
-
-
-
-
 
         // Covert timestamp into dd/mm//yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
         String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
-
-
-
-        //System.out.println(pSpeed);
-
-
-
-
-
-        Log.i("SpeedInRec", "before conversion: " + pSpeed);
-
-
-
-
-
-
 
 
 
@@ -235,9 +203,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     }
 
 
-    private void sharePost(String pTitle,String pDescription,  String pSpeed, Bitmap bitmap){
+    private void sharePost(String pTitle, String pDescription,  String pSpeed, Bitmap bitmap){
 
-        String shareBody = pTitle +"\n"+ pDescription;
+        String shareBody = pTitle +"\n"+ pDescription + "\n" + pSpeed;
 
         Uri uri = saveRouteToShare(bitmap);
 
@@ -316,11 +284,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
     // View holder class
     public static class MyHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
-
-
-
-
-
         // Views from row_post.xml
         ImageView uPictureIv;
         TextView uEmailTv, pTitleTv, pDescriptionTv, pLikesTv, pTimeTv, pAverageSpeedTv;
