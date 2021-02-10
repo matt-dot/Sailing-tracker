@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.sailing_tracker.Adapters.AdapterUserSessions;
+import com.example.sailing_tracker.Models.ModelPost;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +40,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,7 +50,9 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
@@ -55,6 +63,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     DatabaseReference databaseReference;
+
 
     // Storage
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -88,6 +97,18 @@ public class ProfileFragment extends Fragment {
 
     // For checking profile picture
     String profilePicture;
+
+
+
+
+    private RecyclerView recyclerView;
+    private List<ModelPost> postList;
+    AdapterUserSessions adapterUserSessions;
+
+
+
+    private static final String TAG = "HomeFragment";
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     public ProfileFragment(){
         // Required empty public constructor
@@ -181,7 +202,28 @@ public class ProfileFragment extends Fragment {
                 showEditProfileDialog();
             }
         });
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        // recycler view and its properties
+        recyclerView = view.findViewById(R.id.usersSessionRecyclerView);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        // Shows newest post first
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(layoutManager);
+
+
+        // init post list
+        postList = new ArrayList<>();
+
+
+        loadPost();
+
         return view;
+
     }
 
             private boolean checkStoragePermissions(){
@@ -513,6 +555,48 @@ public class ProfileFragment extends Fragment {
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
 
+
+    }
+
+    public void loadPost() {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String uid = firebaseUser.getUid();
+
+        // Path of all posts
+        DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Posts");
+
+        Query queryForCurrentUser = mDatabase1.orderByChild("uid").equalTo(uid);
+        // Get all data from this reference
+        queryForCurrentUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
+                for(DataSnapshot ds : snapshot.getChildren()) {
+                    ModelPost modelPost = ds.getValue(ModelPost.class);
+
+                    postList.add(modelPost);
+
+                    // Adapter
+                    adapterUserSessions = new AdapterUserSessions(getActivity(), postList);
+                    // Set adapter to recycler view
+                    recyclerView.setAdapter(adapterUserSessions);
+
+
+
+
+                }
+                Log.d("PostListData", "onDataChange: "+ postList);
+
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // In case of error
+                Toast.makeText(getActivity(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

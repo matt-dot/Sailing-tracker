@@ -51,7 +51,7 @@ import static android.content.ContentValues.TAG;
 import static com.example.sailing_tracker.HomeFragment.sessionIDForPath;
 
 
-public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
+public class AdapterUserSessions extends RecyclerView.Adapter<AdapterUserSessions.MyHolder> {
 
     Context context;
     List<ModelPost> postList;
@@ -67,7 +67,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     String myUID;
 
 
-    public AdapterPosts(Context context, List<ModelPost> postList) {
+    public AdapterUserSessions(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
 

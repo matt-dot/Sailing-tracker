@@ -105,16 +105,26 @@
         android:contentDescription="Edit button"
         android:src="@drawable/id_edit_white" />
 
-    <fragment
-
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
+        android:layout_marginTop="220dp"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="155dp"
-        tools:context=".MapsActivity" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="50dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/usersSessionRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="520dp"
+            android:gravity="center_horizontal"
+            android:text="Users"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </LinearLayout>
 
 
 </RelativeLayout>

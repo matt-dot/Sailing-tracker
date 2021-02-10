@@ -74,7 +74,8 @@ public class HomeFragment extends Fragment{
 
     public void loadPost() {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = firebaseUser.getUid();
+        assert firebaseUser != null;
+        final String uid = firebaseUser.getUid();
 
         // Path of all posts
 
@@ -84,19 +85,19 @@ public class HomeFragment extends Fragment{
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 postList.clear();
-                for(DataSnapshot ds : snapshot.getChildren()){
-                    ModelPost modelPost = ds.getValue(ModelPost.class);
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        ModelPost modelPost = ds.getValue(ModelPost.class);
 
-                    postList.add(modelPost);
+                        postList.add(modelPost);
 
-                    // Adapter
-                    adapterPosts = new AdapterPosts(getActivity(), postList);
-                    // Set adapter to recycler view
-                    recyclerView.setAdapter(adapterPosts);
+                        // Adapter
+                        adapterPosts = new AdapterPosts(getActivity(), postList);
+                        // Set adapter to recycler view
+                        recyclerView.setAdapter(adapterPosts);
 
 
+                    }
 
-                }
                 Log.d("PostListData", "onDataChange: "+ postList);
 
 
