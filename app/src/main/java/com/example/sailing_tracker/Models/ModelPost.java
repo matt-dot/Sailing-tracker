@@ -11,6 +11,7 @@ public class ModelPost {
     String uName;
     String pSessionID;
     String pSpeed;
+    String pLikes;
 
 
 
@@ -20,7 +21,7 @@ public class ModelPost {
         // Constructor
     }
 
-    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName, String pSessionID, String pSpeed) {
+    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName, String pSessionID, String pSpeed, String pLikes) {
         this.pId = pId;
         this.pTitle = pTitle;
         this.pDescription = pDescription;
@@ -31,12 +32,20 @@ public class ModelPost {
         this.uName = uName;
         this.pSessionID = pSessionID;
         this.pSpeed = pSpeed;
+        this.pLikes = pLikes;
 
 
 
 
     }
 
+    public String getpLikes() {
+        return pLikes;
+    }
+
+    public void setpLikes(String pLikes) {
+        this.pLikes = pLikes;
+    }
 
     public String getpSpeed() {
         return pSpeed;

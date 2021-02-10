@@ -236,6 +236,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         hashMap.put("uDp", dp);
         hashMap.put("pSessionID", sessionIDForPath);
         hashMap.put("pSpeed", String.valueOf((averageSpeed)));
+        hashMap.put("pLikes", "0");
         Log.d("AverageSpeedCheck", "Session: " + averageSpeed);
 
 
