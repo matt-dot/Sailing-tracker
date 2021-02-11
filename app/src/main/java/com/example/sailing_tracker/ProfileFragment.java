@@ -131,6 +131,8 @@ public class ProfileFragment extends Fragment {
 
 
 
+
+
         // Init arrays of permissions
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -142,7 +144,6 @@ public class ProfileFragment extends Fragment {
         phoneTv = view.findViewById(R.id.phoneTv);
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
         boatClassTv = view.findViewById(R.id.boatClassTv);
-
 
 
         // init progress dialog
@@ -560,12 +561,13 @@ public class ProfileFragment extends Fragment {
 
     public void loadPost() {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        assert firebaseUser != null;
         final String uid = firebaseUser.getUid();
 
         // Path of all posts
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Posts");
 
-        Query queryForCurrentUser = mDatabase1.orderByChild("uid").equalTo(uid);
+        Query queryForCurrentUser = mDatabase1.orderByChild("uEmail").equalTo(firebaseUser.getEmail());
         // Get all data from this reference
         queryForCurrentUser.addValueEventListener(new ValueEventListener() {
             @Override

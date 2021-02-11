@@ -23,14 +23,14 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
     // View holder class
     static class MyHolder extends RecyclerView.ViewHolder {
-
+        // Define variables
         ImageView mUsersIv;
         TextView mNameTv, mEmailTv, mBoatClassTv;
 
         MyHolder(@NonNull View itemView) {
             super(itemView);
 
-            // Init views
+            // Assign views to variables
             mUsersIv = itemView.findViewById(R.id.usersIv);
             mNameTv = itemView.findViewById(R.id.nameTv);
             mEmailTv = itemView.findViewById(R.id.emailTv);
@@ -40,7 +40,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     }
 
 
-
+    // This method inflates the value of row_users and returns the holder view
     @NonNull
     @Override
     public AdapterUsers.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,21 +49,24 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         return new MyHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        // Get data
+        // Data from userList is extracted and assigned to variables
         String userImage = userList.get(position).getImage();
         String userName = userList.get(position).getName();
         String userEmail = userList.get(position).getEmail();
         String userBoatClass = userList.get(position).getBoatClass();
 
 
-        // Set data
-
+        // The data retrieved from the postList list and assigned to variables
+        // then populates the attributes of the row_user
+        // They are assigned below
         holder.mNameTv.setText(userName);
         holder.mEmailTv.setText(userEmail);
         holder.mBoatClassTv.setText(userBoatClass);
 
+        // Try catch block used to load the display image of each user
         try {
             Picasso.get().load(userImage)
                     .placeholder(R.drawable.ic_default_user_image)
@@ -78,19 +81,9 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     // Constructor
     public AdapterUsers(List<ModelUser> userList) {
         this.userList = userList;
-
-
-
-
-
-
     }
 
-
-
-
-
-
+    // Returns the length of userList
     @Override
     public int getItemCount() {
         return userList.size();

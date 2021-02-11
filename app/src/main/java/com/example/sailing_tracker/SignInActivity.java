@@ -47,7 +47,8 @@ public class SignInActivity extends AppCompatActivity{
     // Views
     EditText mEmailEt, mPasswordEt;
     Button mLoginBtn;
-    TextView mRecoverPassTv, mRegisterTv;
+    TextView mRecoverPassTv;
+    TextView mRegisterTv;
     SignInButton mGoogleLoginBtn;
 
     // Progress bar to display message while logging in user
