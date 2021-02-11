@@ -47,7 +47,7 @@ public class SignInActivity extends AppCompatActivity{
     // Views
     EditText mEmailEt, mPasswordEt;
     Button mLoginBtn;
-    TextView mRecoverPassTv;
+    TextView mRecoverPassTv, mRegisterTv;
     SignInButton mGoogleLoginBtn;
 
     // Progress bar to display message while logging in user
@@ -57,7 +57,7 @@ public class SignInActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_signin);
 
         // Initialize views and assign to variables
         mEmailEt = findViewById(R.id.emailEt);
@@ -65,6 +65,7 @@ public class SignInActivity extends AppCompatActivity{
         mLoginBtn = findViewById(R.id.signIn_btn);
         mRecoverPassTv = findViewById(R.id.mRecoverPassTv);
         mGoogleLoginBtn = findViewById(R.id.googleLoginBtn);
+        mRegisterTv = findViewById(R.id.registerTv);
 
 
         // Before mAuth
@@ -128,6 +129,18 @@ public class SignInActivity extends AppCompatActivity{
 
             }
         });
+
+
+
+        // Register button click
+        mRegisterTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v){
+                // Start register activity
+                startActivity(new Intent (SignInActivity.this, RegisterActivity.class));
+            }
+        });
+
     }
 
     private void showRecoverPasswordDialog(){

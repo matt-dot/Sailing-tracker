@@ -102,7 +102,7 @@ public class UsersActivity extends AppCompatActivity{
         }
         else{
             // User is not signed in
-            startActivity(new Intent(UsersActivity.this, MainActivity.class));
+            startActivity(new Intent(UsersActivity.this, SignInActivity.class));
 
         }
     }

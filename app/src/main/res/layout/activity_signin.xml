@@ -68,6 +68,16 @@
         android:layout_marginBottom="20dp"
         android:text="login" />
 
+    <TextView
+        android:id="@+id/registerTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Create an account"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/signIn_btn"
+        android:textColor="@color/colorPrimaryDark"/>
+
    <TextView
        android:id="@+id/mRecoverPassTv"
        android:layout_width="match_parent"

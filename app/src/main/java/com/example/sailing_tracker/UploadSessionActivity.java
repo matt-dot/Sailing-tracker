@@ -318,7 +318,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
             uid = user.getUid();
         } else {
             // User is not signed in
-            startActivity(new Intent(UploadSessionActivity.this, MainActivity.class));
+            startActivity(new Intent(UploadSessionActivity.this, SignInActivity.class));
 
         }
     }
