@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sailing_tracker.Adapters.AdapterPosts;
 import com.example.sailing_tracker.Models.ModelPost;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,13 +72,7 @@ public class HomeFragment extends Fragment{
     }
 
     public void loadPost() {
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        assert firebaseUser != null;
-        final String uid = firebaseUser.getUid();
-
         // Path of all posts
-
-
         // Get all data from this reference
         mDatabase.child("Posts").addValueEventListener(new ValueEventListener() {
             @Override

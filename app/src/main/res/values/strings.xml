@@ -5,7 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="swipe_left_for_register">Swipe Left for Register</string>
     <string name="login">Login</string>
-    <string name="password">Password</string>
+
     <string name="e_mail">Email</string>
     <string name="tag">Welcome to start recording please Login</string>
     <string name="swipe_right_for_login">Swipe Right for Login</string>
@@ -31,4 +31,5 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_maps">Map</string>
+    <string name="password">Password</string>
 </resources>
