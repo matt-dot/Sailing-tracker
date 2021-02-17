@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordEt = findViewById(R.id. passwordEt);
         mRegisterBtn = findViewById(R.id.registerBtn);
         mConfirmPasswordEt = findViewById(R.id.confirmPasswordEt);
-        mBoatClassEt = findViewById(R.id.boatClassEt);
+
 
         // In the onCreate() method, initialize the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
@@ -112,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                             assert user != null;
                             String email = user.getEmail();
                             String uid = user.getUid();
-                            String boatClass = mBoatClassEt.getText().toString().trim();
+
                             // When a user is registered store info in firebase realtime database
                             // using HashMap
                             HashMap<Object, String> hashMap = new HashMap<>();
@@ -121,7 +121,6 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("uid", uid);
                             hashMap.put("name", ""); // To be added later in profile
                             hashMap.put("image", ""); //
-                            hashMap.put("boatClass", boatClass); //
                             // Firebase database instance
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             // Path toe store user data named "Users"

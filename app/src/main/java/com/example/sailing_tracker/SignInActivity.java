@@ -104,7 +104,7 @@ public class SignInActivity extends AppCompatActivity{
                     mEmailEt.setFocusable(true);
 
                 } else {
-                    loginUser(email, password); // Register the user
+                    signIn(email, password); // Register the user
                 }
             }
         });
@@ -218,8 +218,8 @@ public class SignInActivity extends AppCompatActivity{
 
 
     }
-
-    private void loginUser(String email, String password) {
+    // Method to sign in users as they have already created an account
+    private void signIn(String email, String password) {
         // Email and password pattern is valid, show progress dialogue and start registering user
         progressDialog.setMessage("Logging in...");
         progressDialog.show();
@@ -253,12 +253,16 @@ public class SignInActivity extends AppCompatActivity{
     });
 
   }
-
+    // Helper method to change the UI from sign in to dashboard activity
     public void  updateUI(FirebaseUser account){
+        // Check account is not null
         if(account != null){
+            // Display Toast to user informing success
             Toast.makeText(this,"Login successful",Toast.LENGTH_LONG).show();
+            // Change view to HomeFragment (default fragment in dashboard activity
             startActivity(new Intent(SignInActivity.this, DashboardActivity.class));
         }else {
+            // Inform user of failure
             Toast.makeText(this,"Login failed",Toast.LENGTH_LONG).show();
         }
     }
