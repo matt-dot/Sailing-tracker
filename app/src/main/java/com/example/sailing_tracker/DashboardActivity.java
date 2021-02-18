@@ -14,26 +14,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class
-
-DashboardActivity extends AppCompatActivity {
-
+public class DashboardActivity extends AppCompatActivity {
     // Firebase auth
     FirebaseAuth firebaseAuth;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-
-        // Init
+        // Instantiate the firebase auth class
         firebaseAuth = FirebaseAuth.getInstance();
 
-
-        // Toolbar init
+        // Instantiate the toolbar
         final Toolbar mToolBar = findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolBar);
         // Set default toolbar value
@@ -47,38 +40,51 @@ DashboardActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    // If the home icon is clicked then change the fragment to the home fragment view
                     case R.id.nav_home:
                         mToolBar.setTitle("Home");
-                        HomeFragment fragment1 = new HomeFragment();
-                        fragment1.setArguments(getIntent().getExtras());
+                        HomeFragment homeFragment = new HomeFragment();
+                        homeFragment.setArguments(getIntent().getExtras());
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, fragment1).commit();
+                                .replace(R.id.fragment_container, homeFragment).commit();
                         break;
 
                     case R.id.nav_record:
+                        // If the record icon is clicked then change the fragment to the record fragment view
                         mToolBar.setTitle("Record");
-                        RecordFragment fragment2 = new RecordFragment();
-                        fragment2.setArguments(getIntent().getExtras());
+                        RecordFragment recordFragment = new RecordFragment();
+                        recordFragment.setArguments(getIntent().getExtras());
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, fragment2).commit();
+                                .replace(R.id.fragment_container, recordFragment).commit();
                         break;
                     case R.id.nav_profile:
+                        // If the profile icon is clicked then change the fragment to the profile fragment view
                         mToolBar.setTitle("Profile");
-                        ProfileFragment fragment3 = new ProfileFragment();
-                        fragment3.setArguments(getIntent().getExtras());
+                        ProfileFragment profileFragment = new ProfileFragment();
+                        profileFragment.setArguments(getIntent().getExtras());
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, fragment3).commit();
+                                .replace(R.id.fragment_container, profileFragment).commit();
                         break;
-
                 }
                 return true;
-
             }
-
         });
-
-
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_signOut) {
+            firebaseAuth.signOut();
+            checkUserStatus();
+        }
+        if (id == R.id.action_showUsers){
+           // To be implemented
+            //Intent myIntent = new Intent(DashboardActivity.this, UsersActivity.class);
+            //startActivity(myIntent);
+        }
+        return true;
+    }
+
     private void checkUserStatus() {
         // Get the current user
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -92,24 +98,6 @@ DashboardActivity extends AppCompatActivity {
         }
     }
 
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_logout) {
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        if (id == R.id.action_showUsers){
-            Intent myIntent = new Intent(DashboardActivity.this, UsersActivity.class);
-            startActivity(myIntent);
-        }
-        return true;
-    }
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -119,4 +107,4 @@ DashboardActivity extends AppCompatActivity {
     }
 }
 
-// TODO: 03/12/20 UI of record
+

@@ -31,7 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
     // Views
-    EditText mEmailEt, mPasswordEt, mConfirmPasswordEt, mBoatClassEt;
+    EditText mEmailEt, mPasswordEt, mConfirmPasswordEt;
     Button mRegisterBtn;
 
     // Progressbar to display while registering user
@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Registering User..");
+        progressDialog.setMessage("Registering  User..");
 
 
 
@@ -83,11 +83,12 @@ public class RegisterActivity extends AppCompatActivity {
                     mEmailEt.setFocusable(true);
 
                 } else if (!isValidPassword(password)) {
-                    mPasswordEt.setError("Password requires at least one lowercase, uppercase, at least 8 characters and at least 1 symbol ");
+                    mPasswordEt.setError("Password requires at least one lowercase, uppercase, between 8 and 20 characters (inclusive) and at least 1 symbol ");
                     mPasswordEt.setFocusable(true);
 
                 } else if(!password.equals(confirmPassword)){
-                    Toast.makeText(RegisterActivity.this,"Passwords do not match",Toast.LENGTH_LONG).show();
+                    mPasswordEt.setError("Passwords do not match");
+                    mPasswordEt.setFocusable(true);
                 } else {
                     registerUser(email, password); // Register the user
                 }
@@ -179,7 +180,7 @@ public class RegisterActivity extends AppCompatActivity {
                 + "(?=\\S+$).{8,20}$";
 
         // Compile the ReGex
-        Pattern p = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex);
 
         // If the password is empty
         // return false
@@ -190,11 +191,11 @@ public class RegisterActivity extends AppCompatActivity {
         // Pattern class contains matcher() method
         // to find matching between given password
         // and regular expression.
-        Matcher m = p.matcher(password);
+        Matcher matcher = pattern.matcher(password);
 
         // Return if the password
         // matched the ReGex
-        return m.matches();
+        return matcher.matches();
     }
 
     // Allows navigation between pages

@@ -109,7 +109,7 @@ public class UsersActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_logout) {
+        if (id == R.id.action_signOut) {
             firebaseAuth.signOut();
             checkUserStatus();
         }

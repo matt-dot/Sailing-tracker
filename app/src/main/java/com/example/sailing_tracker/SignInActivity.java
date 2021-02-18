@@ -357,8 +357,6 @@ public class SignInActivity extends AppCompatActivity{
 }
 
 
-// TODO: 17/12/2020 Upload not working causes crash to sign in screen 
-// TODO: 17/12/2020  
 
 
 

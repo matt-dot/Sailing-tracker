@@ -296,7 +296,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_logout) {
+        if (id == R.id.action_signOut) {
             mAuth.signOut();
             checkUserStatus();
         }

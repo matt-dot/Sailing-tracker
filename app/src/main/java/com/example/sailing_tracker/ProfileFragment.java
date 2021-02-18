@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,8 +63,7 @@ public class ProfileFragment extends Fragment {
     FirebaseUser user;
     DatabaseReference databaseReference;
 
-
-    // Storage
+    // Storage instantiation
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference = storage.getReferenceFromUrl("gs://sailing-tracker-ed506.appspot.com");
 
@@ -74,9 +72,8 @@ public class ProfileFragment extends Fragment {
 
     // Views from xml
     ImageView profilePicIv;
-    TextView nameTv, emailTv, phoneTv, boatClassTv;
+    TextView nameTv, emailTv, boatClassTv;
     FloatingActionButton floatingActionButton;
-    Button usersBtn;
 
     // Progress dialog
     ProgressDialog progressDialog;
@@ -99,16 +96,10 @@ public class ProfileFragment extends Fragment {
     String profilePicture;
 
 
-
-
     private RecyclerView recyclerView;
     private List<ModelPost> postList;
     AdapterUserSessions adapterUserSessions;
 
-
-
-    private static final String TAG = "HomeFragment";
-    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     public ProfileFragment(){
         // Required empty public constructor
@@ -119,19 +110,11 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-
-
         // Init firebase
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         databaseReference = getInstance().getReference("Users");
         storageReference = storage.getReference("filePathAndName");
-
-
-
-
-
-
 
         // Init arrays of permissions
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -141,7 +124,7 @@ public class ProfileFragment extends Fragment {
         profilePicIv = view.findViewById(R.id.profilePicIv);
         nameTv = view.findViewById(R.id.nameTv);
         emailTv = view.findViewById(R.id.emailTv);
-        phoneTv = view.findViewById(R.id.phoneTv);
+
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
         boatClassTv = view.findViewById(R.id.boatClassTv);
 
@@ -165,14 +148,12 @@ public class ProfileFragment extends Fragment {
                     // Get data
                     String name = "" + ds.child("name").getValue();
                     String email = "" + ds.child("email").getValue();
-                    String phone = "" + ds.child("phone").getValue();
                     String image = "" + ds.child("image").getValue();
                     String boatClass = "" + ds.child("boatClass").getValue();
 
                     // Set data
                     nameTv.setText(name);
                     emailTv.setText(email);
-                    phoneTv.setText(phone);
                     boatClassTv.setText(boatClass);
 
                     try {
@@ -182,13 +163,8 @@ public class ProfileFragment extends Fragment {
                         // Set default if exception
                         Picasso.get().load(R.drawable.id_default_profile).into(profilePicIv);
 
-
                     }
-
-
                 }
-
-
             }
 
             @Override
@@ -220,7 +196,7 @@ public class ProfileFragment extends Fragment {
         // init post list
         postList = new ArrayList<>();
 
-
+        // Call load post method
         loadPost();
 
         return view;
@@ -595,8 +571,9 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
                 // In case of error
-                Toast.makeText(getActivity(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

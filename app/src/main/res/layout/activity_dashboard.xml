@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".DashboardActivity">
 
-
     <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,19 +21,12 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        <!--FrameLayout: show fragment-->
-
-
-
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
-    <!--Bottom navigation: show menu-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
@@ -45,8 +37,6 @@
         app:menu="@menu/menu_nav"
         app:itemBackground="@color/colorAccent"
         />
-
-
-
-
 </RelativeLayout>
+
+
