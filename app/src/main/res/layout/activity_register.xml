@@ -105,6 +105,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
         android:layout_marginBottom="20dp"
-        android:text="Sign In"
+        android:text="Register"
         android:background="@drawable/layout_rounded_corners"/>
 </LinearLayout>
