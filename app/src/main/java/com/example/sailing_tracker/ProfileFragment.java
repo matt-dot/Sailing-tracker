@@ -245,8 +245,8 @@ public class ProfileFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Edit profile");
 
-                // Set linear layout
-                LinearLayout linearLayout = new LinearLayout(getActivity());
+
+
 
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
@@ -341,6 +341,7 @@ public class ProfileFragment extends Fragment {
         builder.create().show();
 
     }
+
 
     private void showProfilePicDialog() {
                 String[] options = {"Camera", "Gallery"};
