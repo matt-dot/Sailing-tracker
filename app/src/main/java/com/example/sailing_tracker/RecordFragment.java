@@ -257,7 +257,7 @@ public class RecordFragment extends Fragment {
                         timeInSeconds = time / 1000;
 
                         // Log the location data
-                        Log.d(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
+                        Log.i(TAG, "onReceive:  Lat: " + latitude + ", Long: " + longitude);
                         Log.d("Speed_before_conversion", "onReceive: Speed before conversion " + speed);
 
                         // Update the text views displayed in record fragment
@@ -292,26 +292,15 @@ public class RecordFragment extends Fragment {
                         // Add speed data to the float arraylist
                         speedData.add(speed);
 
-
-
-
                         // Instantiate Firebase database
 
                         // Path to store user data named "Users"
                         DatabaseReference reference = database.getReference();
 
 
-
-
-
                         if(sessionID != null) {
                             // Put data within arraylist in database
                             reference.child("Sessions").child(sessionID).child("LatLngData").setValue(latLongArray);
-
-
-                        } else {
-                            Toast.makeText(context, "Error null sessionID", Toast.LENGTH_SHORT).show();
-                            Log.i("SessionIdNull", "onReceive: " + sessionID);
                         }
 
                     }
@@ -321,7 +310,6 @@ public class RecordFragment extends Fragment {
     }
 
     private void totalSpeed(double speedCalc){
-
         totalSpeed = totalSpeed + speedCalc;
         Log.i("AverageSpeedCalculation", "averageSpeed: " + totalSpeed);
         meanCalculation(totalSpeed);
