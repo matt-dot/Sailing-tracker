@@ -17,7 +17,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent">
+            android:background="@color/colorAccent"
+            android:outlineSpotShadowColor="@color/Black">
 
 
             <LinearLayout
@@ -70,7 +71,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
-                        android:textColor="@color/White"/>
+                        android:textColor="@color/White"
+                        android:textSize="20sp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -93,7 +95,8 @@
         android:layout_marginRight="6dp"
         android:layout_marginBottom="563dp"
         android:contentDescription="Edit button"
-        android:src="@drawable/id_edit_white" />
+        android:src="@drawable/id_edit_white"
+        android:background="@color/Aqua"/>
 
     <LinearLayout
         android:layout_marginTop="220dp"

@@ -8,12 +8,11 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.1.2'
         /*Update library, otherwise may get error:
         "Default FirebaseApp is not initialized in this process"*/
-        classpath 'com.google.gms:google-services:4.3.4'
-        classpath 'com.google.gms:google-services:4.3.4'
+        classpath 'com.google.gms:google-services:4.3.5'
 
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+
+
     }
 }
 
