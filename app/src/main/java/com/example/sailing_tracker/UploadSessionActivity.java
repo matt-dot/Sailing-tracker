@@ -157,7 +157,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
 
 
-
+        // Get the display picture of the user
         Query imageQuery = mDatabase.orderByChild("email").equalTo(user.getEmail());
         imageQuery.addValueEventListener(new ValueEventListener() {
             @Override
@@ -168,7 +168,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                     dp = "" + ds.child("image").getValue().toString();
 
                 }
-
 
             }
 
@@ -201,10 +200,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
                 String title = titleEt.getText().toString().trim();
                 String description = descriptionEt.getText().toString().trim();
 
-
-
-
-
                 // Method call, parsing what was entered into to above elements
                 uploadData(title, description, averageSpeed);
 
@@ -213,7 +208,7 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
     }
 
-    // Method which uploads data related to the post
+    // Method which uploads data for the post
     private void uploadData(final String title, final String description, double averageSpeed) {
         // Show the status of upload
         pd.setMessage("Publishing session...");
@@ -229,7 +224,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         hashMap.put("pTitle", title);
         hashMap.put("pDescription", description);
         hashMap.put("pTime", timeStamp);
-        Log.i("checkts", "uploadData: " + timeStamp);
         if (dp == null){
             dp = "null";
         }
@@ -237,9 +231,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
         hashMap.put("pSessionID", sessionIDForPath);
         hashMap.put("pSpeed", String.valueOf((averageSpeed)));
         hashMap.put("pLikes", "0");
-        Log.d("AverageSpeedCheck", "Session: " + averageSpeed);
-
-
 
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
@@ -258,9 +249,6 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
 
             }
         });
-
-
-
 
         // Move to home fragment
         startActivity(new Intent(UploadSessionActivity.this, DashboardActivity.class));
@@ -332,16 +320,13 @@ public class UploadSessionActivity extends AppCompatActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
-
-
         // Instantiate the firebase database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Instantiate google map
         mMap = googleMap;
         Log.i("SessionID", "onMapReady: " + sessionIDForPath);
-        // Path where to save data to
+        // Path to read data from
         mDatabase.child("Sessions").child(sessionIDForPath).child("LatLngData").addValueEventListener(new ValueEventListener() {
             @SuppressLint("MissingPermission")
             @Override
