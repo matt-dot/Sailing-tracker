@@ -79,8 +79,8 @@ public class DashboardActivity extends AppCompatActivity {
         }
         if (id == R.id.action_showUsers){
            // To be implemented
-            //Intent myIntent = new Intent(DashboardActivity.this, UsersActivity.class);
-            //startActivity(myIntent);
+            Intent myIntent = new Intent(DashboardActivity.this, UsersActivity.class);
+            startActivity(myIntent);
         }
         return true;
     }

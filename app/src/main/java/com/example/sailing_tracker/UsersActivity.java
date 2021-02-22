@@ -47,7 +47,7 @@ public class UsersActivity extends AppCompatActivity{
         // The toolbar is instantiated and assigned a title
         final Toolbar mToolBar = findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolBar);
-        mToolBar.setTitle("Users");
+        //mToolBar.setTitle("Users");
 
         // RecyclerView
         recyclerView = findViewById(R.id.users_recyclerView);
@@ -68,9 +68,9 @@ public class UsersActivity extends AppCompatActivity{
             // Get current user
             final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             // Get path of database named users
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
             // Get all data from path
-            databaseReference.addValueEventListener(new ValueEventListener() {
+            databaseReference.child("Users").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     // Clear user list before populating

@@ -17,27 +17,8 @@ import java.util.List;
 
 public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
+    // Declare the list to hold the model classes
     private final List<ModelUser> userList;
-
-
-
-    // View holder class
-    static class MyHolder extends RecyclerView.ViewHolder {
-        // Define variables
-        ImageView mUsersIv;
-        TextView mNameTv, mEmailTv, mBoatClassTv;
-
-        MyHolder(@NonNull View itemView) {
-            super(itemView);
-
-            // Assign views to variables
-            mUsersIv = itemView.findViewById(R.id.usersIv);
-            mNameTv = itemView.findViewById(R.id.nameTv);
-            mEmailTv = itemView.findViewById(R.id.emailTv);
-            mBoatClassTv = itemView.findViewById(R.id.boatClassTv);
-
-        }
-    }
 
 
     // This method inflates the value of row_users and returns the holder view
@@ -87,6 +68,24 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     @Override
     public int getItemCount() {
         return userList.size();
+    }
+
+    // View holder class
+    static class MyHolder extends RecyclerView.ViewHolder {
+        // Define variables
+        ImageView mUsersIv;
+        TextView mNameTv, mEmailTv, mBoatClassTv;
+
+        MyHolder(@NonNull View itemView) {
+            super(itemView);
+
+            // Assign views to variables
+            mUsersIv = itemView.findViewById(R.id.usersIv);
+            mNameTv = itemView.findViewById(R.id.nameTv);
+            mEmailTv = itemView.findViewById(R.id.emailTv);
+            mBoatClassTv = itemView.findViewById(R.id.boatClassTv);
+
+        }
     }
 
 
