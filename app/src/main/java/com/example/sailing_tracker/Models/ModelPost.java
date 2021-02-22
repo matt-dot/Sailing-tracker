@@ -1,5 +1,6 @@
 package com.example.sailing_tracker.Models;
 
+// Declare the variables for the model class
 public class ModelPost {
     String pId;
     String pTitle;
@@ -13,15 +14,13 @@ public class ModelPost {
     String pSpeed;
     String pLikes;
 
-
-
-
-
     public ModelPost(){
         // Constructor
     }
 
-    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid, String uEmail, String uDp, String uName, String pSessionID, String pSpeed, String pLikes) {
+    // Construct the variables
+    public ModelPost(String pId, String pTitle, String pDescription, String pTime, String uid,
+                     String uEmail, String uDp, String uName, String pSessionID, String pSpeed, String pLikes) {
         this.pId = pId;
         this.pTitle = pTitle;
         this.pDescription = pDescription;
@@ -33,10 +32,6 @@ public class ModelPost {
         this.pSessionID = pSessionID;
         this.pSpeed = pSpeed;
         this.pLikes = pLikes;
-
-
-
-
     }
 
     public String getpLikes() {
@@ -54,8 +49,6 @@ public class ModelPost {
     public void setpSpeed(String pSpeed) {
         this.pSpeed = pSpeed;
     }
-
-
 
     public String getpSessionID() {
         return pSessionID;

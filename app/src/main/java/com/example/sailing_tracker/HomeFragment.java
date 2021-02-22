@@ -25,17 +25,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// Logic error, posts being displayed by alphabetical order.
 public class HomeFragment extends Fragment{
 
     // Firebase
     FirebaseAuth firebaseAuth;
 
+
+    // Define variables
     private RecyclerView recyclerView;
     private List<ModelPost> postList;
     AdapterPosts adapterPosts;
     public static String sessionIDForPath;
 
-    private static final String TAG = "HomeFragment";
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment{
     public HomeFragment(){
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
@@ -57,14 +61,13 @@ public class HomeFragment extends Fragment{
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // Shows newest post first
         layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
 
 
         // init post list
         postList = new ArrayList<>();
 
-
+        // Call the method to populate the home fragment
         loadPost();
 
         return view;
@@ -80,36 +83,25 @@ public class HomeFragment extends Fragment{
                 postList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         ModelPost modelPost = ds.getValue(ModelPost.class);
-
+                        // Add the model post to postList list
                         postList.add(modelPost);
-
                         // Adapter
                         adapterPosts = new AdapterPosts(getActivity(), postList);
                         // Set adapter to recycler view
                         recyclerView.setAdapter(adapterPosts);
-
-
                     }
-
-                Log.d("PostListData", "onDataChange: "+ postList);
-
-
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-
     }
 
     public void receiveSessionID(String receivedSessionID) {
         // Assign the sessionID from RecordFragment to variable
         // This will be used for database path
         sessionIDForPath = receivedSessionID;
-        Log.d(TAG, "receiveSessionID: " +sessionIDForPath);
+
 
         // Log to make sure the session ID matches the session ID in
         // generated in record fragment

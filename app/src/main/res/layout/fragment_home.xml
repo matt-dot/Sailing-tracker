@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="50dp"
     tools:context=".HomeFragment">
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="?android:attr/actionBarSize"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -17,16 +15,14 @@
             android:layout_height="match_parent"
             android:textAlignment="center"
             android:gravity="center_horizontal"
-            android:textSize="30sp"
-            android:text="Users"/>
-
-
-
-
-
-
-
-
-
-
+            android:textSize="30sp" />
 </FrameLayout>
+
+
+
+
+
+
+
+
+

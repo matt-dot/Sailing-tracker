@@ -1,89 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-
     android:elevation="3dp"
     android:padding="5dp"
-    app:cardBackgroundColor="@color/AntiqueWhite"
+    app:cardBackgroundColor="@color/colorAccent"
     app:cardCornerRadius="3dp"
-    app:cardUseCompatPadding="true">
-
+    app:cardUseCompatPadding="true"
+    tools:targetApi="lollipop">
     <LinearLayout
+        android:layout_margin="10sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/White">
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
-
+            android:orientation="horizontal"
+            android:layout_margin="10sp">
             <com.blogspot.atifsoftwares.circularimageview.CircularImageView
                 android:id="@+id/pImageIv"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_default_user_image" />
-
+                android:src="@drawable/ic_default_user_image"
+                android:layout_margin="10sp"/>
             <LinearLayout
-                android:layout_width="match_parent"
+
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                android:layout_margin="10sp">
                 <TextView
+                    android:layout_marginLeft="10sp"
                     android:id="@+id/uEmailTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email"
                     android:textColor="@color/Black"
-                    android:textSize="20sp" />
-
+                    android:textSize="20sp"
+                  />
                 <TextView
+                    android:layout_marginLeft="10sp"
                     android:id="@+id/pTimeTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Time"
                     android:textColor="@color/Black" />
-
-
             </LinearLayout>
         </LinearLayout>
-
         <TextView
+            android:layout_marginLeft="10sp"
             android:id="@+id/pTitleTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:text="Title of session">
-
+            android:textSize="20sp"
+            android:text="Title of session"
+            android:textColor="@color/Black">
         </TextView>
-
         <TextView
+            android:layout_marginLeft="10sp"
             android:id="@+id/pAverageSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:text="Average Speed">
-
+            android:textSize="15sp"
+            android:text="Average Speed"
+            android:textColor="@color/Black">
         </TextView>
-
-
-
         <TextView
+            android:layout_marginLeft="10sp"
             android:id="@+id/pDescriptionTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:text="Description of session">
-
+            android:text="Description of session"
+            android:textColor="@color/Black">
         </TextView>
 
         <com.google.android.gms.maps.MapView
+            android:layout_margin="10sp"
             android:id="@+id/postMap"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
@@ -93,18 +98,17 @@
             android:id="@+id/pLikesTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="100 Likes" />
-
+            android:layout_marginLeft="10sp"
+            android:textColor="@color/Black"
+            android:textSize="13sp"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
-
             <Button
                 android:id="@+id/likeBtn"
                 android:layout_width="wrap_content"
@@ -113,11 +117,9 @@
                 android:background="@color/White"
                 android:drawableStart="@drawable/ic_like"
                 android:drawableLeft="@drawable/ic_like"
-                android:drawablePadding="5dp"
-                android:text="LIKE" />
-
-
-
+                android:drawablePadding="10dp"
+                android:text="LIKE"
+                />
             <Button
                 android:id="@+id/shareBtn"
                 android:layout_width="wrap_content"
@@ -126,12 +128,17 @@
                 android:background="@color/White"
                 android:drawableStart="@drawable/ic_share"
                 android:drawableLeft="@drawable/ic_share"
-                android:drawablePadding="5dp"
+                android:drawablePadding="10dp"
                 android:text="SHARE" />
-
-
         </LinearLayout>
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
+
+
+
+
+
+
+
+

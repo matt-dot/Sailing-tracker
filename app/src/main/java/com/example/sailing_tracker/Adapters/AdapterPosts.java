@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.text.format.DateFormat;
@@ -42,6 +44,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -51,9 +55,7 @@ import static android.content.ContentValues.TAG;
 
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
-
     Context context;
-
     // List to hold each model post
     List<ModelPost> postList;
     View view;
@@ -96,8 +98,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
-
-
         // Below data from the postList list is assigned to variables whcih will be used to
         // set the data of each post
         String uEmail = postList.get(position).getuEmail();
@@ -119,7 +119,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         // The value of each attribute is now assigned to the previously retrieved
         // data from the postList
         holder.pLikesTv.setText(pLikes + " Likes");
-        holder.pAverageSpeedTv.setText(pSpeed);
+        holder.pAverageSpeedTv.setText("Average speed: " + round(Double.parseDouble(pSpeed), 2) + " knots");
         holder.uEmailTv.setText(uEmail);
         holder.pTimeTv.setText(pTime);
         holder.pTitleTv.setText(pTitle);
@@ -134,8 +134,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         } catch (Exception e){
 
         }
-
-
 
 
         // Sets on click listener for the like button
@@ -187,36 +185,31 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             public void onClick(View v) {
                 // define the view to convert into a bitmap
                 View contentView =  view.findViewById(R.id.postMap);
+
                 // enable drawing cache
                 contentView.setDrawingCacheEnabled(true);
                 // Convert the content view into a bitmap using drawing cache
-                Bitmap bitmap = contentView.getDrawingCache();
+                Bitmap bitmap = Bitmap.createBitmap(contentView.getDrawingCache());
+
+                String pSpeedWithAnnotation = "Average speed: " + round(Double.parseDouble(pSpeed), 2) + " knots";
 
                 // Call sharePost method parsing the relevant variables
-                sharePost(pTitle, pSpeed, pDescription, bitmap);
+                sharePost(pTitle, pSpeedWithAnnotation, pDescription, bitmap);
 
             }
         });
 
-
-
-
-
-
-
-
     }
 
-    // This method handles the sharing of posts to external applications
 
+
+    // This method handles the sharing of posts to external applications
     private void sharePost(String pTitle, String pDescription,  String pSpeed, Bitmap bitmap){
         // Concatenate the title, description and speed of the post into one variable
         String shareBody = pTitle +"\n"+ pDescription + "\n" + pSpeed;
 
         // Define the uri for the bitmap
         Uri uri = saveRouteToShare(bitmap);
-
-
         // Share intent, brings up the standard menu for user to choose what platform they wish to
         // share their session on
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -225,10 +218,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject here");
         shareIntent.setType("image/png");
         context.startActivity(Intent.createChooser(shareIntent, "Share via"));
-
-
-
-
     }
 
     // This method handles where the bitmap of the route should be saved in order
@@ -282,6 +271,15 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         });
     }
 
+    // Rounding helper method
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
 
     // Method used to reset the recycler view within each post.
     @Override
@@ -304,6 +302,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
 
+
     // View holder class
     public static class MyHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
         // Views from row_post.xml
@@ -316,9 +315,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         ArrayList<LatLng> latLngArrayList = new ArrayList<LatLng>();
         double lat, lon;
         String sessionID;
-
-
-
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -340,22 +336,15 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 mapView.onResume();
                 mapView.getMapAsync(this);
             }
-
-
         }
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void onMapReady(GoogleMap googleMap) {
-
-
             // Instantiate the firebase database reference
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
             // Instantiate google map
             mapCurrent = googleMap;
-
-
                 // Query which searches for only session data which is within the node of the current sessionID
                 // of the postList
                 Query getLatLongQuery = mDatabase.child("Sessions").child(sessionID).child("LatLngData");
@@ -379,7 +368,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                                 // Store the lat and long data into array list
                                 latLngArrayList.add(new LatLng(lat, lon));
                                 // Move the camera to the last coordinate of the session
-                                mapCurrent.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 11));
+                                mapCurrent.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 13));
                             }
                         }
                         // Init Polyline options
@@ -406,6 +395,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
             }
         }
+
 
 
     }

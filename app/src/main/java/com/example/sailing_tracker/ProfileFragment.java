@@ -202,7 +202,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // Shows newest post first
         layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
+
         recyclerView.setLayoutManager(layoutManager);
 
 
@@ -210,7 +210,7 @@ public class ProfileFragment extends Fragment {
         postList = new ArrayList<>();
 
         // Call load post method
-        //loadPost();
+        loadPost();
 
         return view;
 
@@ -483,6 +483,7 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
     private void uploadProfilePicture(Uri image_uri) {
         UploadTask uploadTask;
 
@@ -603,6 +604,44 @@ public class ProfileFragment extends Fragment {
 
 
 
+        });
+
+
+
+
+    }
+
+    // Method used to load the users previous post to be used to be used to populate
+    // the recycler view present in their profile
+     public void loadPost() {
+        // Get the current user
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        assert firebaseUser != null;
+        // Path of all posts
+        DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Posts");
+        // Query to only get the current user's posts
+        Query queryForCurrentUser = mDatabase1.orderByChild("uEmail").equalTo(firebaseUser.getEmail());                          // should be "uEmail"
+        // Get all data from this reference
+        queryForCurrentUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    ModelPost modelPost = ds.getValue(ModelPost.class);
+                    postList.add(modelPost);
+                    // Adapter
+                    adapterUserSessions = new AdapterUserSessions(getActivity(), postList);
+                    // Set adapter to recycler view
+                    recyclerView.setAdapter(adapterUserSessions);
+                }
+                Log.d("PostListData", "onDataChange: " + postList);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                                                                                                                            //Add if postList != null
+                // In case of error
+                Toast.makeText(getActivity(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
