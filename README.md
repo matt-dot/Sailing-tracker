@@ -4,3 +4,4 @@
 - Avg speed
 - Time taken 
 - Post session to social media feed, to share with friends on app
+- A level project
